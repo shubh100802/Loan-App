@@ -26,12 +26,12 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(cors({
-    origin: [
-        "http://127.0.0.1:5500", 
-        "http://localhost:5500",
-        "http://localhost:3000"
-    ],
-    credentials: true
+  origin: [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "http://localhost:3000"
+  ],
+  credentials: true
 }));
 
 // Routes
@@ -43,24 +43,26 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/applications", applicationRoutes);
 app.use("/api/upload", uploadRoutes);
 
-// Serve static assets in production
+// In the production section, update these lines:
 if (process.env.NODE_ENV === 'production') {
-    // Set static folder
-    app.use(express.static(path.join(__dirname, '..')));
-    
-    // Handle React routing, return all requests to index.html
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, '..', 'index.html'));
-    });
+  // Set static folder (go up two levels from __dirname to reach the root)
+  const rootPath = path.join(__dirname, '..', '..');
+  app.use(express.static(rootPath));
+
+  // Handle all other routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(rootPath, 'index.html'));
+  });
+
 } else {
-    // Default route for development
-    app.get("/", (req, res) => {
-        res.send("Loan App Backend is running in development mode...");
-    });
+  // Default route for development
+  app.get("/", (req, res) => {
+    res.send("Loan App Backend is running in development mode...");
+  });
 }
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on PORT ${PORT}`);
+  console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on PORT ${PORT}`);
 });
