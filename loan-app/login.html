@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LoanApp</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        /* Responsive Canvas Container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* 3D Card Effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Glow Effect */
+        .glow {
+            position: relative;
+        }
+
+        .glow::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #4f46e5, #7c3aed, #4f46e5);
+            background-size: 200% 200%;
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0.3;
+            border-radius: 1rem;
+            animation: gradientBG 3s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Base Styles */
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --primary-dark: #4338ca;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 0.5rem;
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            display: flex;
+            overflow-x: hidden;
+            position: relative;
+            flex-direction: column;
+            padding: 1rem;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+            background: #f8fafc;
+        }
+
+        /* 3D Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Layout */
+        .login-container {
+            max-width: 24rem;
+            width: 100%;
+            margin: auto;
+            padding: 1.5rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+
+        .login-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        /* Card */
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-2px) translateZ(10px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-card-content {
+            padding: 1.75rem 1.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.625rem 1rem 0.625rem 2.75rem;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            color: var(--text);
+            background-color: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            transition: all 0.2s ease;
+            height: 2.75rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .forgot-password {
+            font-size: 0.875rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .forgot-password:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1.25rem 0 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            accent-color: var(--primary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.5;
+            border-radius: var(--radius);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: var(--shadow);
+            height: 2.75rem;
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.1), 0 4px 6px -2px rgba(79, 70, 229, 0.05);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.25rem 0;
+            color: var(--text-light);
+            font-size: 0.8125rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--border);
+        }
+
+        .divider-text {
+            padding: 0 1rem;
+        }
+
+        /* Social Buttons */
+        .social-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin: 1.25rem 0;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 2.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+            color: var(--text);
+            font-size: 1.25rem;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        .login-footer {
+            margin-top: 1.25rem;
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--text-light);
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Admin Footer */
+        .admin-footer {
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border);
+            background-color: rgba(249, 250, 251, 0.5);
+        }
+
+        .admin-footer a {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            margin-left: 0.25rem;
+        }
+
+        .admin-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body {
+                padding: 0.75rem;
+            }
+
+            .login-container {
+                padding: 0.5rem 0;
+                max-width: 100%;
+            }
+
+            .login-card-content {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .social-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .login-card {
+                border-radius: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center p-4">
+    <!-- 3D Animation Background -->
+    <div id="canvas-container" class="fixed inset-0 -z-10">
+        <!-- Floating shapes will be added by Three.js -->
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="fixed top-20 left-10 w-16 h-16 rounded-full bg-indigo-200 opacity-20 animate-pulse"></div>
+    <div class="fixed bottom-1/3 right-1/4 w-24 h-24 rounded-full bg-purple-200 opacity-20 animate-pulse delay-1000">
+    </div>
+    <div class="fixed top-1/4 right-20 w-32 h-32 rounded-full bg-blue-200 opacity-20 animate-pulse delay-500"></div>
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <a href="index.html" class="inline-block">
+                <span class="text-3xl font-bold gradient-text">LoanApp</span>
+            </a>
+            <h1 class="mt-4 text-2xl font-bold text-gray-900">Welcome back!</h1>
+            <p class="text-gray-600">Please sign in to your account</p>
+        </div>
+
+        <div class="card-3d bg-white rounded-xl shadow-xl overflow-hidden">
+            <div class="p-8">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="contact" class="form-label">Contact Number</label>
+                        <div class="input-group">
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <input type="tel" id="contact" name="contact" class="form-control" placeholder="9876543210"
+                                pattern="[0-9]{10}" title="Please enter a valid 10-digit number" inputmode="numeric"
+                                maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                autocomplete="tel" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <label for="password" class="form-label">Password</label>
+                            <a href="forgot-password.html" class="forgot-password">
+                                Forgot password?
+                            </a>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <input type="password" id="password" name="password" class="form-control"
+                                placeholder="••••••••" required>
+                            <button type="button" class="password-toggle"
+                                onclick="togglePasswordVisibility('password')">
+                                <i class="far fa-eye" id="password-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Sign in
+                    </button>
+                </form>
+
+
+                <div class="login-footer">
+                    <p>
+                        Don't have an account?
+                        <a href="register.html" class="text-indigo-600 hover:text-indigo-500 font-medium">Sign up</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
+                <p class="text-sm text-gray-600">
+                    Are you an admin?
+                    <a href="admin-login.html" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        Admin Login
+                    </a>
+                </p>
+            </div>
+            <!-- Back to home -->
+            <div class="mt-6 text-center">
+                <a href="index.html"
+                    class="text-gray-600 hover:text-indigo-600 transition flex items-center justify-center">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Three.js 3D Background
+        document.addEventListener('DOMContentLoaded', function () {
+            // Setup scene, camera, and renderer
+
+            // Create scene
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+            // Set renderer size and append to container
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Create particles
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 5000;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for (let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 10;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+            // Particle material
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.005,
+                color: '#4f46e5',
+                transparent: true,
+                opacity: 0.6
+            });
+
+            // Create particles system
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            // Camera position
+            camera.position.z = 2;
+
+            // Mouse movement effect
+            let mouseX = 0;
+            let mouseY = 0;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+            });
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                particlesMesh.rotation.x += 0.0005;
+                particlesMesh.rotation.y += 0.0005;
+
+                // Add subtle parallax effect
+                particlesMesh.rotation.x += mouseY * 0.0005;
+                particlesMesh.rotation.y += mouseX * 0.0005;
+
+                renderer.render(scene, camera);
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            // Start animation
+            animate();
+        });
+
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const passwordIcon = document.getElementById('password-icon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
+        }
+
+
+        // =============== LOGIN HANDLER ===============
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const mobile = document.getElementById("contact").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ mobile, password })
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alert(data.msg || "Login failed");
+                    return;
+                }
+
+                // Save JWT
+                localStorage.setItem("userToken", data.token);
+                localStorage.setItem("userName", data.user.name);
+
+                // Redirect to dashboard
+                window.location.href = "user/dashboard.html";
+
+            } catch (err) {
+                console.error(err);
+                alert("Server error");
+            }
+        });
+
+
+        // Enhanced 3D background effect
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Three.js for 3D background
+            let scene, camera, renderer, particles = [];
+
+            function init() {
+                // Scene setup
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setPixelRatio(window.devicePixelRatio);
+                document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+                // Camera position
+                camera.position.z = 30;
+
+                // Add lights
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                scene.add(ambientLight);
+
+                const pointLight = new THREE.PointLight(0xffffff, 0.8);
+                camera.add(pointLight);
+                scene.add(camera);
+
+                // Create particles
+                const geometry = new THREE.TetrahedronGeometry(1, 0);
+                const material = new THREE.MeshPhongMaterial({
+                    color: 0x4f46e5,
+                    shininess: 100,
+                    flatShading: true
+                });
+
+                // Add floating particles
+                for (let i = 0; i < 50; i++) {
+                    const particle = new THREE.Mesh(geometry, material);
+
+                    // Random position
+                    particle.position.x = Math.random() * 100 - 50;
+                    particle.position.y = Math.random() * 100 - 50;
+                    particle.position.z = Math.random() * 100 - 50;
+
+                    // Random size
+                    const size = Math.random() * 3 + 1;
+                    particle.scale.set(size, size, size);
+
+                    // Random rotation
+                    particle.rotation.x = Math.random() * Math.PI;
+                    particle.rotation.y = Math.random() * Math.PI;
+
+                    // Random speed
+                    particle.userData = {
+                        speed: Math.random() * 0.01 + 0.01,
+                        rotationSpeed: Math.random() * 0.01 + 0.005
+                    };
+
+                    scene.add(particle);
+                    particles.push(particle);
+                }
+
+                // Handle window resize
+                window.addEventListener('resize', onWindowResize, false);
+
+                // Start animation
+                animate();
+            }
+
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Animate particles
+                particles.forEach(particle => {
+                    // Float up and down
+                    particle.position.y += Math.sin(Date.now() * particle.userData.speed) * 0.05;
+
+                    // Rotate
+                    particle.rotation.x += particle.userData.rotationSpeed;
+                    particle.rotation.y += particle.userData.rotationSpeed * 0.5;
+
+                    // Bounce around
+                    if (particle.position.x > 60) particle.position.x = -60;
+                    if (particle.position.x < -60) particle.position.x = 60;
+                    if (particle.position.y > 40) particle.position.y = -40;
+                    if (particle.position.y < -40) particle.position.y = 40;
+                    if (particle.position.z > 40) particle.position.z = -40;
+                    if (particle.position.z < -40) particle.position.z = 40;
+                });
+
+                // Rotate camera slowly
+                camera.position.x = Math.sin(Date.now() * 0.0005) * 30;
+                camera.position.z = Math.cos(Date.now() * 0.0005) * 30;
+                camera.lookAt(scene.position);
+
+                renderer.render(scene, camera);
+            }
+
+            // Initialize the 3D scene
+            init();
+
+            // Add subtle parallax effect on mouse move
+            document.addEventListener('mousemove', (e) => {
+                const x = (window.innerWidth / 2 - e.pageX) / 100;
+                const y = (window.innerHeight / 2 - e.pageY) / 100;
+
+                // Move the entire scene slightly based on mouse position
+                if (scene) {
+                    scene.rotation.y = x * 0.05;
+                    scene.rotation.x = y * 0.05;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - LoanApp</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* OTP Input Styling */
+        .otp-input-group {
+            display: flex;
+            justify-content: space-between;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .otp-input {
+            width: 45px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: white;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .otp-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+            transform: translateY(-2px) translateZ(10px);
+        }
+
+        .otp-input:not(:placeholder-shown) {
+            border-color: #4f46e5;
+            background: #f5f3ff;
+        }
+
+        /* Resend OTP Link */
+        .resend-otp {
+            color: #4f46e5;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .resend-otp:hover {
+            color: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .resend-otp:active {
+            transform: translateY(0);
+        }
+
+        .resend-otp::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #4f46e5;
+            transition: width 0.3s ease;
+        }
+
+        .resend-otp:hover::after {
+            width: 100%;
+        }
+
+        /* Countdown Timer */
+        .countdown {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        /* Verification Success Animation */
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .verification-success {
+            animation: checkmark 0.5s cubic-bezier(0.42, 0, 0.58, 1) forwards;
+        }
+
+        /* 3D Card Effect for OTP Container */
+        .otp-container {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+        }
+
+        .otp-container:hover {
+            transform: perspective(1000px) rotateY(5deg) rotateX(5deg) translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center p-4">
+    <!-- 3D Animation Background -->
+    <div id="canvas-container" class="fixed inset-0 -z-10"></div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-md">
+        <!-- Logo -->
+        <div class="text-center mb-8 transform transition-all duration-500 hover:scale-105">
+            <a href="index.html" class="inline-block">
+                <span class="text-3xl font-bold gradient-text">LoanApp</span>
+            </a>
+            <h1 class="mt-4 text-2xl font-bold text-gray-900">Verify Your Account</h1>
+            <p class="text-gray-600">We've sent a 6-digit code to your gmail</p>
+            
+        </div>
+
+        <!-- OTP Verification Card -->
+        <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden otp-container">
+            <div class="p-8">
+                <!-- Verification Icon -->
+                <div
+                    class="w-20 h-20 mx-auto mb-6 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <i class="fas fa-mobile-alt text-3xl"></i>
+                </div>
+
+                <!-- OTP Form -->
+                <form id="otp-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Enter 6-digit OTP</label>
+                        <div class="otp-input-group" id="otp-container">
+                            <input type="text" maxlength="1" class="otp-input" pattern="\d*" inputmode="numeric"
+                                required>
+                            <input type="text" maxlength="1" class="otp-input" pattern="\d*" inputmode="numeric"
+                                required>
+                            <input type="text" maxlength="1" class="otp-input" pattern="\d*" inputmode="numeric"
+                                required>
+                            <span class="flex items-center text-gray-400">-</span>
+                            <input type="text" maxlength="1" class="otp-input" pattern="\d*" inputmode="numeric"
+                                required>
+                            <input type="text" maxlength="1" class="otp-input" pattern="\d*" inputmode="numeric"
+                                required>
+                            <input type="text" maxlength="1" class="otp-input" pattern="\d*" inputmode="numeric"
+                                required>
+                        </div>
+                        <input type="hidden" id="otp" name="otp" required>
+
+                        <div class="mt-4 text-center">
+                            <p class="text-sm text-gray-600">
+                                Didn't receive the code?
+                                <span id="resend-otp" class="resend-otp">Resend OTP</span>
+                            </p>
+                            <div id="countdown" class="countdown">Resend in 1:59</div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 transform hover:-translate-y-0.5">
+                        Verify & Continue
+                    </button>
+                </form>
+
+                <!-- Success Message (Initially Hidden) -->
+                <div id="success-message" class="hidden text-center mt-6">
+                    <div
+                        class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mx-auto mb-4 verification-success">
+                        <i class="fas fa-check text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Verification Successful!</h3>
+                    <p class="text-gray-600 mb-6">Your account has been verified successfully.</p>
+                    <a href="user/dashboard.html"
+                        class="inline-flex items-center text-indigo-600 hover:text-indigo-500 font-medium">
+                        Go to Dashboard
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
+                <p class="text-sm text-gray-600">
+                    Having trouble? <a href="https://www.instagram.com/itsmeshubh2026" class="font-medium text-indigo-600 hover:text-indigo-500">Contact
+                        Support</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Back to login -->
+        <div class="mt-6 text-center">
+            <a href="login.html"
+                class="text-gray-600 hover:text-indigo-600 transition flex items-center justify-center">
+                <i class="fas fa-arrow-left mr-1"></i> Back to login
+            </a>
+        </div>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/main.js"></script>
+
+    <script>
+        // =============== INITIAL SETUP ===============
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobile = localStorage.getItem("pendingMobile");
+            if (!mobile) {
+                alert("No mobile found, please register again");
+                window.location.href = "register.html";
+                return;
+            }
+
+            // Update masked mobile display
+            const masked = "+91 ••••• •" + mobile.slice(5);
+            document.querySelector(".text-indigo-600.font-medium").textContent = masked;
+
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const otpHidden = document.getElementById('otp');
+            const otpForm = document.getElementById('otp-form');
+            const resendOtpBtn = document.getElementById('resend-otp');
+            const countdownEl = document.getElementById('countdown');
+
+            // =============== OTP INPUT HANDLING ===============
+            otpInputs.forEach((input, index) => {
+                input.addEventListener("input", () => {
+                    input.value = input.value.replace(/\D/g, '');
+
+                    if (input.value && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                    updateOtpValue();
+                });
+
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Backspace" && !input.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            });
+
+            function updateOtpValue() {
+                let val = "";
+                otpInputs.forEach(i => val += i.value);
+                otpHidden.value = val;
+            }
+
+            // =============== SUBMIT OTP TO BACKEND ===============
+            otpForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const otp = otpHidden.value;
+                if (otp.length !== 6) {
+                    alert("Enter valid 6-digit OTP");
+                    return;
+                }
+
+                try {
+                    const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ mobile, otp })
+                    });
+
+                    const data = await res.json();
+
+                    if (!data.success) {
+                        alert(data.msg || "Invalid OTP");
+                        return;
+                    }
+
+                    // =============== SAVE TOKEN & USER ===============
+                    localStorage.setItem("userToken", data.token);
+                    localStorage.setItem("userName", data.user.name);
+
+                    localStorage.removeItem("pendingMobile");
+
+                    // =============== REDIRECT TO DASHBOARD ===============
+                    window.location.href = "user/dashboard.html";
+
+                } catch (error) {
+                    console.error(error);
+                    alert("Server error, try again later.");
+                }
+            });
+
+            // =============== RESEND OTP HANDLER ===============
+            resendOtpBtn.addEventListener("click", async () => {
+                try {
+                    const res = await fetch("http://localhost:5000/api/auth/resend-otp", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ mobile })
+                    });
+
+                    const data = await res.json();
+                    alert(data.msg || "OTP resent");
+                    startCountdown();
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Failed to resend OTP");
+                }
+            });
+
+            // =============== COUNTDOWN TIMER ===============
+            let countdown = 120;
+            let interval;
+
+            function startCountdown() {
+                resendOtpBtn.style.pointerEvents = "none";
+                countdownEl.textContent = "Resend in 2:00";
+
+                interval = setInterval(() => {
+                    countdown--;
+                    let m = Math.floor(countdown / 60);
+                    let s = String(countdown % 60).padStart(2, "0");
+                    countdownEl.textContent = `Resend in ${m}:${s}`;
+
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        resendOtpBtn.style.pointerEvents = "auto";
+                        countdownEl.textContent = "";
+                        countdown = 120;
+                    }
+                }, 1000);
+            }
+
+            startCountdown();
+        });
+    </script>
+
+</body>
+
+</html>

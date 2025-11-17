@@ -1,0 +1,186 @@
+/* Admin Dashboard Custom Styles */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c7d2fe;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a5b4fc;
+}
+
+/* Fix for mobile scrolling */
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Adjust main content area for mobile */
+@media (max-width: 767px) {
+    .flex.h-screen {
+        height: auto;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+    
+    .flex-1.overflow-hidden {
+        overflow: visible;
+        padding-bottom: 4rem; /* Space for bottom navigation */
+    }
+    
+    .overflow-y-auto {
+        overflow-y: visible;
+    }
+    
+    /* Fix for mobile menu */
+    #mobile-sidebar {
+        z-index: 60;
+    }
+    
+    /* Adjust padding for mobile */
+    .p-4, .p-6 {
+        padding: 1rem;
+    }
+    
+    /* Fix for charts on mobile */
+    .chart-container {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+}
+
+/* Sidebar styles */
+.bg-sidebar {
+    background-color: #4f46e5;
+}
+
+.sidebar-link {
+    transition: all 0.3s ease;
+}
+
+.sidebar-link:hover {
+    background-color: #4338ca;
+    transform: translateX(4px);
+}
+
+/* Card styles */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Status badges */
+.status-pending {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-approved {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-rejected {
+    @apply bg-red-100 text-red-800;
+}
+
+/* Form styles */
+.form-input {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+}
+
+/* Button styles */
+.btn {
+    @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+.btn-secondary {
+    @apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-50;
+}
+
+.btn-danger {
+    @apply bg-red-600 hover:bg-red-700 focus:ring-red-500;
+}
+
+/* Table styles */
+.table-container {
+    @apply overflow-x-auto bg-white rounded-lg shadow overflow-y-auto;
+}
+
+table {
+    @apply min-w-full divide-y divide-gray-200;
+}
+
+th {
+    @apply px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+td {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-500;
+}
+
+tr:nth-child(even) {
+    @apply bg-gray-50;
+}
+
+/* Modal styles */
+.modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-container {
+    @apply bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .mobile-hide {
+        display: none;
+    }
+    
+    .mobile-full {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* Custom utility classes */
+.overflow-y-overlay {
+    overflow-y: overlay;
+}
+
+/* Custom scrollbar for Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #c7d2fe #f1f1f1;
+}

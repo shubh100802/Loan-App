@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - LoanApp</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+
+        .profile-pic-upload {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-pic-upload:hover .profile-edit {
+            opacity: 1;
+        }
+
+        .profile-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Mobile Sidebar Overlay -->
+    <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+    <!-- Mobile Sidebar -->
+    <div id="mobile-sidebar"
+        class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
+        <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
+            <span class="text-white text-xl font-bold">LoanApp</span>
+            <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="flex flex-col h-full px-4 py-4 overflow-y-auto">
+            <nav class="flex-1 space-y-2">
+                <a href="dashboard.html"
+                    class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                    <i class="fas fa-home mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="applications.html"
+                    class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                    <i class="fas fa-file-invoice-dollar mr-3"></i>
+                    My Applications
+                </a>
+                <a href="profile.html"
+                    class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                    <i class="fas fa-user-circle mr-3"></i>
+                    Profile
+                </a>
+            </nav>
+            <div class="p-4 mt-auto border-t border-indigo-500">
+                <div class="flex items-center">
+                    <img class="user-avatar w-10 h-10 rounded-full" alt="User">
+                    <div class="ml-3">
+                        <p class="user-name text-sm font-medium text-white">User Name</p>
+                        <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="flex flex-col h-screen md:flex-row">
+        <!-- Desktop Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
+                <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
+                    <span class="text-white text-xl font-bold">LoanApp</span>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="dashboard.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            My Applications
+                        </a>
+                        <a href="profile.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            Profile
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-indigo-500">
+                    <div class="flex items-center">
+                        <img class="user-avatar w-10 h-10 rounded-full" alt="User">
+                        <div class="ml-3">
+                            <p class="user-name text-sm font-medium text-white">User Name</p>
+                            <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button"
+                            class="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
+                            aria-label="Open menu">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="ml-4 text-xl font-semibold text-gray-900">My Profile</h1>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button onclick="logout()"
+                            class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-sm text-gray-700 focus:outline-none" id="user-menu">
+                                <span class="user-name hidden md:inline-block mr-2"></span>
+                                <img class="user-avatar w-8 h-8 rounded-full" alt="User">
+
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                role="menu" id="user-dropdown">
+                                <div class="py-1" role="none">
+                                    <a href="profile.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                        <i class="fas fa-user-circle mr-2"></i> Your Profile
+                                    </a>
+
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        role="menuitem" onclick="logout()">
+                                        <i class="fas fa-sign-out-alt mr-2"></i> Sign out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Mobile Sidebar -->
+            <div class="md:hidden hidden bg-white shadow-lg rounded-lg mx-4 mt-2 p-4" id="mobile-sidebar">
+                <div class="space-y-1">
+                    <a href="dashboard.html"
+                        class="flex items-center px-3 py-2 text-base font-medium text-gray-600 rounded-md hover:bg-gray-50">
+                        <i class="fas fa-home mr-3 text-gray-500"></i>
+                        Dashboard
+                    </a>
+                    <a href="applications.html"
+                        class="flex items-center px-3 py-2 text-base font-medium text-gray-600 rounded-md hover:bg-gray-50">
+                        <i class="fas fa-file-invoice-dollar mr-3 text-gray-500"></i>
+                        My Applications
+                    </a>
+                    <a href="profile.html"
+                        class="flex items-center px-3 py-2 text-base font-medium text-white bg-indigo-600 rounded-md">
+                        <i class="fas fa-user-circle mr-3"></i>
+                        Profile
+                    </a>
+                    ttings
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Profile Header -->
+                    <div class="bg-white rounded-xl shadow overflow-hidden mb-6">
+                        <div class="profile-header px-6 py-8 text-white text-center">
+                            <div class="mb-4">
+                                <div class="profile-pic-upload mx-auto">
+                                    <img id="profilePhoto"
+                                        class="w-32 h-32 rounded-full border-4 border-white shadow-lg mx-auto"
+                                        src="https://ui-avatars.com/api/?name=User+Name&background=7c3aed&color=fff&size=256"
+                                        alt="Profile picture">
+                                    <div class="profile-edit">
+                                        <i class="fas fa-camera"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 id="headerName" class="text-2xl font-bold">Loading...</h2>
+                            <p id="headerEmail" class="text-indigo-100">Loading...</p>
+
+                            <div class="mt-4 flex justify-center space-x-4">
+                                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
+                                    <i class="fas fa-phone-alt mr-1"></i>
+                                    <span id="headerPhone">Loading...</span>
+                                </span>
+
+                                <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                    <span id="headerAddress">Loading...</span>
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- Profile Navigation -->
+                        <div class="bg-white border-b">
+                            <nav class="flex overflow-x-auto">
+                                <a href="#personal"
+                                    class="px-6 py-4 border-b-2 border-indigo-500 text-sm font-medium text-indigo-600 whitespace-nowrap nav-link active">
+                                    <i class="fas fa-user-circle mr-2"></i> Personal Information
+                                </a>
+                                <a href="#documents"
+                                    class="px-6 py-4 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap nav-link">
+                                    <i class="fas fa-file-alt mr-2"></i> Documents
+                                </a>
+
+                            </nav>
+                        </div>
+
+                        <!-- Profile Content -->
+                        <div class="p-6">
+                            <!-- ===================== PERSONAL INFORMATION SECTION ===================== -->
+                            <div id="personal" class="profile-section">
+
+                                <!-- Header + Edit Button -->
+                                <div class="flex justify-between items-center mb-6">
+                                    <h3 class="text-lg font-medium text-gray-900">Personal Information</h3>
+                                    <button id="editBtn"
+                                        class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                        <i class="fas fa-edit mr-1"></i> Edit
+                                    </button>
+                                </div>
+
+                                <!-- ================== VIEW MODE ================== -->
+                                <div id="profileView">
+                                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Full
+                                                Name</label>
+                                            <div id="field_fullName"
+                                                class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                            <div id="field_email"
+                                                class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone
+                                                Number</label>
+                                            <div id="field_mobile"
+                                                class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of
+                                                Birth</label>
+                                            <div id="field_dob"
+                                                class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                            </div>
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                            <div id="field_address"
+                                                class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Employment Section -->
+                                    <div class="mt-8 pt-6 border-t border-gray-200">
+                                        <h4 class="text-md font-medium text-gray-900 mb-4">Employment Information</h4>
+
+                                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Employment
+                                                    Status</label>
+                                                <div id="field_employmentStatus"
+                                                    class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                                                <div id="field_company"
+                                                    class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Job
+                                                    Title</label>
+                                                <div id="field_jobTitle"
+                                                    class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Monthly
+                                                    Income</label>
+                                                <div id="field_monthlyIncome"
+                                                    class="bg-gray-50 p-3 rounded-lg border border-gray-200">Loading...
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ================== EDIT MODE ================== -->
+                                <form id="profileEditForm" class="hidden mt-4 space-y-6">
+
+                                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Full
+                                                Name</label>
+                                            <input id="input_fullName" class="w-full p-3 border rounded-lg" />
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                            <input id="input_email" class="w-full p-3 border rounded-lg" />
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone
+                                                Number</label>
+                                            <input id="input_mobile" class="w-full p-3 border rounded-lg" />
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Date of
+                                                Birth</label>
+                                            <input id="input_dob" type="date" class="w-full p-3 border rounded-lg" />
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                            <input id="input_address" class="w-full p-3 border rounded-lg" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Employment Section -->
+                                    <div class="mt-6 pt-4 border-t border-gray-200">
+                                        <h4 class="text-md font-medium text-gray-900 mb-3">Employment Information</h4>
+
+                                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Employment
+                                                    Status</label>
+                                                <input id="input_employmentStatus"
+                                                    class="w-full p-3 border rounded-lg" />
+                                            </div>
+
+                                            <div>
+                                                <label
+                                                    class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                                                <input id="input_company" class="w-full p-3 border rounded-lg" />
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Job
+                                                    Title</label>
+                                                <input id="input_jobTitle" class="w-full p-3 border rounded-lg" />
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Monthly
+                                                    Income</label>
+                                                <input id="input_monthlyIncome" type="number"
+                                                    class="w-full p-3 border rounded-lg" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex justify-end space-x-3">
+                                        <button id="cancelBtn" type="button"
+                                            class="px-4 py-2 border rounded-lg">Cancel</button>
+
+                                        <button id="saveBtn" type="submit"
+                                            class="px-4 py-2 bg-indigo-600 text-white rounded-lg">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+
+
+                            </div>
+
+
+                            <!-- Documents Section (Hidden by default) -->
+                            <div id="documents" class="profile-section hidden">
+                                <!-- <div class="flex justify-between items-center mb-6">
+                                    <h3 class="text-lg font-medium text-gray-900">Documents</h3>
+                                    <button class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                        <i class="fas fa-plus mr-1"></i> Add Document
+                                    </button>
+                                </div> -->
+
+                                <div id="documentsList" class="space-y-4">
+                                    <!-- JS will render document cards here -->
+                                </div>
+
+
+                                <div class="mt-8 pt-6 border-t border-gray-200">
+                                    <h4 class="text-md font-medium text-gray-900 mb-4">Upload New Document</h4>
+                                    <div
+                                        class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                        <div class="space-y-1 text-center">
+                                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor"
+                                                fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                                <path
+                                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            <div class="flex text-sm text-gray-600">
+                                                <label for="file-upload"
+                                                    class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
+                                                    <span>Upload a file</span>
+                                                    <input id="file-upload" name="file-upload" type="file"
+                                                        class="sr-only">
+                                                </label>
+                                                <p class="pl-1">or drag and drop</p>
+                                            </div>
+                                            <p class="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-4 z-40">
+        <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="applications.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="fas fa-file-invoice-dollar text-xl"></i>
+            <span class="text-xs mt-1">Applications</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-indigo-600">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span class="text-xs mt-1">Profile</span>
+        </a>
+
+    </div>
+
+    <style>
+        /* Add smooth transitions for mobile menu */
+        #mobile-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Ensure content doesn't scroll when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+    </style>
+
+    <script>
+        /* ============================================================
+           =============== MOBILE SIDEBAR & NAVIGATION ================
+           ============================================================ */
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMenuButton = document.getElementById('close-mobile-menu');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            const mobileOverlay = document.getElementById('mobile-sidebar-overlay');
+
+            function toggleMobileMenu() {
+                if (mobileSidebar && mobileOverlay) {
+                    mobileSidebar.classList.toggle('-translate-x-full');
+                    mobileOverlay.classList.toggle('hidden');
+                    document.body.classList.toggle('overflow-hidden');
+                }
+            }
+
+            if (mobileMenuButton) mobileMenuButton.addEventListener('click', toggleMobileMenu);
+            if (closeMenuButton) closeMenuButton.addEventListener('click', toggleMobileMenu);
+            if (mobileOverlay) mobileOverlay.addEventListener('click', toggleMobileMenu);
+
+            document.querySelectorAll('#mobile-sidebar a').forEach(link => {
+                link.addEventListener('click', toggleMobileMenu);
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !mobileSidebar.classList.contains('-translate-x-full')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+
+        /* ============================================================
+           ================== NAVIGATION BETWEEN SECTIONS ==============
+           ============================================================ */
+
+        const navLinks = document.querySelectorAll('.profile-section');
+        const navTabs = document.querySelectorAll('.nav-link');
+
+        function showSection(sectionId) {
+            navLinks.forEach(section => section.classList.add('hidden'));
+
+            navTabs.forEach(tab => {
+                tab.classList.remove('border-indigo-500', 'text-indigo-600');
+                tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+            });
+
+            document.getElementById(sectionId).classList.remove('hidden');
+
+            const activeTab = document.querySelector(`[href="#${sectionId}"]`);
+            if (activeTab) {
+                activeTab.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+                activeTab.classList.add('border-indigo-500', 'text-indigo-600');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', function (e) {
+                e.preventDefault();
+                const sectionId = this.getAttribute('href').substring(1);
+                showSection(sectionId);
+                history.pushState(null, null, `#${sectionId}`);
+            });
+        });
+
+        // Load default section
+        window.addEventListener('load', function () {
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                showSection(hash);
+            } else {
+                showSection('personal');
+            }
+        });
+
+
+        /* ============================================================
+           ==================== TOOLTIP INITIALIZATION =================
+           ============================================================ */
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
+        });
+
+
+        /* ============================================================
+         =============== FIXED PROFILE PIC UPLOAD ====================
+         ============================================================ */
+
+        document.querySelector(".profile-edit").addEventListener("click", () => {
+
+            const inputFile = document.createElement("input");
+            inputFile.type = "file";
+            inputFile.accept = "image/*";
+
+            inputFile.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Preview
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById("profilePhoto").src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Upload to backend
+                const formData = new FormData();
+                formData.append("profilePic", file);
+
+                const res = await fetch("http://localhost:5000/api/user/update-profile-pic", {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    },
+                    body: formData
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    alert(data.msg || "Profile picture update failed");
+                    return;
+                }
+
+                alert("Profile picture updated successfully!");
+            };
+
+            inputFile.click();
+        });
+
+
+
+
+        /* ============================================================
+           ===================== CHECK LOGIN TOKEN =====================
+           ============================================================ */
+
+        const token = localStorage.getItem("userToken");
+        if (!token) {
+            window.location.href = "../login.html";
+        }
+
+
+        /* ============================================================
+            ======================= LOAD PROFILE ========================
+            ============================================================ */
+
+
+        async function loadProfile() {
+            try {
+                const res = await fetch("http://localhost:5000/api/user/profile", {
+                    method: "GET",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    alert("Session expired. Login again.");
+                    window.location.href = "../login.html";
+                    return;
+                }
+
+                const user = data.user;
+
+                // TOP-RIGHT USER NAME & AVATAR
+                document.querySelectorAll(".user-name").forEach(el => el.textContent = user.name);
+
+                // Avatar (top-right and sidebar)
+                document.querySelectorAll(".user-avatar").forEach(img => {
+                    img.src = user.profilePic
+                        ? `http://localhost:5000/uploads/${user.profilePic}`
+                        : `https://ui-avatars.com/api/?name=${user.name}&background=7c3aed&color=fff`;
+                });
+
+
+                /* -------- VIEW MODE -------- */
+                document.getElementById("field_fullName").textContent = user.name;
+                document.getElementById("field_email").textContent = user.email || "-";
+                document.getElementById("field_mobile").textContent = user.mobile;
+                document.getElementById("field_dob").textContent = user.dob || "-";
+                document.getElementById("field_address").textContent = user.address || "-";
+                document.getElementById("field_employmentStatus").textContent = user.employmentStatus || "-";
+                document.getElementById("field_company").textContent = user.company || "-";
+                document.getElementById("field_jobTitle").textContent = user.jobTitle || "-";
+                document.getElementById("field_monthlyIncome").textContent = user.monthlyIncome || "-";
+                // HEADER FIELDS
+                document.getElementById("headerName").textContent = user.name;
+                document.getElementById("headerEmail").textContent = user.email || "No email";
+                document.getElementById("headerPhone").textContent = user.mobile || "No phone";
+                document.getElementById("headerAddress").textContent = user.address || "No address";
+
+                // PROFILE PIC
+                const pic = user.profilePic
+                    ? `http://localhost:5000/uploads/${user.profilePic}`
+                    : `https://ui-avatars.com/api/?name=${user.name}&background=7c3aed&color=fff&size=256`;
+
+                document.getElementById("profilePhoto").src = pic;
+
+
+                /* -------- EDIT MODE -------- */
+                document.getElementById("input_fullName").value = user.name;
+                document.getElementById("input_email").value = user.email || "";
+                document.getElementById("input_mobile").value = user.mobile;
+                document.getElementById("input_dob").value = user.dob || "";
+                document.getElementById("input_address").value = user.address || "";
+                document.getElementById("input_employmentStatus").value = user.employmentStatus || "";
+                document.getElementById("input_company").value = user.company || "";
+                document.getElementById("input_jobTitle").value = user.jobTitle || "";
+                document.getElementById("input_monthlyIncome").value = user.monthlyIncome || "";
+
+            } catch (err) {
+                console.error(err);
+                alert("Unable to load profile");
+            }
+        }
+        loadProfile();
+        loadDocuments();
+
+
+
+        /* ============================================================
+           ================= INLINE EDIT MODE ==========================
+           ============================================================ */
+
+        const editBtn = document.getElementById("editBtn");
+        const profileView = document.getElementById("profileView");
+        const profileEditForm = document.getElementById("profileEditForm");
+        const cancelBtn = document.getElementById("cancelBtn");
+        const saveBtn = document.getElementById("saveBtn");
+
+        editBtn.addEventListener("click", () => {
+            profileView.classList.add("hidden");
+            profileEditForm.classList.remove("hidden");
+        });
+
+        cancelBtn.addEventListener("click", () => {
+            profileEditForm.classList.add("hidden");
+            profileView.classList.remove("hidden");
+        });
+
+        /* SAVE PROFILE */
+        profileEditForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const payload = {
+                name: document.getElementById("input_fullName").value.trim(),
+                email: document.getElementById("input_email").value.trim(),
+                mobile: document.getElementById("input_mobile").value.trim(),
+                dob: document.getElementById("input_dob").value,
+                address: document.getElementById("input_address").value.trim(),
+                employmentStatus: document.getElementById("input_employmentStatus").value.trim(),
+                company: document.getElementById("input_company").value.trim(),
+                jobTitle: document.getElementById("input_jobTitle").value.trim(),
+                monthlyIncome: document.getElementById("input_monthlyIncome").value
+            };
+
+            const res = await fetch("http://localhost:5000/api/user/update-profile", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            if (!data.success) {
+                alert(data.msg || "Update failed");
+                return;
+            }
+
+            alert("Profile updated successfully!");
+            loadProfile();
+
+            profileEditForm.classList.add("hidden");
+            profileView.classList.remove("hidden");
+        });
+
+        /* ========================= DOCUMENTS: Upload / List / Download / Delete ========================= */
+
+        // helper: create DOM card for a doc
+        function docCardHTML(doc) {
+            // create element
+            const wrapper = document.createElement("div");
+            wrapper.className = "bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-between";
+            wrapper.innerHTML = `
+    <div class="flex items-center">
+      <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+        <i class="fas fa-file-alt text-indigo-600"></i>
+      </div>
+      <div>
+        <h4 class="font-medium text-gray-900">${escapeHtml(doc.originalname)}</h4>
+        <p class="text-sm text-gray-500">Uploaded on ${new Date(doc.uploadedAt).toLocaleString()}</p>
+      </div>
+    </div>
+    <div class="flex space-x-2">
+      <button class="doc-view text-gray-400 hover:text-indigo-600" title="View/Download">
+        <i class="fas fa-eye"></i>
+      </button>
+      <button class="doc-download text-gray-400 hover:text-indigo-600" title="Download">
+        <i class="fas fa-download"></i>
+      </button>
+      <button class="doc-delete text-gray-400 hover:text-red-600" title="Delete">
+        <i class="fas fa-trash"></i>
+      </button>
+    </div>
+  `;
+
+            // attach metadata
+            wrapper.dataset.docId = doc._id;
+            wrapper.querySelector(".doc-view").addEventListener("click", () => {
+                // open in new tab (if pdf/image supported)
+                window.open(`http://localhost:5000/uploads/${doc.filename}`, "_blank");
+            });
+
+            wrapper.querySelector(".doc-download").addEventListener("click", () => {
+                // trigger download route (uses proper original filename)
+                window.location.href = `http://localhost:5000/api/user/documents/download/${doc._id}`;
+            });
+
+            wrapper.querySelector(".doc-delete").addEventListener("click", async () => {
+                if (!confirm("Delete this document?")) return;
+                try {
+                    const res = await fetch(`http://localhost:5000/api/user/documents/${doc._id}`, {
+                        method: "DELETE",
+                        headers: { "Authorization": "Bearer " + token }
+                    });
+                    const data = await res.json();
+                    if (!data.success) { alert(data.msg || "Delete failed"); return; }
+                    alert("Document deleted");
+                    await loadDocuments(); // refresh list
+                } catch (err) {
+                    console.error(err);
+                    alert("Server error");
+                }
+            });
+
+            return wrapper;
+        }
+
+        // escape helper to avoid HTML injection in filename
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text.replace(/[&<>"'`=\/]/g, s => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;'
+            }[s]));
+        }
+
+        // load documents and render into documentsList
+        async function loadDocuments() {
+            try {
+                const res = await fetch("http://localhost:5000/api/user/documents", {
+                    method: "GET",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                const data = await res.json();
+                if (!data.success) {
+                    console.warn("Could not load documents", data.msg);
+                    document.getElementById("documentsList").innerHTML = "<p class='text-sm text-gray-500'>No documents found.</p>";
+                    return;
+                }
+
+                const docs = data.documents || [];
+                const container = document.getElementById("documentsList");
+                container.innerHTML = "";
+
+                if (docs.length === 0) {
+                    container.innerHTML = "<p class='text-sm text-gray-500'>No documents uploaded yet.</p>";
+                    return;
+                }
+
+                docs.forEach(doc => {
+                    container.appendChild(docCardHTML(doc));
+                });
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById("documentsList").innerHTML = "<p class='text-sm text-red-500'>Unable to load documents.</p>";
+            }
+        }
+
+        // upload handler (file input already present)
+        const fileInput = document.getElementById("file-upload");
+        if (fileInput) {
+            fileInput.addEventListener("change", async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // basic validations
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                if (file.size > maxSize) {
+                    alert("File too large. Max 10MB.");
+                    fileInput.value = "";
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("document", file);
+
+                try {
+                    const res = await fetch("http://localhost:5000/api/user/upload-document", {
+                        method: "POST",
+                        headers: { "Authorization": "Bearer " + token },
+                        body: formData
+                    });
+
+                    const data = await res.json();
+                    if (!data.success) {
+                        alert(data.msg || "Upload failed");
+                        return;
+                    }
+
+                    alert("Uploaded successfully");
+                    fileInput.value = "";
+                    await loadDocuments();
+                } catch (err) {
+                    console.error(err);
+                    alert("Upload error");
+                }
+            });
+        }
+
+        // ================= LOAD DOCUMENTS ==================
+async function loadDocuments() {
+    try {
+        const res = await fetch("http://localhost:5000/api/user/documents", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            console.error("Failed to load documents");
+            return;
+        }
+
+        const docsContainer = document.getElementById("documentsList");
+        docsContainer.innerHTML = "";
+
+        data.documents.forEach(doc => {
+            docsContainer.innerHTML += `
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+                            <i class="fas fa-file-alt text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900">${doc.originalname}</h4>
+                            <p class="text-sm text-gray-500">
+                                ${(doc.size / 1024).toFixed(1)} KB • 
+                                ${new Date(doc.uploadedAt).toLocaleString()}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <a href="http://localhost:5000/api/user/documents/download/${doc._id}"
+                           class="text-gray-600 hover:text-indigo-600">
+                           <i class="fas fa-download"></i>
+                        </a>
+
+                        <button onclick="deleteDocument('${doc._id}')"
+                            class="text-gray-600 hover:text-red-600">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+async function deleteDocument(id) {
+    if (!confirm("Delete this document?")) return;
+
+    try {
+        await fetch(`http://localhost:5000/api/user/documents/${id}`, {
+            method: "DELETE",
+            headers: { "Authorization": "Bearer " + token }
+        });
+
+        loadDocuments(); // refresh list
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+
+
+        /* ============================================================
+           =========================== LOGOUT ==========================
+           ============================================================ */
+
+        function logout() {
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userName");
+            window.location.href = "../login.html";
+        }
+
+    </script>
+
+</body>
+
+</html>

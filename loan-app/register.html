@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - LoanApp</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/auth.css">
+    <style>
+        /* 3D Card Effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Glow Effect */
+        .glow {
+            position: relative;
+        }
+
+        .glow::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #4f46e5, #7c3aed, #4f46e5);
+            background-size: 200% 200%;
+            z-index: -1;
+            filter: blur(15px);
+            opacity: 0.3;
+            border-radius: 1rem;
+            animation: gradientBG 3s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Input Focus Effect */
+        .input-group {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .input-group:focus-within {
+            transform: translateY(-2px);
+        }
+
+        .input-group input:focus+.input-highlight {
+            width: 100%;
+            opacity: 1;
+        }
+
+        .input-highlight {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        /* Button Hover Effect */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+
+        .btn-hover:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center p-4">
+    <!-- 3D Animation Background -->
+    <div id="canvas-container" class="fixed inset-0 -z-10">
+        <!-- Floating shapes will be added by Three.js -->
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="fixed top-20 left-10 w-16 h-16 rounded-full bg-indigo-200 opacity-20 animate-pulse"></div>
+    <div class="fixed bottom-1/3 right-1/4 w-24 h-24 rounded-full bg-purple-200 opacity-20 animate-pulse delay-1000">
+    </div>
+    <div class="fixed top-1/4 right-20 w-32 h-32 rounded-full bg-blue-200 opacity-20 animate-pulse delay-500"></div>
+
+    <!-- Main Container -->
+    <div class="w-full max-w-4xl">
+        <div class="flex flex-col md:flex-row items-center">
+            <!-- Left Side - Illustration -->
+            <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10 transform transition-all duration-500 hover:scale-105">
+                <div class="relative floating">
+                    <!-- 3D Card -->
+                    <div class="card-3d bg-white p-8 rounded-2xl">
+                        <div class="text-center mb-6">
+                            <h2 class="text-3xl font-bold gradient-text mb-2">Join Us Today</h2>
+                            <p class="text-gray-600">Start your journey with LoanApp</p>
+                        </div>
+
+                        <!-- 3D Illustration -->
+                        <div class="relative h-64 flex items-center justify-center">
+                            <!-- Phone Illustration -->
+                            <div
+                                class="absolute w-48 h-80 bg-gradient-to-br from-indigo-100 to-blue-100 rounded-3xl p-2 shadow-xl border border-white/50 transform rotate-6">
+                                <div class="w-full h-full bg-white rounded-2xl p-4">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                                        <div class="text-xs font-medium text-gray-500">LoanApp</div>
+                                        <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                    </div>
+
+                                    <div class="bg-indigo-50 rounded-lg p-3 mb-3">
+                                        <div class="h-2 bg-indigo-200 rounded-full mb-2"></div>
+                                        <div class="h-2 bg-indigo-200 rounded-full w-3/4"></div>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <div class="h-2 bg-gray-200 rounded-full"></div>
+                                        <div class="h-2 bg-gray-200 rounded-full w-5/6"></div>
+                                        <div class="h-2 bg-gray-200 rounded-full w-4/6"></div>
+                                    </div>
+
+                                    <div class="absolute bottom-4 left-0 right-0 px-4">
+                                        <div class="h-10 bg-indigo-600 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Floating Elements -->
+                            <div
+                                class="absolute -top-6 -right-6 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-white shadow-lg transform rotate-12">
+                                <i class="fas fa-star"></i>
+                            </div>
+
+                            <div
+                                class="absolute -bottom-4 -left-6 w-10 h-10 bg-green-400 rounded-full flex items-center justify-center text-white shadow-lg transform -rotate-12">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 text-center">
+                            <div class="inline-flex items-center space-x-2 px-4 py-2 bg-indigo-50 rounded-full">
+                                <div class="w-2 h-2 bg-indigo-600 rounded-full animate-pulse"></div>
+                                <span class="text-sm font-medium text-indigo-700">Secure & Encrypted</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Registration Form -->
+            <div class="md:w-1/2">
+                <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden glow">
+                    <div class="p-8">
+                        <div class="text-center mb-8">
+                            <a href="index.html" class="inline-block">
+                                <span class="text-3xl font-bold gradient-text">LoanApp</span>
+                            </a>
+                            <h1 class="mt-4 text-2xl font-bold text-gray-900">Create Your Account</h1>
+                            <p class="text-gray-600">Join thousands of satisfied customers</p>
+                        </div>
+
+                        <form id="register-form" class="space-y-6">
+                            <!-- Name -->
+                            <div class="form-group">
+                                <label for="name" class="form-label">Full Name</label>
+                                <div class="input-group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-indigo-400"></i>
+                                    </div>
+                                    <input type="text" id="name" name="name" class="form-control pl-10"
+                                        placeholder="Enter Your Name" required>
+                                    <span class="input-highlight"></span>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Number -->
+                            <div class="form-group">
+                                <label for="mobile" class="form-label">Mobile Number</label>
+                                <div class="input-group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-mobile-alt text-indigo-400"></i>
+                                    </div>
+                                    <input type="tel" id="mobile" name="mobile" class="form-control pl-10"
+                                        placeholder="+91 98765 43210" required>
+                                    <span class="input-highlight"></span>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address</label>
+                                <div class="input-group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-indigo-400"></i>
+                                    </div>
+                                    <input type="email" id="email" name="email" class="form-control pl-10"
+                                        placeholder="you@gmail.com" required>
+                                    <span class="input-highlight"></span>
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-indigo-400"></i>
+                                    </div>
+                                    <input type="password" id="password" name="password"
+                                        class="form-control pl-10 pr-10" placeholder="••••••••" required>
+                                    <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                        onclick="togglePasswordVisibility('password')">
+                                        <i class="far fa-eye text-gray-400 hover:text-indigo-600"
+                                            id="password-icon"></i>
+                                    </button>
+                                    <span class="input-highlight"></span>
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="form-group">
+                                <label for="confirm-password" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-indigo-400"></i>
+                                    </div>
+                                    <input type="password" id="confirm-password" name="confirmPassword"
+                                        class="form-control pl-10 pr-10" placeholder="••••••••" required>
+                                    <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                        onclick="togglePasswordVisibility('confirm-password')">
+                                        <i class="far fa-eye text-gray-400 hover:text-indigo-600"
+                                            id="confirm-password-icon"></i>
+                                    </button>
+                                    <span class="input-highlight"></span>
+                                </div>
+                            </div>
+
+                            <!-- Terms & Conditions -->
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input id="terms" name="terms" type="checkbox"
+                                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                        required>
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label for="terms" class="font-medium text-gray-700">I agree to the <a href="#"
+                                            class="text-indigo-600 hover:text-indigo-500">Terms of Service</a> and <a
+                                            href="#" class="text-indigo-600 hover:text-indigo-500">Privacy
+                                            Policy</a></label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit"
+                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 btn-hover">
+                                Create Account
+                            </button>
+                        </form>
+
+                        <!-- Login Link -->
+                        <div class="mt-6 text-center">
+                            <p class="text-sm text-gray-600">
+                                Already have an account?
+                                <a href="login.html" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                    Sign in
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back to home -->
+                <div class="mt-6 text-center">
+                    <a href="index.html"
+                        class="text-gray-600 hover:text-indigo-600 transition flex items-center justify-center">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+    <script>
+        // Initialize Three.js for 3D background
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+
+            // Scene setup
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({
+                alpha: true,
+                antialias: true
+            });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Add floating shapes
+            const geometry = new THREE.IcosahedronGeometry(1, 0);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x4f46e5,
+                shininess: 50,
+                transparent: true,
+                opacity: 0.6,
+                wireframe: false
+            });
+
+            const shapes = [];
+            const shapeCount = 8;
+
+            for (let i = 0; i < shapeCount; i++) {
+                const shape = new THREE.Mesh(geometry, material.clone());
+
+                // Random position
+                shape.position.x = (Math.random() - 0.5) * 20;
+                shape.position.y = (Math.random() - 0.5) * 10;
+                shape.position.z = (Math.random() - 0.5) * 10;
+
+                // Random size
+                const size = Math.random() * 0.5 + 0.5;
+                shape.scale.set(size, size, size);
+
+                // Random rotation speed
+                shape.rotationSpeed = {
+                    x: Math.random() * 0.01 - 0.005,
+                    y: Math.random() * 0.01 - 0.005
+                };
+
+                // Random movement
+                shape.movement = {
+                    x: (Math.random() - 0.5) * 0.002,
+                    y: (Math.random() - 0.5) * 0.002
+                };
+
+                shapes.push(shape);
+                scene.add(shape);
+            }
+
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+
+            // Camera position
+            camera.position.z = 5;
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // Animate shapes
+                shapes.forEach(shape => {
+                    shape.rotation.x += shape.rotationSpeed.x;
+                    shape.rotation.y += shape.rotationSpeed.y;
+
+                    // Floating movement
+                    shape.position.x += shape.movement.x;
+                    shape.position.y += shape.movement.y;
+
+                    // Bounce off edges
+                    if (Math.abs(shape.position.x) > 10) shape.movement.x *= -1;
+                    if (Math.abs(shape.position.y) > 5) shape.movement.y *= -1;
+                });
+
+                renderer.render(scene, camera);
+            }
+
+            // Handle window resize
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            window.addEventListener('resize', onWindowResize);
+
+            // Start animation
+            animate();
+        }
+
+
+        // =============== TOGGLE PASSWORD VISIBILITY ===============
+        function togglePasswordVisibility(id) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById(id + "-icon");
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+
+        // =============== REGISTER FORM SUBMIT HANDLER ===============
+        document.getElementById("register-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            // =============== COLLECT FORM DATA ===============
+            const name = document.getElementById("name").value.trim();
+            const mobile = document.getElementById("mobile").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const confirmPassword = document.getElementById("confirm-password").value.trim();
+
+            // =============== VALIDATIONS ===============
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            if (!/^\d{10}$/.test(mobile)) {
+                alert("Enter a valid 10-digit mobile number!");
+                return;
+            }
+
+            // =============== SEND REQUEST TO BACKEND ===============
+            try {
+                const response = await fetch("http://localhost:5000/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, mobile, email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert(data.msg || "Registration failed");
+                    return;
+                }
+
+                // =============== STORE MOBILE FOR OTP ===============
+                localStorage.setItem("pendingMobile", mobile);
+
+                // =============== REDIRECT TO OTP PAGE ===============
+                window.location.href = "verify-otp.html";
+
+            } catch (error) {
+                console.error(error);
+                alert("Something went wrong. Try again later.");
+            }
+        });
+
+    </script>
+</body>
+
+</html>

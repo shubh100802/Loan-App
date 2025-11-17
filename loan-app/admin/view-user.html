@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View User - Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+</head>
+
+<body class="bg-gray-100 p-6">
+
+    <div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">User Details</h2>
+
+        <div id="userDetails" class="space-y-4">
+            Loading user details...
+        </div>
+
+        <a href="users.html" class="mt-6 inline-block bg-indigo-600 text-white px-4 py-2 rounded">
+            Back to Users
+        </a>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("id");
+
+        const token = localStorage.getItem("adminToken");
+        if (!token) {
+            alert("Login first");
+            window.location.href = "admin-login.html";
+        }
+
+        if (!userId) {
+            document.getElementById("userDetails").innerHTML = "Invalid user ID.";
+        }
+
+
+        async function loadUser() {
+            try {
+                const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    document.getElementById("userDetails").innerHTML = "User not found.";
+                    return;
+                }
+
+                const u = data.user;
+
+                document.getElementById("userDetails").innerHTML = `
+                    <p><strong>Name:</strong> ${u.name}</p>
+                    <p><strong>Email:</strong> ${u.email}</p>
+                    <p><strong>Mobile:</strong> ${u.mobile}</p>
+                    <p><strong>Verified:</strong> ${u.isVerified ? "Yes" : "No"}</p>
+                    <p><strong>DOB:</strong> ${u.dob || "-"}</p>
+                    <p><strong>Address:</strong> ${u.address || "-"}</p>
+                    <p><strong>Employment Status:</strong> ${u.employmentStatus || "-"}</p>
+                    <p><strong>Company:</strong> ${u.company || "-"}</p>
+                    <p><strong>Job Title:</strong> ${u.jobTitle || "-"}</p>
+                    <hr>
+
+                    <h3 class="text-xl font-semibold mt-4">Documents</h3>
+                    <ul class="ml-4 list-disc">
+                       ${u.documents && u.documents.length > 0
+                        ? u.documents.map(doc => {
+
+                            // CASE 1: doc = { name: "Aadhar", file: "abc.pdf" }
+                            if (typeof doc === "object") {
+                                return `
+                <li>
+                    <a href="http://localhost:5000/uploads/documents/${doc.file}" target="_blank">
+                        ${doc.name}
+                    </a>
+                </li>
+            `;
+                            }
+
+                            // CASE 2: doc = "abc.pdf"
+                            return `
+            <li>
+                <a href="http://localhost:5000/uploads/documents/${doc}" target="_blank">
+                    ${doc}
+                </a>
+            </li>
+        `;
+                        }).join('')
+                        : "No documents uploaded"}
+
+                    </ul>
+                `;
+            } catch (err) {
+                console.error(err);
+                document.getElementById("userDetails").innerHTML = "Error loading details.";
+            }
+        }
+
+        loadUser();
+    </script>
+
+</body>
+
+</html>

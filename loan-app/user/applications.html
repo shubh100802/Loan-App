@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - LoanApp</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .application-card {
+            transition: all 0.3s ease;
+        }
+
+        .application-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .status-pending {
+            background-color: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-approved {
+            background-color: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-rejected {
+            background-color: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .status-inreview {
+            background-color: #DBEAFE;
+            color: #1E40AF;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="flex flex-col h-screen md:flex-row">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
+                <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
+                    <span class="text-white text-xl font-bold">LoanApp</span>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="dashboard.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            My Applications
+                        </a>
+                        <a href="profile.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            Profile
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-indigo-500">
+                    <div class="flex items-center">
+                        <img class="user-avatar w-10 h-10 rounded-full">
+                        <div class="ml-3">
+                            <p class="user-name text-sm font-medium text-white"></p>
+                            <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+        <!-- Mobile Sidebar -->
+        <div id="mobile-sidebar"
+            class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
+            <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
+                <span class="text-white text-xl font-bold">LoanApp</span>
+                <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col h-full px-4 py-4 overflow-y-auto">
+                <nav class="flex-1 space-y-2">
+                    <a href="dashboard.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-home mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="applications.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                        <i class="fas fa-file-invoice-dollar mr-3"></i>
+                        My Applications
+                    </a>
+                    <a href="profile.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-user-circle mr-3"></i>
+                        Profile
+                    </a>
+                </nav>
+                <div class="p-4 mt-auto border-t border-indigo-500">
+                    <div class="flex items-center">
+                        <img class="user-avatar w-10 h-10 rounded-full">
+                        <div class="ml-3">
+                            <p class="user-name text-sm font-medium text-white"></p>
+                            <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button"
+                            class="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
+                            aria-label="Open menu">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="ml-4 text-xl font-semibold text-gray-900">My Applications</h1>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button onclick="logout()"
+                            class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-sm text-gray-700 focus:outline-none">
+                                <span class="user-name hidden md:inline-block mr-2"></span>
+                                <img class="user-avatar w-8 h-8 rounded-full">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Application Stats -->
+                    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                                        <i class="fas fa-file-invoice text-white text-xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Total Applications
+                                            </dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900" id="stat-total">0
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                                        <i class="fas fa-check-circle text-white text-xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Approved</dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900" id="stat-approved">0
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                                        <i class="fas fa-clock text-white text-xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">In Review</dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900" id="stat-review">0
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white overflow-hidden shadow rounded-lg">
+                            <div class="px-4 py-5 sm:p-6">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+                                        <i class="fas fa-times-circle text-white text-xl"></i>
+                                    </div>
+                                    <div class="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt class="text-sm font-medium text-gray-500 truncate">Rejected</dt>
+                                            <dd class="flex items-baseline">
+                                                <div class="text-2xl font-semibold text-gray-900" id="stat-rejected">0
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Applications List -->
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-lg leading-6 font-medium text-gray-900">Loan Applications</h3>
+                                    <p class="mt-1 max-w-2xl text-sm text-gray-500">Your recent loan applications and
+                                        their status</p>
+                                </div>
+                                <a href="application.html?new=true"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <i class="fas fa-plus mr-2"></i> New Application
+                                </a>
+                            </div>
+                        </div>
+                        <div class="bg-white shadow overflow-hidden sm:rounded-b-lg">
+                            <ul id="applications-list" class="divide-y divide-gray-200"></ul>
+
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-4 z-50">
+        <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="applications.html" class="flex flex-col items-center text-indigo-600">
+            <i class="fas fa-file-invoice-dollar text-xl"></i>
+            <span class="text-xs mt-1">Applications</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span class="text-xs mt-1">Profile</span>
+        </a>
+    </div>
+
+    <script>
+
+        async function loadUser() {
+            try {
+                const token = localStorage.getItem("userToken");
+                if (!token) {
+                    window.location.href = "../login.html";
+                    return;
+                }
+
+                const res = await fetch("http://localhost:5000/api/user/profile", {
+                    method: "GET",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alert("Session expired. Login again.");
+                    logout();
+                    return;
+                }
+
+                const user = data.user;
+
+                // ================== UPDATE NAME ==================
+                document.querySelectorAll(".user-name").forEach(el => {
+                    el.textContent = user.name || "User";
+                });
+
+                // ================== GENERATE INITIALS ==================
+                const parts = (user.name || "U").trim().split(" ");
+                let initials = parts.length === 1
+                    ? parts[0][0].toUpperCase()
+                    : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+
+                // ================== UPDATE PROFILE PIC ==================
+                document.querySelectorAll(".user-avatar").forEach(img => {
+                    if (user.profilePic) {
+                        img.src = `http://localhost:5000/uploads/${user.profilePic}`;
+                    } else {
+                        img.src = `https://ui-avatars.com/api/?name=${initials}&background=7c3aed&color=fff&bold=true`;
+                    }
+                });
+
+            } catch (err) {
+                console.log("User load error:", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadUser);
+
+
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileSidebar = document.getElementById('mobile-sidebar');
+        const mobileSidebarOverlay = document.getElementById('mobile-sidebar-overlay');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        function toggleMobileMenu() {
+            mobileSidebar.classList.toggle('-translate-x-full');
+            mobileSidebarOverlay.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', toggleMobileMenu);
+        }
+
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', toggleMobileMenu);
+        }
+
+        // Close menu when clicking on overlay
+        if (mobileSidebarOverlay) {
+            mobileSidebarOverlay.addEventListener('click', toggleMobileMenu);
+        }
+
+        // Close menu when clicking on a link in mobile menu
+        document.querySelectorAll('#mobile-sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) { // Only for mobile
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+        // Close menu with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && !mobileSidebar.classList.contains('-translate-x-full')) {
+                toggleMobileMenu();
+            }
+        });
+
+        // Logout function
+        function logout(event) {
+            if (event) event.preventDefault();
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userAvatar");
+            window.location.href = "../login.html";
+        }
+
+    </script>
+
+
+    <script>
+        const API_BASE = "http://localhost:5000";
+
+        // ------------------------------
+        // Load Applications Dynamically
+        // ------------------------------
+        async function loadApplications() {
+            const token = localStorage.getItem("userToken");
+            const list = document.getElementById("applications-list");
+            
+            if (!token) {
+                window.location.href = "../login.html";
+                return;
+            }
+
+            try {
+                // Show loading state
+                list.innerHTML = '<div class="p-8 text-center text-gray-500">Loading applications...</div>';
+                
+                console.log('Fetching applications from:', `${API_BASE}/api/applications`);
+                const res = await fetch(`${API_BASE}/api/applications`, {
+                    method: "GET",
+                    headers: { 
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                console.log('Response status:', res.status);
+                
+                // Try to parse response as JSON
+                let data;
+                try {
+                    data = await res.json();
+                    console.log('API Response:', data);
+                } catch (jsonError) {
+                    console.error('Failed to parse JSON response:', jsonError);
+                    throw new Error('Invalid JSON response from server');
+                }
+
+                if (!res.ok) {
+                    throw new Error(data.message || `HTTP error! status: ${res.status}`);
+                }
+
+                // Check if data is an array or if it's wrapped in a success/error object
+                let apps = [];
+                if (Array.isArray(data)) {
+                    apps = data;
+                } else if (data && data.success && Array.isArray(data.applications)) {
+                    // Handle case where data is wrapped in {success: true, applications: [...]}
+                    apps = data.applications;
+                } else if (data && data.data && Array.isArray(data.data)) {
+                    // Handle case where data is wrapped in {data: [...]}
+                    apps = data.data;
+                } else {
+                    console.error('Unexpected response format:', data);
+                    throw new Error('Unexpected response format from server');
+                }
+
+                if (apps.length === 0) {
+                    list.innerHTML = `
+                        <div class="p-8 text-center text-gray-500">
+                            <i class="fas fa-inbox text-4xl text-gray-300 mb-2"></i>
+                            <p class="text-lg font-medium text-gray-500">No applications found</p>
+                            <p class="text-sm text-gray-400 mt-1">You haven't applied for any loans yet.</p>
+                            <a href="application.html?new=true" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                                <i class="fas fa-plus mr-2"></i> Apply for a Loan
+                            </a>
+                        </div>`;
+                    return;
+                }
+
+                // ----- Update Stats -----
+                qs("#stat-total").textContent = apps.length;
+                qs("#stat-approved").textContent = apps.filter(a => a.status === "approved").length;
+                qs("#stat-review").textContent = apps.filter(a => a.status === "in review").length;
+                qs("#stat-rejected").textContent = apps.filter(a => a.status === "rejected").length;
+
+                // ----- Update List -----
+                list.innerHTML = ""; // Clear old entries
+
+                apps.forEach(app => {
+                    const li = document.createElement("li");
+                    li.className = "application-card";
+
+                    // Format status for display (capitalize first letter)
+                    const status = app.status ? 
+                        app.status.charAt(0).toUpperCase() + app.status.slice(1).toLowerCase() : 
+                        'Pending';
+                    
+                    // Format date
+                    const appDate = app.createdAt ? 
+                        new Date(app.createdAt).toLocaleDateString('en-IN', { 
+                            year: 'numeric', 
+                            month: 'short', 
+                            day: 'numeric' 
+                        }) : 'N/A';
+                    
+                    // Format loan amount if available
+                    const amount = app.loanAmount ? 
+                        `₹${parseInt(app.loanAmount).toLocaleString('en-IN')}` : 'N/A';
+
+                    li.className = 'bg-white overflow-hidden shadow rounded-lg mb-4';
+                    li.innerHTML = `
+                    <div class="px-4 py-4 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm font-medium text-indigo-600 truncate">
+                                ${app.loanName || 'Loan'} - ${app.bankName || 'Bank'}
+                            </p>
+                            <div class="ml-2 flex-shrink-0 flex">
+                                <p class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full status-${app.status ? app.status.toLowerCase().replace(" ", "") : 'pending'}">
+                                    ${status}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-2 sm:flex sm:justify-between">
+                            <div class="sm:flex">
+                                <p class="flex items-center text-sm text-gray-500">
+                                    <i class="fas fa-indian-rupee-sign mr-1.5 h-4 w-4 text-gray-400"></i>
+                                    ${amount}
+                                </p>
+                                <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                                    <i class="far fa-calendar-alt mr-1.5 h-4 w-4 text-gray-400"></i>
+                                    ${appDate}
+                                </p>
+                            </div>
+                            <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                                <i class="fas fa-percentage mr-1.5 h-4 w-4 text-gray-400"></i>
+                                <p>
+                                    ${app.interestRate ? `Interest: <span class="font-medium">${app.interestRate}%</span>` : ''}
+                                </p>
+                            </div>
+                        </div>
+                    </div>`;
+                    list.appendChild(li);
+                });
+
+            } catch (err) {
+                console.error("Error loading applications:", err);
+            }
+        }
+
+        // Helper shortcut
+        function qs(id) { return document.querySelector(id); }
+
+        // Load on page load
+        document.addEventListener("DOMContentLoaded", loadApplications);
+    </script>
+
+
+</body>
+
+</html>

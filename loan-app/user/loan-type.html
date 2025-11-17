@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Loan Type - LoanApp</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .loan-card {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .loan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: #4f46e5;
+        }
+
+        .loan-card.selected {
+            border-color: #4f46e5;
+            background-color: #f5f3ff;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- Sidebar -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
+                <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
+                    <span class="text-white text-xl font-bold">LoanApp</span>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="dashboard.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            My Applications
+                        </a>
+                        <a href="profile.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            Profile
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-indigo-500">
+                    <div class="flex items-center">
+                        <img class="user-avatar w-10 h-10 rounded-full">
+                        <div class="ml-3">
+                            <p class="user-name text-sm font-medium text-white"></p>
+                            <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Mobile Sidebar Overlay -->
+            <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+            <!-- Mobile Sidebar -->
+            <div id="mobile-sidebar"
+                class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
+                <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
+                    <span class="text-white text-xl font-bold">LoanApp</span>
+                    <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col h-full px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="dashboard.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            My Applications
+                        </a>
+                        <a href="profile.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            Profile
+                        </a>
+                    </nav>
+                    <div class="p-4 mt-auto border-t border-indigo-500">
+                        <div class="flex items-center">
+                            <img class="user-avatar w-10 h-10 rounded-full">
+                            <div class="ml-3">
+                                <p class="user-name text-sm font-medium text-white"></p>
+                                <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button"
+                            class="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none mr-2"
+                            aria-label="Open menu">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="text-xl font-semibold text-gray-900">Select Loan Type</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-sm text-gray-700 focus:outline-none">
+                                <span class="user-name hidden md:inline-block mr-2"></span>
+                                <img class="user-avatar w-8 h-8 rounded-full">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 pb-20 md:pb-6">
+                <!-- Progress Steps -->
+                <div class="max-w-3xl mx-auto mb-8">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white">
+                                1
+                            </div>
+                            <div class="ml-2 text-sm font-medium text-indigo-600">Select Bank</div>
+                        </div>
+                        <div class="flex-1 h-1 mx-2 bg-indigo-600"></div>
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white">
+                                2
+                            </div>
+                            <div class="ml-2 text-sm font-medium text-indigo-600">Loan Type</div>
+                        </div>
+                        <div class="flex-1 h-1 mx-2 bg-gray-200"></div>
+                        <div class="flex items-center">
+                            <div
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-gray-500">
+                                3
+                            </div>
+                            <div class="ml-2 text-sm font-medium text-gray-500">Application</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Bank -->
+                <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-4 mb-8 flex items-center">
+                    <div class="flex-shrink-0 bg-indigo-50 p-3 rounded-lg">
+                        <i class="fas fa-university text-indigo-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-900" id="selected-bank">HDFC Bank</h3>
+                        <p class="text-sm text-gray-500">Select your loan type to proceed</p>
+                    </div>
+                    <button onclick="window.history.back()"
+                        class="ml-auto px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
+                        Change Bank
+                    </button>
+                </div>
+
+                <!-- Loan Types -->
+                <div class="max-w-3xl mx-auto">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Available Loan Types</h2>
+
+                    <div id="loanList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+
+                    <!-- Next Button -->
+                    <div class="mt-8 mb-6 md:mb-0 text-center">
+                        <button id="nextButton" onclick="proceedToApplication()"
+                            class="px-8 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 opacity-50 cursor-not-allowed"
+                            disabled>
+                            Continue to Application
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-4 z-40">
+        <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="applications.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="far fa-file-alt text-lg"></i>
+            <span class="text-xs mt-1">Applications</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="far fa-user text-lg"></i>
+            <span class="text-xs mt-1">Profile</span>
+        </a>
+
+    </div>
+
+    <!-- JavaScript -->
+
+    <script>
+        const token = localStorage.getItem("userToken");
+        if (!token) {
+            window.location.href = "../login.html";
+        }
+
+        async function loadUser() {
+            try {
+                const res = await fetch("http://localhost:5000/api/user/profile", {
+                    method: "GET",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    alert("Session expired. Login again.");
+                    localStorage.clear();
+                    window.location.href = "../login.html";
+                    return;
+                }
+
+                const user = data.user;
+
+                // ================== UPDATE NAME ==================
+                document.querySelectorAll(".user-name").forEach(el => {
+                    el.textContent = user.name;
+                });
+
+                // ================== INITIALS GENERATION ==================
+                const nameParts = user.name.trim().split(" ");
+                let initials = "";
+                if (nameParts.length === 1) {
+                    initials = nameParts[0][0].toUpperCase();
+                } else {
+                    initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+                }
+
+                // ================== AVATAR OR FALLBACK ==================
+                document.querySelectorAll(".user-avatar").forEach(img => {
+                    if (user.profilePic) {
+                        img.src = `http://localhost:5000/uploads/${user.profilePic}`;
+                    } else {
+                        img.src = `https://ui-avatars.com/api/?name=${initials}&background=7c3aed&color=fff&bold=true`;
+                    }
+                });
+
+            } catch (err) {
+                console.log(err);
+                alert("Unable to load user.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadUser);
+    </script>
+
+    <script>
+        // Get selected bank from session storage
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectedBankName = sessionStorage.getItem('selectedBankName');
+            const selectedBankLogo = sessionStorage.getItem('selectedBankLogo');
+
+            document.getElementById('selected-bank').innerHTML = `
+    <img src="${selectedBankLogo}" class="h-8 w-8 rounded inline-block mr-2">
+    ${selectedBankName}
+`;
+
+        });
+
+        // Track selected loan type
+        let selectedLoanType = null;
+
+        // Add padding to the bottom of the page on mobile to account for fixed bottom navigation
+        function adjustMainPadding() {
+            const main = document.querySelector('main');
+            if (window.innerWidth < 768) { // Mobile view
+                const buttonHeight = document.querySelector('#nextButton').offsetHeight;
+                const bottomNavHeight = document.querySelector('.md\\:hidden.fixed').offsetHeight;
+                main.style.paddingBottom = (buttonHeight + bottomNavHeight + 20) + 'px';
+            } else {
+                main.style.paddingBottom = '';
+            }
+        }
+
+        // Initial adjustment and on resize
+        window.addEventListener('resize', adjustMainPadding);
+        document.addEventListener('DOMContentLoaded', function () {
+            adjustMainPadding();
+            // Scroll to top when page loads on mobile
+            if (window.innerWidth < 768) {
+                window.scrollTo(0, 0);
+            }
+        });
+
+
+
+        // Function to proceed to application
+        function proceedToApplication() {
+            try {
+                const stored = sessionStorage.getItem('selectedLoan');
+                if (stored) {
+                    // We have a selected loan saved by the card click handler
+                    // Don't overwrite; keep the stored loan object
+                    // Redirect to application page (after verifying page exists)
+                    fetch('application.html')
+                        .then(response => {
+                            if (response.ok) {
+                                window.location.href = 'application.html';
+                            } else {
+                                // fallback
+                                window.location.href = 'applications.html';
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error fetching application.html:', err);
+                            window.location.href = 'applications.html';
+                        });
+                } else {
+                    const alertMessage = 'Please select a loan type before proceeding';
+                    if (window.innerWidth < 768) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                        alertDiv.textContent = alertMessage;
+                        document.body.appendChild(alertDiv);
+                        document.querySelector('.grid.grid-cols-1').scrollIntoView({ behavior: 'smooth' });
+                        setTimeout(() => alertDiv.remove(), 3000);
+                    } else {
+                        alert(alertMessage);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in proceedToApplication:', error);
+                window.location.href = 'applications.html';
+            }
+        }
+
+
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMenuButton = document.getElementById('close-mobile-menu');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            const mobileOverlay = document.getElementById('mobile-sidebar-overlay');
+
+            // Toggle mobile menu
+            function toggleMobileMenu() {
+                if (mobileSidebar && mobileOverlay) {
+                    mobileSidebar.classList.toggle('-translate-x-full');
+                    mobileOverlay.classList.toggle('hidden');
+                    document.body.classList.toggle('overflow-hidden');
+                }
+            }
+
+            // Open mobile menu
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close mobile menu
+            if (closeMenuButton) {
+                closeMenuButton.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close menu when clicking on overlay
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close menu when clicking on menu links
+            document.querySelectorAll('#mobile-sidebar a').forEach(link => {
+                link.addEventListener('click', toggleMobileMenu);
+            });
+
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !mobileSidebar.classList.contains('-translate-x-full')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+    </script>
+
+    <script>
+
+        //  ========== Select Loan Type ==========
+
+        const API_BASE = "http://localhost:5000/api/loans";
+
+        // Selected bank
+        const bankId = sessionStorage.getItem("selectedBankId");
+        const bankName = sessionStorage.getItem("selectedBankName");
+        const bankLogo = sessionStorage.getItem("selectedBankLogo");
+
+        // Show bank name + logo
+        document.getElementById("selected-bank").innerHTML = `
+    <img src="${bankLogo}" class="h-8 w-8 rounded inline-block mr-2">
+    ${bankName}
+`;
+
+        let selectedLoan = null;
+        let selectedCard = null;
+
+        async function loadLoans() {
+            const container = document.getElementById("loanList");
+            container.innerHTML = `<p class="text-gray-500 p-4">Loading loan types...</p>`;
+
+            try {
+                const res = await fetch(`${API_BASE}?bank=${bankId}`);
+                const json = await res.json();
+
+                if (!json.success) {
+                    container.innerHTML = `<p class="text-red-500">Unable to load loan types.</p>`;
+                    return;
+                }
+
+                const loans = json.data;
+                container.innerHTML = "";
+
+                loans.forEach(loan => {
+                    const card = document.createElement("div");
+                    card.className =
+                        "p-6 bg-white shadow-md rounded-lg cursor-pointer loan-card hover:shadow-xl transition";
+
+                    let interest = `${loan.minInterestRate}% - ${loan.maxInterestRate}% p.a.`;
+                    let tenure = `${loan.minTenure} - ${loan.maxTenure} years`;
+                    let amount = `₹${loan.minLoanAmount} - ₹${loan.maxLoanAmount}`;
+                    let processing = `${loan.minProcessingFee}% - ${loan.maxProcessingFee}%`;
+
+                    card.innerHTML = `
+                <h3 class="text-xl font-bold">${loan.loanName}</h3>
+                <p class="text-gray-600 mt-1">${loan.description || ""}</p>
+
+                <div class="mt-3 text-sm">
+                    <p><strong>Interest:</strong> ${interest}</p>
+                    <p><strong>Tenure:</strong> ${tenure}</p>
+                    <p><strong>Loan Amount:</strong> ${amount}</p>
+                    <p><strong>Processing Fee:</strong> ${processing}</p>
+                </div>
+            `;
+
+                    // Card Select Handler
+                    card.onclick = () => {
+                        selectedLoan = loan;
+
+                        // Remove previous highlight
+                        if (selectedCard) {
+                            selectedCard.classList.remove("ring-2", "ring-indigo-500");
+                        }
+
+                        // Highlight selected card
+                        card.classList.add("ring-2", "ring-indigo-500");
+                        selectedCard = card;
+
+                        // Store full selected loan
+                        sessionStorage.setItem("selectedLoan", JSON.stringify(loan));
+
+                        // enable the Next/Continue button
+                        const nextBtn = document.getElementById('nextButton');
+                        if (nextBtn) {
+                            nextBtn.disabled = false;
+                            nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
+                    };
+
+
+                    container.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<p class="text-red-500">Error loading loan types.</p>`;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadLoans);
+
+        // Continue button
+        document.getElementById("nextButton").onclick = () => {
+            if (!selectedLoan) {
+                alert("Please select a loan type before proceeding.");
+                return;
+            }
+
+            // Redirect to application page
+            window.location.href = "application.html";
+        };
+
+    </script>
+
+</body>
+
+</html>

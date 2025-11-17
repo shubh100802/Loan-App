@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Application - LoanApp</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --bg-gray: #f9fafb;
+        }
+
+        /* Form steps */
+        /* .form-step {
+            display: none;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-step.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+            animation: fadeIn 0.3s ease-in-out;
+        } */
+
+        .form-step.exiting {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transform: translateX(-20px);
+            pointer-events: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Progress steps */
+        .progress-steps {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            counter-reset: step;
+        }
+
+        .progress-step {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            z-index: 1;
+        }
+
+        .progress-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background-color: var(--border-color);
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.completed:not(:last-child)::after,
+        .progress-step.active:not(:last-child)::after {
+            background-color: var(--primary-color);
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.completed .step-number {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+
+        .progress-step.active .step-number {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+
+        .progress-step.active .step-label,
+        .progress-step.completed .step-label {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Form controls */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: white;
+            background-clip: padding-box;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+        }
+
+        .form-control.is-invalid {
+            border-color: var(--error-color);
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23ef4444' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--error-color);
+        }
+
+        .is-invalid~.invalid-feedback {
+            display: block;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            line-height: 1.5;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: white;
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover:not(:disabled) {
+            background-color: var(--bg-gray);
+        }
+
+        /* Animation classes */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.3s ease-in-out forwards;
+        }
+
+        .slide-out-left {
+            animation: slideOutLeft 0.3s ease-in-out forwards;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <div class="flex flex-col h-screen md:flex-row">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+        <!-- Mobile Sidebar -->
+        <div id="mobile-sidebar"
+            class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
+            <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
+                <span class="text-white text-xl font-bold">LoanApp</span>
+                <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col h-full px-4 py-4 overflow-y-auto">
+                <nav class="flex-1 space-y-2">
+                    <a href="dashboard.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-home mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="applications.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-file-invoice-dollar mr-3"></i>
+                        My Applications
+                    </a>
+                    <a href="profile.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                        <i class="fas fa-user-circle mr-3"></i>
+                        Profile
+                    </a>
+                </nav>
+                <div class="p-4 mt-auto border-t border-indigo-500">
+                    <div class="flex items-center">
+                        <img class="sidebar-user-avatar w-10 h-10 rounded-full object-cover"
+                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"
+                            alt="User avatar">
+                        <div class="ml-3">
+                            <p class="sidebar-user-name text-sm font-medium text-white">Loading...</p>
+                            <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
+                <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
+                    <span class="text-white text-xl font-bold">LoanApp</span>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="dashboard.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            My Applications
+                        </a>
+                        <a href="profile.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            Profile
+                        </a>
+                    </nav>
+                </div>
+                <div class="p-4 border-t border-indigo-500">
+                    <div class="flex items-center">
+                        <img class="sidebar-user-avatar w-10 h-10 rounded-full object-cover"
+                            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"
+                            alt="User avatar">
+                        <div class="ml-3">
+                            <p class="sidebar-user-name text-sm font-medium text-white">Loading...</p>
+                            <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button"
+                            class="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
+                            aria-label="Open menu">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="ml-4 text-xl font-semibold text-gray-900">Loan Application</h1>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button onclick="logout()"
+                            class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-sm text-gray-700 focus:outline-none">
+                                <span class="user-name hidden md:inline-block mr-2">Loading...</span>
+                                <img class="user-avatar w-8 h-8 rounded-full"
+                                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"
+                                    alt="User avatar">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50 pb-24 md:pb-6">
+                <div class="max-w-4xl mx-auto">
+
+
+                    <!-- Application Form -->
+                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                            <div class="mb-4 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                                <p class="text-sm text-indigo-800">
+                                    <span class="font-semibold">Bank:</span> <span id="selectedBankName">-</span>
+                                </p>
+                                <p class="text-sm text-indigo-800 mt-1">
+                                    <span class="font-semibold">Loan Type:</span> <span id="selectedLoanName">-</span>
+                                </p>
+                                <p class="text-sm text-indigo-800 mt-1">
+                                    <span class="font-semibold">Interest Rate:</span> <span
+                                        id="selectedLoanInterest">-</span>
+                                </p>
+                                <p class="text-sm text-indigo-800 mt-1">
+                                    <span class="font-semibold">Processing Fee:</span> <span
+                                        id="selectedLoanProcessing">-</span>
+                                </p>
+                                <p class="text-sm text-indigo-800 mt-1">
+                                    <span class="font-semibold">Tenure:</span> <span id="selectedLoanTenure">-</span>
+                                </p>
+                            </div>
+
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Personal Information</h3>
+                            <p class="mt-1 max-w-2xl text-sm text-gray-500">Please fill in your personal details.</p>
+                        </div>
+                        <form id="loanApplicationForm" class="p-6">
+                            <!-- ONE-PAGE APPLICATION FORM -->
+                            <div class="space-y-8">
+
+                                <!-- Personal Information -->
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-4">Personal Information</h3>
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">First Name</label>
+                                            <input id="first-name" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Last Name</label>
+                                            <input id="last-name" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-4">
+                                            <label class="form-label">Email Address</label>
+                                            <input id="email" type="email" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-4">
+                                            <label class="form-label">Phone Number</label>
+                                            <input id="phone" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Date of Birth</label>
+                                            <input id="date-of-birth" type="date" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Gender</label>
+                                            <select id="gender" class="form-control">
+                                                <option>Select Gender</option>
+                                                <option>Male</option>
+                                                <option>Female</option>
+                                                <option>Other</option>
+                                                <option>Prefer not to say</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label class="form-label">Address</label>
+                                            <input id="address" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">City</label>
+                                            <input id="city" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">State</label>
+                                            <input id="state" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">Postal Code</label>
+                                            <input id="postal-code" type="text" class="form-control">
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- Employment -->
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-4">Employment Details</h3>
+                                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Employment Type</label>
+                                            <select id="employment-type" class="form-control">
+                                                <option>Select Employment Type</option>
+                                                <option>Salaried</option>
+                                                <option>Self-Employed</option>
+                                                <option>Business</option>
+                                                <option>Retired</option>
+                                                <option>Student</option>
+                                                <option>Unemployed</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Monthly Income</label>
+                                            <input id="monthly-income" type="number" class="form-control">
+                                        </div>
+                                        
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Loan Amount (₹)</label>
+                                            <input id="loan-amount" type="number" class="form-control" required>
+                                        </div>
+                                        
+                                        <div class="sm:col-span-6">
+                                            <label class="form-label">Purpose of Loan</label>
+                                            <select id="loan-purpose" class="form-control" required>
+                                                <option value="">Select a purpose</option>
+                                                <option value="Home Purchase">Home Purchase</option>
+                                                <option value="Home Renovation">Home Renovation</option>
+                                                <option value="Personal Use">Personal Use</option>
+                                                <option value="Education">Education</option>
+                                                <option value="Medical">Medical</option>
+                                                <option value="Business">Business</option>
+                                                <option value="Debt Consolidation">Debt Consolidation</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Documents -->
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-4">Document Uploads</h3>
+
+                                    <div class="space-y-4">
+
+                                        <!-- PAN -->
+                                        <div class="border p-4 rounded-lg">
+                                            <h5>PAN Card</h5>
+                                            <input type="file" id="pan-card" accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="pan-card-status" class="text-sm mt-1"></p>
+                                        </div>
+
+                                        <!-- Aadhaar -->
+                                        <div class="border p-4 rounded-lg">
+                                            <h5>Aadhaar Card (Front & Back)</h5>
+                                            <input type="file" id="aadhaar-front" accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="aadhaar-front-status" class="text-sm mt-1"></p>
+                                            <input type="file" id="aadhaar-back" accept=".pdf,.jpg,.jpeg,.png"
+                                                class="mt-2">
+                                            <p id="aadhaar-back-status" class="text-sm mt-1"></p>
+                                        </div>
+
+                                        <!-- Address Proof -->
+                                        <div class="border p-4 rounded-lg">
+                                            <h5>Address Proof</h5>
+                                            <input type="file" id="address-proof" accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="address-proof-status" class="text-sm mt-1"></p>
+                                        </div>
+
+                                        <!-- Income Proof -->
+                                        <div class="border p-4 rounded-lg">
+                                            <h5>Income Proof</h5>
+                                            <input type="file" id="income-proof" accept=".pdf">
+                                            <p id="income-proof-status" class="text-sm mt-1"></p>
+                                        </div>
+
+                                        <!-- Photo -->
+                                        <div class="border p-4 rounded-lg">
+                                            <h5>Passport Photo</h5>
+                                            <input type="file" id="photo" accept=".jpg,.jpeg,.png">
+                                            <p id="photo-status" class="text-sm mt-1"></p>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- SUBMIT -->
+                                <div class="pt-5">
+                                    <button type="submit"
+                                        class="w-full bg-indigo-600 text-white py-3 rounded-md text-center text-md font-medium">
+                                        Submit Application
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-4 z-40">
+        <a href="dashboard.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="fas fa-home text-xl"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="applications.html" class="flex flex-col items-center text-indigo-600">
+            <i class="fas fa-file-invoice-dollar text-xl"></i>
+            <span class="text-xs mt-1">Applications</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="fas fa-user-circle text-xl"></i>
+            <span class="text-xs mt-1">Profile</span>
+        </a>
+
+    </div>
+
+    <style>
+        /* Add smooth transitions for mobile menu */
+        #mobile-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Ensure content doesn't scroll when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+    </style>
+
+
+
+    <script>
+        /* Consolidated & fixed script
+           - Single initialization
+           - Single submit handler (no duplicates)
+           - Includes bankName + loanName in payload
+           - Safe file inputs + uploads
+           - Autosave/restore to localStorage
+        */
+
+        (() => {
+            // ---------- Config ----------
+            const API_BASE = "http://localhost:5000";
+            const uploadEndpoint = `${API_BASE}/api/upload/document`;
+            const applicationsEndpoint = `${API_BASE}/api/applications`;
+            const formId = "loanApplicationForm";
+
+            const textFields = [
+                "first-name", "last-name", "email", "phone", "date-of-birth", "gender",
+                "address", "city", "state", "postal-code", "employment-type", "monthly-income",
+                "loan-amount", "loan-purpose"
+            ];
+
+            const uploadConfigs = [
+                { id: 'pan-card', property: 'pan', status: 'pan-card-status' },
+                { id: 'aadhaar-front', property: 'aadhaarFront', status: 'aadhaar-front-status' },
+                { id: 'aadhaar-back', property: 'aadhaarBack', status: 'aadhaar-back-status' },
+                { id: 'address-proof', property: 'addressProof', status: 'address-proof-status' },
+                { id: 'income-proof', property: 'incomeProof', status: 'income-proof-status' },
+                { id: 'photo', property: 'photo', status: 'photo-status' }
+            ];
+
+            // ---------- App state ----------
+            let applicationData = { documents: { pan: null, aadhaarFront: null, aadhaarBack: null, addressProof: null, incomeProof: null, photo: null } };
+
+            // ---------- Helpers ----------
+            const qs = id => document.getElementById(id);
+            const log = (...a) => console.log("[app]", ...a);
+
+            /* ---------------------
+               UI: logout, menu, user, loan summary
+               (kept self-contained)
+               --------------------- */
+            function logout(event) {
+                if (event) event.preventDefault();
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userAvatar');
+                window.location.href = '../login.html';
+            }
+
+            function setupMobileMenu() {
+                const menuBtn = qs("mobile-menu-button");
+                const sidebar = qs("mobile-sidebar");
+                const overlay = qs("mobile-sidebar-overlay");
+                const closeBtn = qs("close-mobile-menu");
+                if (!menuBtn || !sidebar || !overlay) return;
+                menuBtn.addEventListener("click", () => {
+                    sidebar.classList.remove("-translate-x-full");
+                    overlay.classList.remove("hidden");
+                    document.body.classList.add("menu-open");
+                });
+                const closeMenu = () => {
+                    sidebar.classList.add("-translate-x-full");
+                    overlay.classList.add("hidden");
+                    document.body.classList.remove("menu-open");
+                };
+                closeBtn?.addEventListener("click", closeMenu);
+                overlay.addEventListener("click", closeMenu);
+            }
+
+            function populateSelectedLoanSummary() {
+                const bankName = sessionStorage.getItem("selectedBankName");
+                if (bankName) qs("selectedBankName").textContent = bankName;
+                const selectedLoanJson = sessionStorage.getItem("selectedLoan");
+                if (!selectedLoanJson) return;
+                try {
+                    const loan = JSON.parse(selectedLoanJson);
+                    qs("selectedLoanName").textContent = loan.loanName || loan.name || "-";
+                    const interest = loan.interestRate || ((loan.minInterestRate != null && loan.maxInterestRate != null) ? `${loan.minInterestRate}% - ${loan.maxInterestRate}% p.a.` : "-");
+                    qs("selectedLoanInterest").textContent = interest;
+                    const processing = loan.processingFee || ((loan.minProcessingFee != null && loan.maxProcessingFee != null) ? `${loan.minProcessingFee}% - ${loan.maxProcessingFee}%` : "-");
+                    qs("selectedLoanProcessing").textContent = processing;
+                    const tenure = loan.tenure || ((loan.minTenure != null && loan.maxTenure != null) ? `${loan.minTenure} - ${loan.maxTenure} years` : "-");
+                    qs("selectedLoanTenure").textContent = tenure;
+                    if (loan.loanId) sessionStorage.setItem("selectedLoanId", loan.loanId);
+                    if (loan._id) sessionStorage.setItem("selectedLoanId", loan._id);
+                } catch (e) {
+                    console.warn("Error parsing selected loan JSON:", e);
+                }
+            }
+
+            async function loadUser() {
+                try {
+                    const token = localStorage.getItem("userToken");
+                    if (!token) { window.location.href = "../login.html"; return; }
+                    const res = await fetch(`${API_BASE}/api/user/profile`, { method: "GET", headers: { "Authorization": "Bearer " + token } });
+                    const data = await res.json();
+                    if (!data?.success) { alert("Session expired. Please login again."); logout(); return; }
+                    const user = data.user;
+                    document.querySelectorAll(".user-name, .sidebar-user-name").forEach(el => el.textContent = user.name || "User");
+                    const nameParts = (user.name || "User").trim().split(" ");
+                    const initials = nameParts.length === 1 ? nameParts[0][0].toUpperCase() : (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+                    const setAvatar = imgEl => {
+                        if (user.profilePic) imgEl.src = `${API_BASE}/uploads/${user.profilePic}`;
+                        else imgEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=7c3aed&color=fff&bold=true`;
+                        imgEl.classList.add("w-8", "h-8", "rounded-full", "object-cover");
+                    };
+                    document.querySelectorAll(".user-avatar, .sidebar-user-avatar").forEach(setAvatar);
+                    localStorage.setItem("userName", user.name || "User");
+                    if (user.profilePic) localStorage.setItem("userAvatar", `${API_BASE}/uploads/${user.profilePic}`);
+                } catch (err) {
+                    console.error("Failed to load user:", err);
+                    const storedName = localStorage.getItem("userName") || "User";
+                    const storedAvatar = localStorage.getItem("userAvatar") || `https://ui-avatars.com/api/?name=U&background=7c3aed&color=fff`;
+                    document.querySelectorAll(".user-name, .sidebar-user-name").forEach(el => el.textContent = storedName);
+                    document.querySelectorAll(".user-avatar, .sidebar-user-avatar").forEach(img => { img.src = storedAvatar; img.classList.add("w-8", "h-8", "rounded-full", "object-cover"); });
+                }
+            }
+
+            // ---------- Upload helpers ----------
+            async function uploadDocument(file, statusId) {
+                const statusEl = qs(statusId);
+                if (statusEl) {
+                    statusEl.textContent = "Uploading...";
+                    statusEl.classList.remove("text-red-600", "text-green-600");
+                }
+                const fd = new FormData();
+                fd.append("file", file);
+                try {
+                    const res = await fetch(uploadEndpoint, {
+                        method: "POST",
+                        headers: { "Authorization": "Bearer " + localStorage.getItem("userToken") },
+                        body: fd
+                    });
+                    const data = await res.json().catch(() => null);
+                    if (!res.ok) {
+                        if (statusEl) { statusEl.textContent = "Failed ❌"; statusEl.classList.add("text-red-600"); }
+                        log("Upload failed", res.status, data);
+                        return null;
+                    }
+                    if (statusEl) { statusEl.textContent = "Uploaded ✓"; statusEl.classList.add("text-green-600"); }
+                    const url = data?.url || data?.fileUrl || null;
+                    log("Upload success", url);
+                    return url;
+                } catch (err) {
+                    if (statusEl) { statusEl.textContent = "Upload Error ❌"; statusEl.classList.add("text-red-600"); }
+                    console.error("Upload error", err);
+                    return null;
+                }
+            }
+
+            // ---------- Autosave ----------
+            function saveTextFieldsToStorage() {
+                try {
+                    const snap = {};
+                    textFields.forEach(id => { const el = qs(id); if (el) snap[id] = el.value; });
+                    localStorage.setItem("loanForm_snapshot", JSON.stringify(snap));
+                    localStorage.setItem("loanForm_docs", JSON.stringify(applicationData.documents));
+                } catch (e) { console.warn("save failed", e); }
+            }
+
+            function restoreTextFieldsFromStorage() {
+                try {
+                    const snap = JSON.parse(localStorage.getItem("loanForm_snapshot") || "{}");
+                    textFields.forEach(id => { const el = qs(id); if (el && snap[id] !== undefined) el.value = snap[id]; });
+                    const docs = JSON.parse(localStorage.getItem("loanForm_docs") || "{}") || {};
+                    applicationData.documents = { ...applicationData.documents, ...docs };
+                    uploadConfigs.forEach(c => {
+                        if (applicationData.documents[c.property]) {
+                            const s = qs(c.status); if (s) { s.textContent = "Uploaded ✓"; s.classList.add("text-green-600"); }
+                        }
+                    });
+                } catch (e) { console.warn("restore failed", e); }
+            }
+
+            // ---------- Safe file inputs (hidden native inputs + button) ----------
+            function setupSafeFileInputs() {
+                uploadConfigs.forEach(cfg => {
+                    const input = qs(cfg.id);
+                    if (!input) { log("no input", cfg.id); return; }
+                    // If we already converted this input earlier, skip (idempotent)
+                    if (input.dataset.safeInitialized === "1") return;
+
+                    input.style.display = "none";
+                    input.removeAttribute("onclick");
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "safe-file-btn inline-flex items-center px-4 py-2 border rounded-md text-sm bg-white hover:bg-gray-50";
+                    btn.textContent = "Choose file";
+                    input.parentNode.insertBefore(btn, input.nextSibling);
+
+                    btn.addEventListener("click", ev => { ev.preventDefault(); input.click(); });
+
+                    input.addEventListener("change", async () => {
+                        if (!(input.files && input.files[0])) return;
+                        const file = input.files[0];
+                        // optional client-side size limits
+                        const maxMb = (cfg.id === "photo") ? 2 : (cfg.id === "income-proof" ? 10 : 5);
+                        if (file.size > maxMb * 1024 * 1024) { alert(`File too large. Max ${maxMb}MB.`); input.value = ""; return; }
+                        btn.textContent = "Uploading: " + file.name;
+                        const url = await uploadDocument(file, cfg.status);
+                        if (url) {
+                            applicationData.documents[cfg.property] = url;
+                            saveTextFieldsToStorage();
+                            btn.textContent = "Chosen: " + file.name;
+                        } else {
+                            btn.textContent = "Choose file";
+                        }
+                    });
+
+                    // restore text if previously uploaded
+                    if (applicationData.documents[cfg.property]) btn.textContent = "Chosen (restored)";
+                    // mark as initialized
+                    input.dataset.safeInitialized = "1";
+                });
+            }
+
+            // ---------- Attach autosave handlers ----------
+            function attachTextAutosave() {
+                textFields.forEach(id => {
+                    const el = qs(id); if (!el) return;
+                    // avoid duplicate listeners
+                    if (el.dataset.saveListenerAttached === "1") return;
+                    el.addEventListener("input", saveTextFieldsToStorage);
+                    el.dataset.saveListenerAttached = "1";
+                });
+            }
+
+            // ---------- Attach single submit handler ----------
+            function attachFormSubmit() {
+                const form = qs(formId);
+                if (!form) { console.error("Form not found:", formId); return; }
+                // Prevent double-binding
+                if (form.dataset.submitHandlerAttached === "1") return;
+
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+
+                    // Parse selectedLoan safely
+                    const selectedLoanRaw = sessionStorage.getItem("selectedLoan");
+                    let selectedLoanObj = null;
+                    if (selectedLoanRaw) {
+                        try { selectedLoanObj = JSON.parse(selectedLoanRaw); } catch (e) { console.warn("selectedLoan parse", e); }
+                    }
+
+                    const payload = {
+                        fullName: `${qs("first-name")?.value.trim() || ""} ${qs("last-name")?.value.trim() || ""}`.trim(),
+                        email: qs("email")?.value.trim() || "",
+                        phone: qs("phone")?.value.trim() || "",
+                        dob: qs("date-of-birth")?.value.trim() || "",
+                        gender: qs("gender")?.value.trim() || "",
+                        address: qs("address")?.value.trim() || "",
+                        city: qs("city")?.value.trim() || "",
+                        state: qs("state")?.value.trim() || "",
+                        postalCode: qs("postal-code")?.value.trim() || "",
+                        employmentType: qs("employment-type")?.value.trim() || "",
+                        monthlyIncome: qs("monthly-income")?.value.trim() || "",
+                        loanAmount: qs("loan-amount")?.value.trim() || "",
+                        loanPurpose: qs("loan-purpose")?.value.trim() || "",
+                        documents: applicationData.documents || {},
+                        // REQUIRED BY BACKEND
+                        bankName: sessionStorage.getItem("selectedBankName") || "",
+                        loanName: selectedLoanObj?.loanName || selectedLoanObj?.name || selectedLoanObj?.loan_type || "",
+                        loanId: sessionStorage.getItem("selectedLoanId") || "",
+                        bankId: sessionStorage.getItem("selectedBankId") || ""
+                    };
+
+                    log("Submitting payload:", payload);
+
+                    // basic front validation to avoid empty required fields
+                    if (!payload.fullName || !payload.email || !payload.phone || !payload.address || !payload.dob || !payload.gender) {
+                        alert("Please complete all required fields before submitting.");
+                        return;
+                    }
+
+                    try {
+                        const res = await fetch(applicationsEndpoint, {
+                            method: "POST",
+                            headers: {
+                                "Authorization": "Bearer " + localStorage.getItem("userToken"),
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        const data = await res.json().catch(() => null);
+
+                        if (res.ok) {
+                            alert("🎉 Application Submitted Successfully!");
+                            localStorage.removeItem("loanForm_snapshot");
+                            localStorage.removeItem("loanForm_docs");
+                            window.location.href = "applications.html";
+                        } else {
+                            console.error("Submission failed", res.status, data);
+                            alert("Submission failed: " + (data?.msg || data?.message || "Server error"));
+                        }
+                    } catch (err) {
+                        console.error("Submission error", err);
+                        alert("Submission failed (network error).");
+                    }
+                });
+
+                form.dataset.submitHandlerAttached = "1";
+            }
+
+            // ---------- Debug reload saver ----------
+            function attachReloadDebugger() {
+                window.addEventListener("beforeunload", saveTextFieldsToStorage);
+            }
+
+            // ---------- Init sequence ----------
+            document.addEventListener("DOMContentLoaded", async () => {
+                console.log("[app] Initializing consolidated script");
+                // Auth check and UI
+                const token = localStorage.getItem("userToken");
+                if (!token) { window.location.href = "../login.html"; return; }
+                setupMobileMenu();
+                populateSelectedLoanSummary();
+                await loadUser();
+                // attach logout to any .logout-btn (if present)
+                document.querySelectorAll('.logout-btn').forEach(btn => btn.addEventListener('click', logout));
+
+                // Restore, setup upload & handlers
+                restoreTextFieldsFromStorage();
+                setupSafeFileInputs();
+                attachTextAutosave();
+                attachFormSubmit();
+                attachReloadDebugger();
+                console.log("[app] ready");
+            });
+
+        })(); 
+    </script>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

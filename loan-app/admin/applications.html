@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loan Applications - Admin Panel</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-indigo-700">
+                <div class="flex items-center justify-center h-16 px-6 bg-indigo-800">
+                    <h1 class="text-xl font-bold text-white">LoanApp Admin</h1>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="index.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="users.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-users mr-3"></i>
+                            Users
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            Applications
+                        </a>
+                        <a href="loan-types.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-tags mr-3"></i>
+                            Loan Types
+                        </a>
+                        
+                    </nav>
+
+                    <!-- Sidebar admin block (matches index.html) -->
+                    <div class="mt-auto p-4 border-t border-indigo-600">
+                        <div class="flex items-center">
+                            <img class="w-10 h-10 rounded-full"
+                                src="https://ui-avatars.com/api/?name=Admin+User&background=7c3aed&color=fff"
+                                alt="Admin">
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-white"><span class="admin-username">Admin</span></p>
+                                <p class="text-xs text-indigo-200">Administrator</p>
+                            </div>
+                        </div>
+                        <button onclick="logout()"
+                            class="w-full mt-4 flex items-center justify-center px-4 py-2 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+        <!-- Mobile Sidebar -->
+        <div id="mobile-sidebar"
+            class="fixed inset-y-0 left-0 transform -translate-x-full w-64 bg-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
+            <div class="flex items-center justify-between h-16 px-4 bg-indigo-800">
+                <span class="text-white text-xl font-bold">LoanApp Admin</span>
+                <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col h-full px-4 py-4 overflow-y-auto">
+                <nav class="flex-1 space-y-2">
+                    <a href="index.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="users.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-users mr-3"></i>
+                        Users
+                    </a>
+                    <a href="applications.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                        <i class="fas fa-file-invoice-dollar mr-3"></i>
+                        Applications
+                    </a>
+                    <a href="loan-types.html"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-tags mr-3"></i>
+                        Loan Types
+                    </a>
+                   
+                </nav>
+
+                <!-- Mobile sidebar admin block -->
+                <div class="mt-auto p-4 border-t border-indigo-600">
+                    <div class="flex items-center">
+                        <img class="w-10 h-10 rounded-full"
+                            src="https://ui-avatars.com/api/?name=Admin+User&background=7c3aed&color=fff" alt="Admin">
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-white"><span class="admin-username">Admin</span></p>
+                            <p class="text-xs text-indigo-200">Administrator</p>
+                        </div>
+                    </div>
+                    <button onclick="logout()"
+                        class="w-full mt-4 flex items-center justify-center px-4 py-2 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Navigation (now matches index.html structure exactly) -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button"
+                            class="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
+                            aria-label="Open menu">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="ml-4 text-xl font-semibold text-gray-900">Loan Applications</h1>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none relative">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+
+                        <div class="relative">
+                            <button class="flex items-center text-sm text-gray-700 focus:outline-none" id="user-menu">
+                                <span class="hidden md:inline-block mr-2 admin-username">Admin</span>
+                                <img class="w-8 h-8 rounded-full"
+                                    src="https://ui-avatars.com/api/?name=Admin+User&background=7c3aed&color=fff"
+                                    alt="Admin">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-6">
+               
+                <!-- Applications Table -->
+                <div class="bg-white shadow rounded-lg overflow-hidden">
+                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                            <div class="mb-4 sm:mb-0">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Loan Applications</h3>
+                                <p class="mt-1 text-sm text-gray-500">View and manage all loan applications</p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
+                                    <input type="text" id="searchInput" placeholder="Search applications..."
+                                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm">
+                                </div>
+                                <select id="statusFilter"
+                                    class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    <option value="">All Statuses</option>
+                                    <option value="submitted">Submitted</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="in review">In Review</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                    <option value="disbursed">Disbursed</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div id="errorAlert" class="hidden bg-red-50 border-l-4 border-red-400 p-4 m-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-circle text-red-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-red-700" id="errorMessage"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table id="applicationsTable" class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Loan Details
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Applicant
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Amount
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Date
+                                    </th>
+                                    <th scope="col" class="relative px-6 py-3">
+                                        <span class="sr-only">Actions</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Loading row -->
+                                <tr id="loadingRow">
+                                    <td colspan="6" class="px-6 py-4 text-center">
+                                        <div class="flex justify-center items-center">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Applications will be loaded here by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- View Application Modal (kept unchanged) -->
+    <style>
+        .modal-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #c7d2fe #f0f4ff;
+        }
+
+        .modal-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-scroll::-webkit-scrollbar-track {
+            background: #f0f4ff;
+            border-radius: 4px;
+        }
+
+        .modal-scroll::-webkit-scrollbar-thumb {
+            background-color: #c7d2fe;
+            border-radius: 4px;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+    </style>
+
+    <div id="viewApplicationModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden overflow-y-auto py-8">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col modal-scroll">
+            <div class="flex items-center justify-between p-4 border-b">
+                <h3 class="text-lg font-medium text-gray-900">Application Details</h3>
+                <button type="button" class="text-gray-400 hover:text-gray-500" id="closeViewModal">
+                    <span class="sr-only">Close</span>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <!-- details omitted for brevity — unchanged -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-md font-medium text-gray-900 mb-4">Applicant Information</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Full Name</p>
+                                <p id="view-applicant-name"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Email</p>
+                                <p id="view-applicant-email"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Phone</p>
+                                <p id="view-applicant-phone"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Address</p>
+                                <p id="view-applicant-address"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-md font-medium text-gray-900 mb-4">Loan Details</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Application ID</p>
+                                <p class="mt-1 text-sm text-gray-900" id="view-loan-id">#APP-1001</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Loan Type</p>
+                                <p class="mt-1 text-sm text-gray-900" id="view-loan-type">Personal Loan</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Loan Amount</p>
+                                <p class="mt-1 text-sm text-gray-900" id="view-loan-amount">₹2,50,000</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h4 class="text-md font-medium text-gray-900 mb-4">Documents</h4>
+                    <div id="documentsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                <button type="button" id="closeViewModalBtn"
+                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50">Close</button>
+                <button type="button"
+                    class="inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    <i class="fas fa-print mr-2"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal (unchanged) -->
+    <div id="deleteApplicationModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Delete Application</h3>
+                <button type="button" class="text-gray-400 hover:text-gray-500" id="closeDeleteModal"><span
+                        class="sr-only">Close</span><i class="fas fa-times"></i></button>
+            </div>
+            <div class="mb-6">
+                <p class="text-gray-700">Are you sure you want to delete the application <span class="font-semibold"
+                        id="deleteAppId">#APP-1001</span>? This action cannot be undone.</p>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button type="button" id="cancelDeleteBtn"
+                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium bg-white hover:bg-gray-50">Cancel</button>
+                <button type="button" id="confirmDeleteBtn"
+                    class="inline-flex px-4 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+    <!-- <script src="assets/js/admin.js"></script> -->
+
+    <!-- Inline UI-only script: auth + avatar + mobile toggle + small helpers -->
+    <script>
+        // Cache-busted avatar + username + mobile toggle & UI helpers
+        (function () {
+            // run after DOM
+            document.addEventListener('DOMContentLoaded', function () {
+                const token = localStorage.getItem('adminToken');
+                const name = localStorage.getItem('adminUsername') || 'Admin';
+
+                // protect page
+                if (!token) {
+                    window.location.href = '../admin-login.html';
+                    return;
+                }
+
+                // fill username text (all .admin-username)
+                document.querySelectorAll('.admin-username').forEach(el => el.textContent = name);
+
+                // initials helper
+                function getInitials(str) {
+                    if (!str) return 'AD';
+                    const words = str.trim().split(/\s+/);
+                    if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+                    return str.slice(0, 2).toUpperCase();
+                }
+
+                const initials = getInitials(name);
+                const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(initials) + '&background=7c3aed&color=fff&size=128&rounded=true&bold=true&format=png&v=' + Date.now();
+
+                // update all admin img[alt="Admin"] (sidebar + header)
+                document.querySelectorAll('img[alt="Admin"]').forEach(img => {
+                    img.src = avatarUrl;
+                    img.alt = name;
+                    img.setAttribute('aria-label', name);
+                });
+
+                // mobile toggle function
+                function toggleMobileMenu() {
+                    const mobileMenu = document.getElementById('mobile-sidebar');
+                    const overlay = document.getElementById('mobile-sidebar-overlay');
+                    if (!mobileMenu || !overlay) return;
+                    if (mobileMenu.classList.contains('translate-x-0')) {
+                        mobileMenu.classList.remove('translate-x-0'); mobileMenu.classList.add('-translate-x-full');
+                        overlay.classList.add('hidden');
+                    } else {
+                        mobileMenu.classList.remove('-translate-x-full'); mobileMenu.classList.add('translate-x-0');
+                        overlay.classList.remove('hidden');
+                    }
+                }
+
+                // expose for other handlers
+                window.toggleMobileMenu = toggleMobileMenu;
+
+                const mobileMenuButton = document.getElementById('mobile-menu-button');
+                if (mobileMenuButton) mobileMenuButton.addEventListener('click', toggleMobileMenu);
+
+                const closeMobileBtn = document.getElementById('close-mobile-menu');
+                if (closeMobileBtn) closeMobileBtn.addEventListener('click', toggleMobileMenu);
+
+                const overlay = document.getElementById('mobile-sidebar-overlay');
+                if (overlay) overlay.addEventListener('click', toggleMobileMenu);
+
+                // simple static modal close handlers (UI-only)
+                $('#closeViewModal, #closeViewModalBtn').on('click', function () {
+                    $('body').removeClass('modal-open');
+                    $('#viewApplicationModal').addClass('hidden');
+                });
+                $('#closeDeleteModal, #cancelDeleteBtn').on('click', function () {
+                    $('#deleteApplicationModal').addClass('hidden');
+                });
+                $(document).on('click', function (e) {
+                    if ($(e.target).is('#viewApplicationModal')) {
+                        $('body').removeClass('modal-open');
+                        $('#viewApplicationModal').addClass('hidden');
+                    }
+                });
+            });
+        })();
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const API_BASE = "http://localhost:5000";
+            const token = localStorage.getItem("adminToken");
+
+            // Redirect if not logged in
+            if (!token) {
+                window.location.href = "../admin-login.html";
+                return;
+            }
+
+            // DOM elements
+            const tableBody = document.querySelector("#applicationsTable tbody");
+            const loadingRow = document.getElementById("loadingRow");
+            const errorAlert = document.getElementById("errorAlert");
+            const errorMessage = document.getElementById("errorMessage");
+            const statusFilter = document.getElementById("statusFilter");
+            const searchInput = document.getElementById("searchInput");
+
+            // Helpers
+            const formatCurrency = amt => "₹ " + (amt || 0).toLocaleString("en-IN");
+
+            const formatDate = d => {
+                if (!d) return "N/A";
+                return new Date(d).toLocaleDateString("en-IN", {
+                    day: "2-digit", month: "short", year: "numeric",
+                    hour: "2-digit", minute: "2-digit"
+                });
+            };
+
+            const statusColor = status => {
+                const s = (status || "").toLowerCase();
+                return {
+                    "pending": "bg-yellow-100 text-yellow-800",
+                    "approved": "bg-green-100 text-green-800",
+                    "rejected": "bg-red-100 text-red-800",
+                    "in review": "bg-blue-100 text-blue-800",
+                    "disbursed": "bg-purple-100 text-purple-800",
+                    "submitted": "bg-gray-100 text-gray-800"
+                }[s] || "bg-gray-100 text-gray-800";
+            };
+
+            // =======================================
+            // FETCH APPLICATIONS
+            // =======================================
+            async function loadApplications() {
+                try {
+                    loadingRow.classList.remove("hidden");
+                    errorAlert.classList.add("hidden");
+
+                    const res = await fetch(`${API_BASE}/api/applications/admin/all`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        throw new Error(data.msg || "Failed to load applications");
+                    }
+
+                    renderApplications(data.data || []);
+
+                } catch (err) {
+                    console.error(err);
+                    errorMessage.textContent = err.message;
+                    errorAlert.classList.remove("hidden");
+
+                } finally {
+                    loadingRow.classList.add("hidden");
+                }
+            }
+
+            // =======================================
+            // RENDER TABLE
+            // =======================================
+            function renderApplications(apps) {
+
+                tableBody.innerHTML = "";
+
+                const query = searchInput.value.trim().toLowerCase();
+                const status = statusFilter.value.trim().toLowerCase();
+
+                const filtered = apps.filter(app => {
+
+                    const fullName = `${app.personal?.firstName ?? ""} ${app.personal?.lastName ?? ""}`.trim().toLowerCase();
+                    const loanName = (app.loanName ?? "").toLowerCase();
+                    const stat = (app.status ?? "").toLowerCase();
+
+                    const matchesSearch =
+                        fullName.includes(query) ||
+                        loanName.includes(query) ||
+                        String(app.loanAmount).includes(query);
+
+                    const matchesStatus = !status || stat === status;
+
+                    return matchesSearch && matchesStatus;
+                });
+
+                if (filtered.length === 0) {
+                    tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-6 text-gray-500">
+                        No applications found
+                    </td>
+                </tr>`;
+                    return;
+                }
+
+                filtered.forEach(app => {
+                    const fullName = `${app.personal?.firstName ?? ""} ${app.personal?.lastName ?? ""}`.trim();
+
+                    const row = document.createElement("tr");
+                    row.className = "hover:bg-gray-50";
+
+                    row.innerHTML = `
+                <td class="px-6 py-4">
+                    <div class="font-medium">${app.loanName || "N/A"}</div>
+                    <div class="text-gray-500 text-sm">${app.bankName || ""}</div>
+                </td>
+
+                <td class="px-6 py-4">
+                    <div class="font-medium">${fullName || "N/A"}</div>
+                    <div class="text-gray-500 text-sm">${app.personal?.email || "-"}</div>
+                </td>
+
+                <td class="px-6 py-4 font-medium">
+                    ${formatCurrency(app.loanAmount)}
+                </td>
+
+                <td class="px-6 py-4">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold ${statusColor(app.status)}">
+                        ${app.status}
+                    </span>
+                </td>
+
+                <td class="px-6 py-4 text-sm text-gray-600">
+                    ${formatDate(app.createdAt)}
+                </td>
+
+                <td class="px-6 py-4 text-right">
+                    <button class="text-indigo-600 hover:text-indigo-900 mr-3"
+                        onclick="viewApplication('${app._id}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                  
+                </td>
+            `;
+
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // -----------------------------
+            // VIEW APPLICATION (fixed)
+            // -----------------------------
+            window.viewApplication = async function (id) {
+                try {
+                    const res = await fetch(`${API_BASE}/api/applications/admin/${id}`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
+
+                    // backend returns: { success: true, data: application }
+                    const result = await res.json();
+
+                    if (!res.ok) {
+                        throw new Error(result.msg || 'Failed to fetch application');
+                    }
+
+                    // extract the actual application object (support both formats)
+                    const app = result.data || result;
+
+                    // Fill Applicant Info (safe guarded)
+                    document.getElementById("view-applicant-name").innerText =
+                        `${app.personal?.firstName ?? ''} ${app.personal?.lastName ?? ''}`.trim() || 'N/A';
+
+                    document.getElementById("view-applicant-email").innerText = app.personal?.email ?? 'N/A';
+                    document.getElementById("view-applicant-phone").innerText = app.personal?.phone ?? 'N/A';
+
+                    const addr = app.personal?.address;
+                    document.getElementById("view-applicant-address").innerText =
+                        addr ? `${addr.street ?? ''}, ${addr.city ?? ''}, ${addr.state ?? ''} - ${addr.zip ?? ''}` : 'N/A';
+
+                    // Loan info
+                    document.getElementById("view-loan-id").innerText = app._id ?? 'N/A';
+                    document.getElementById("view-loan-type").innerText = app.loanName ?? (app.loanId?.loanName ?? 'N/A');
+                    document.getElementById("view-loan-amount").innerText = formatCurrency(app.loanAmount ?? 0);
+
+
+                    // -----------------------------
+                    // Documents
+                    // -----------------------------
+                    const docsContainer = document.getElementById("documentsContainer");
+                    docsContainer.innerHTML = "";
+
+                    (app.documents || []).forEach(doc => {
+                        if (!doc || !doc.url) return;
+
+                        const cleanedUrl = doc.url.startsWith("/") ? doc.url.substring(1) : doc.url;
+                        const fileUrl = `${API_BASE}/${cleanedUrl}`;
+
+                        docsContainer.innerHTML += `
+        <div class="border p-3 rounded flex items-center">
+            <img src="${fileUrl}" 
+     class="w-12 h-12 object-cover rounded mr-4 border cursor-pointer"
+     onclick="openImagePreview('${fileUrl}')"
+/>
+
+            <p class="flex-1 text-sm">${doc.name}</p>
+            <a href="${fileUrl}" download class="text-blue-600">
+                <i class="fas fa-download"></i>
+            </a>
+        </div>
+    `;
+                    });
+
+
+                    // Show modal
+                    document.body.classList.add("modal-open");
+                    document.getElementById("viewApplicationModal").classList.remove("hidden");
+
+                } catch (err) {
+                    console.error('viewApplication error:', err);
+                    alert(err.message || 'Failed to load application');
+                }
+            };
+
+
+            // =======================================
+            // UPDATE STATUS
+            // =======================================
+            window.updateStatus = async function (id, value) {
+                try {
+                    await fetch(`${API_BASE}/api/applications/admin/${id}`, {
+                        method: "PATCH",
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ status: value })
+                    });
+
+
+                    loadApplications();
+
+                } catch (err) {
+                    alert("Failed to update status");
+                }
+            };
+
+            // Filters + search
+            searchInput.addEventListener("input", () => loadApplications());
+            statusFilter.addEventListener("change", () => loadApplications());
+
+            // Initial Load
+            loadApplications();
+
+        });
+    </script>
+
+
+
+    <script>
+        // =======================================
+        // LOGOUT
+        // =======================================
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUsername');
+            window.location.href = '../admin-login.html';
+        }
+    </script>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
+        <div class="flex justify-around items-center h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600">
+                <i class="fas fa-tachometer-alt"></i>
+                <span class="text-xs mt-1">Dashboard</span>
+            </a>
+
+            <a href="users.html" class="flex flex-col items-center justify-center text-gray-500 hover:text-indigo-600">
+                <i class="fas fa-users"></i>
+                <span class="text-xs mt-1">Users</span>
+            </a>
+
+            <a href="applications.html"
+                class="flex flex-col items-center justify-center text-indigo-500 hover:text-indigo-600">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span class="text-xs mt-1">Applications</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Image Preview Modal -->
+    <div id="imagePreviewModal"
+        class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+        <span id="closeImagePreview" class="absolute top-5 right-5 text-white text-3xl cursor-pointer">&times;</span>
+        <img id="previewImage" src="" class="max-h-[90%] max-w-[90%] rounded shadow-lg" />
+    </div>
+
+    <script>
+        // IMAGE PREVIEW FEATURE
+
+        // open modal
+        function openImagePreview(url) {
+            const modal = document.getElementById("imagePreviewModal");
+            const img = document.getElementById("previewImage");
+
+            img.src = url;
+            modal.classList.remove("hidden");
+        }
+
+        // close modal
+        document.getElementById("closeImagePreview").onclick = function () {
+            document.getElementById("imagePreviewModal").classList.add("hidden");
+        };
+
+        // close modal on clicking outside
+        document.getElementById("imagePreviewModal").onclick = function (e) {
+            if (e.target.id === "imagePreviewModal") {
+                document.getElementById("imagePreviewModal").classList.add("hidden");
+            }
+        };
+
+    </script>
+
+</body>
+
+</html>

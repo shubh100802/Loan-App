@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - LoanApp</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        /* 3D Background */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* Card Styles */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            box-sizing: border-box;
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .card-3d:hover {
+            transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(1deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f9fafb;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            background-color: white;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary:disabled {
+            background: #c7d2fe;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .login-error {
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 640px) {
+            .card-3d {
+                border-radius: 0.5rem;
+            }
+
+            .login-container {
+                padding: 1.5rem;
+            }
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center p-4">
+    <!-- 3D Animation Background -->
+    <div id="canvas-container" class="fixed inset-0 -z-10">
+        <!-- Floating shapes will be added by Three.js -->
+    </div>
+
+    <!-- Decorative Elements -->
+    <div class="fixed top-20 left-10 w-16 h-16 rounded-full bg-indigo-200 opacity-20 animate-pulse"></div>
+    <div class="fixed bottom-1/3 right-1/4 w-24 h-24 rounded-full bg-purple-200 opacity-20 animate-pulse delay-1000">
+    </div>
+    <div class="fixed top-1/4 right-20 w-32 h-32 rounded-full bg-blue-200 opacity-20 animate-pulse delay-500"></div>
+
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <a href="../index.html" class="inline-block">
+                <span class="text-3xl font-bold gradient-text">LoanApp</span>
+            </a>
+            <h1 class="mt-4 text-2xl font-bold text-gray-900">Admin Portal</h1>
+            <p class="text-gray-600">Sign in to access the admin dashboard</p>
+        </div>
+
+        <div class="card-3d bg-white rounded-xl shadow-xl overflow-hidden">
+            <div class="p-8">
+                <!-- Error message container -->
+                <div id="loginError" class="login-error" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText"></span>
+                </div>
+
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <input type="text" id="username" name="username" class="form-control"
+                                placeholder="Enter admin username" required>
+                        </div>
+                        <div id="usernameError" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <label for="password" class="form-label">Password</label>
+                        </div>
+                        <div class="input-group">
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <input type="password" id="password" name="password" class="form-control"
+                                placeholder="••••••••" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <i class="far fa-eye" id="password-icon"></i>
+                            </button>
+                        </div>
+                        <div id="passwordError" class="error-message"></div>
+                    </div>
+
+                    <button type="submit" id="loginBtn" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        <span>Sign In</span>
+                    </button>
+                </form>
+
+                <div class="text-center mt-6 text-sm text-gray-600">
+                    <a href="../login.html" class="text-indigo-600 hover:text-indigo-500 font-medium">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to User Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ===============================
+    // Toggle Password Visibility
+    // ===============================
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = document.querySelector(`#${inputId} + i`);
+
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+
+    // ===============================
+    // Handle Admin Login
+    // ===============================
+    document.getElementById("adminLoginForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        const loginBtn = document.getElementById("loginBtn");
+
+        // Reset UI states
+        document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
+
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Logging in...';
+
+        let isValid = true;
+
+        // Basic Validation
+        if (!username) {
+            document.getElementById("usernameError").textContent = "Username is required";
+            document.getElementById("usernameError").style.display = "block";
+            isValid = false;
+        }
+
+        if (!password) {
+            document.getElementById("passwordError").textContent = "Password is required";
+            document.getElementById("passwordError").style.display = "block";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/api/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    adminId: username,   // ✔ Matches your backend
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.msg || "Login failed. Please check your credentials.");
+            }
+
+            // ===========================
+            // Save Token
+            // ===========================
+            localStorage.setItem("adminToken", data.token);
+
+            // ===========================
+            // Save Complete Admin Data
+            // ===========================
+            localStorage.setItem("adminData", JSON.stringify({
+                id: data.admin?.id,
+                username: data.admin?.username,
+                role: data.admin?.role
+            }));
+
+            // ===========================
+            // Save Username for Navbar & Avatar
+            // ===========================
+            localStorage.setItem("adminUsername", data.admin?.username || "Admin");
+
+            // Redirect to Admin Dashboard
+            window.location.href = "admin/index.html";
+
+        } catch (error) {
+            document.getElementById("loginError").textContent = error.message || "Login failed";
+            document.getElementById("loginError").style.display = "block";
+
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+        }
+    });
+
+    // ===============================
+    // Auto Redirect if Already Logged In
+    // ===============================
+    const adminToken = localStorage.getItem("adminToken");
+
+    if (adminToken) {
+        try {
+            if (adminToken.split(".").length === 3) {
+                window.location.href = "admin/index.html";
+            } else {
+                // invalid token → clear it
+                localStorage.removeItem("adminToken");
+                localStorage.removeItem("adminData");
+                localStorage.removeItem("adminUsername");
+            }
+        } catch (err) {
+            console.error("Token validation error:", err);
+            localStorage.removeItem("adminToken");
+            localStorage.removeItem("adminData");
+            localStorage.removeItem("adminUsername");
+        }
+    }
+
+    // ===============================
+    // IMPORTANT:
+    // Removed the old broken block:
+    // ❌ if (data.token) { ... }
+    // ===============================
+
+</script>
+
+</body>
+
+</html>

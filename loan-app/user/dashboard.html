@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LoanApp</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Smooth transitions */
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+
+        /* Card hover effect */
+        .bank-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bank-card>div {
+            flex: 1;
+        }
+
+        .bank-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Ensure consistent card heights */
+        .bank-card .p-6 {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans flex flex-col min-h-screen">
+    <div class="flex flex-col h-screen md:flex-row overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
+                <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
+                    <span class="text-white text-xl font-bold">LoanApp</span>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="#"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            My Applications
+                        </a>
+                        <a href="profile.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            Profile
+                        </a>
+                    </nav>
+                    <div class="p-4 border-t border-indigo-500">
+                        <div class="flex items-center">
+                            <img class="user-avatar w-10 h-10 rounded-full">
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-white user-name">User</p>
+                                <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Mobile Sidebar Overlay -->
+            <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
+
+            <!-- Mobile Sidebar -->
+            <div id="mobile-sidebar"
+                class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
+                <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
+                    <span class="text-white text-xl font-bold">LoanApp</span>
+                    <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col h-full px-4 py-4 overflow-y-auto">
+                    <nav class="flex-1 space-y-2">
+                        <a href="#"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="applications.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-file-invoice-dollar mr-3"></i>
+                            My Applications
+                        </a>
+                        <a href="profile.html"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            Profile
+                        </a>
+                    </nav>
+                    <div class="p-4 mt-auto border-t border-indigo-500">
+                        <div class="flex items-center">
+                            <img class="user-avatar w-10 h-10 rounded-full">
+                            <div class="ml-3">
+                                <p class="text-sm font-medium text-white user-name">User</p>
+                                <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm z-10">
+                <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center">
+                        <button id="mobile-menu-button"
+                            class="md:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
+                            aria-label="Open menu">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="ml-4 text-xl font-semibold text-gray-900">Select Bank</h1>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button onclick="logout()"
+                            class="flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout
+                        </button>
+                        </button>
+                        <div class="relative">
+                            <button class="flex items-center text-sm text-gray-700 focus:outline-none">
+                                <span class="user-name hidden md:inline-block mr-2"></span>
+                                <img class="user-avatar w-8 h-8 rounded-full">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50">
+                <div class="max-w-7xl mx-auto w-full">
+                    <!-- Search and Filter -->
+                    <div class="mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="relative w-full md:w-96 mb-4 md:mb-0">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <input type="text"
+                                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                    placeholder="Search banks...">
+                            </div>
+                            <div class="hidden md:flex gap-2 w-auto">
+                                <!-- Filter Dropdown -->
+                                <div class="relative flex-1 md:flex-none">
+                                    <button id="filterBtn"
+                                        class="w-full flex items-center justify-center md:justify-start px-3 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <i class="fas fa-filter md:mr-2"></i>
+                                        <span class="hidden md:inline">Filters</span>
+                                        <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                                    </button>
+                                    <div id="filterDropdown"
+                                        class="hidden absolute right-0 mt-1 w-72 md:w-56 bg-white rounded-md shadow-lg z-50 border border-gray-200">
+                                        <div class="p-4 space-y-3">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Interest
+                                                    Rate</label>
+                                                <select id="interestRateFilter"
+                                                    class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                                    <option value="all">All Rates</option>
+                                                    <option value="lt8">Below 8%</option>
+                                                    <option value="8-10">8% - 10%</option>
+                                                    <option value="gt10">Above 10%</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Processing
+                                                    Fee</label>
+                                                <select id="processingFeeFilter"
+                                                    class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                                    <option value="all">All Fees</option>
+                                                    <option value="lt1">Below 1%</option>
+                                                    <option value="1-2">1% - 2%</option>
+                                                    <option value="gt2">Above 2%</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex justify-between pt-2">
+                                                <button id="applyFilters"
+                                                    class="px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                    Apply
+                                                </button>
+                                                <button id="resetFilters"
+                                                    class="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                                                    Reset
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sort Dropdown -->
+                                <div class="relative flex-1 md:flex-none">
+                                    <button id="sortBtn"
+                                        class="w-full flex items-center justify-center md:justify-start px-3 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <i class="fas fa-sort-amount-down md:mr-2"></i>
+                                        <span class="hidden md:inline">Sort</span>
+                                        <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                                    </button>
+                                    <div id="sortDropdown"
+                                        class="hidden absolute right-0 mt-1 w-64 md:w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200">
+                                        <div class="py-1">
+                                            <button
+                                                class="sort-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                data-sort="name-asc">
+                                                <i class="fas fa-sort-alpha-down mr-2"></i> Name (A-Z)
+                                            </button>
+                                            <button
+                                                class="sort-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                data-sort="name-desc">
+                                                <i class="fas fa-sort-alpha-up mr-2"></i> Name (Z-A)
+                                            </button>
+                                            <button
+                                                class="sort-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                data-sort="rate-asc">
+                                                <i class="fas fa-percentage mr-2"></i> Interest Rate (Low to High)
+                                            </button>
+                                            <button
+                                                class="sort-option w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                data-sort="rate-desc">
+                                                <i class="fas fa-percentage mr-2"></i> Interest Rate (High to Low)
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Bank Grid -->
+                    <div id="bankList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+
+
+                    <!-- View More Button -->
+                    <div class="mt-6 text-center sticky bottom-4 z-10">
+                        <button id="viewMoreBtn"
+                            class="px-6 py-3 text-sm font-medium text-indigo-600 bg-white rounded-lg shadow-md hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 border border-gray-200"
+                            onclick="toggleMoreBanks()">
+                            View More Banks <i class="fas fa-chevron-down ml-1 transition-transform duration-200"
+                                id="viewMoreIcon"></i>
+                        </button>
+                    </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div
+        class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center py-2 px-4 z-50">
+        <a href="dashboard.html" class="flex flex-col items-center text-indigo-600">
+            <i class="fas fa-home text-lg"></i>
+            <span class="text-xs mt-1">Home</span>
+        </a>
+        <a href="applications.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="far fa-file-alt text-lg"></i>
+            <span class="text-xs mt-1">Applications</span>
+        </a>
+        <a href="profile.html" class="flex flex-col items-center text-gray-500 hover:text-indigo-600">
+            <i class="far fa-user text-lg"></i>
+            <span class="text-xs mt-1">Profile</span>
+        </a>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+
+        // Function to handle bank selection
+        function selectBank(bankName) {
+            try {
+                // Store the selected bank in session storage
+                sessionStorage.setItem('selectedBank', bankName);
+
+                // Show loading state
+                const event = new CustomEvent('showLoading', { detail: 'Processing...' });
+                document.dispatchEvent(event);
+
+                // Simulate API call delay
+                setTimeout(() => {
+                    // Check if loan-type.html exists
+                    fetch('loan-type.html')
+                        .then(response => {
+                            if (response.ok) {
+                                // Redirect to the loan type selection page
+                                window.location.href = 'loan-type.html';
+                            } else {
+                                throw new Error('Page not found');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            // Fallback to applications page if loan-type.html doesn't exist
+                            window.location.href = 'applications.html';
+                        })
+                        .finally(() => {
+                            // Hide loading state
+                            const event = new CustomEvent('hideLoading');
+                            document.dispatchEvent(event);
+                        });
+                }, 500);
+            } catch (error) {
+                console.error('Error in selectBank:', error);
+                // Fallback to applications page on error
+                window.location.href = 'applications.html';
+            }
+        }
+
+        // Toggle more banks visibility
+        function toggleMoreBanks() {
+            const moreBanks = document.getElementById('moreBanks');
+            const viewMoreBtn = document.getElementById('viewMoreBtn');
+            const viewMoreIcon = document.getElementById('viewMoreIcon');
+
+            if (!moreBanks || !viewMoreBtn) return;
+
+            const isHidden = moreBanks.classList.contains('hidden');
+
+            if (isHidden) {
+                // Show more banks
+                moreBanks.classList.remove('hidden');
+                moreBanks.style.display = 'grid';
+                viewMoreBtn.innerHTML = 'View Less <i class="fas fa-chevron-up ml-1"></i>';
+
+                // Scroll to the new content
+                setTimeout(() => {
+                    moreBanks.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'end'
+                    });
+                }, 50);
+            } else {
+                // Hide more banks
+                moreBanks.classList.add('hidden');
+                moreBanks.style.display = 'none';
+                viewMoreBtn.innerHTML = 'View More Banks <i class="fas fa-chevron-down ml-1"></i>';
+
+                // Scroll to the view more button
+                setTimeout(() => {
+                    viewMoreBtn.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 50);
+            }
+
+            // Update the view more icon
+            if (viewMoreIcon) {
+                viewMoreIcon.classList.toggle('fa-chevron-down');
+                viewMoreIcon.classList.toggle('fa-chevron-up');
+            }
+        }
+
+
+
+        // =========================== LOGOUT ===========================
+
+        function logout() {
+            localStorage.removeItem("userToken");
+            localStorage.removeItem("userName");
+            window.location.href = "../login.html";
+        }
+
+        // Filter and Sort Functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toggle filter dropdown
+            const filterBtn = document.getElementById('filterBtn');
+            const filterDropdown = document.getElementById('filterDropdown');
+            const sortBtn = document.getElementById('sortBtn');
+            const sortDropdown = document.getElementById('sortDropdown');
+            const initialBanks = document.getElementById('initialBanks');
+            const moreBanks = document.getElementById('moreBanks');
+            const viewMoreBtn = document.getElementById('viewMoreBtn');
+
+            // Store current filter and sort states
+            let currentFilters = {
+                interestRate: 'all',
+                processingFee: 'all'
+            };
+            let currentSort = 'name-asc';
+
+            // Toggle filter dropdown
+            if (filterBtn) {
+                filterBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    filterDropdown.classList.toggle('hidden');
+                    sortDropdown.classList.add('hidden');
+                });
+            }
+
+            // Toggle sort dropdown
+            if (sortBtn) {
+                sortBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    sortDropdown.classList.toggle('hidden');
+                    filterDropdown.classList.add('hidden');
+                });
+            }
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function () {
+                filterDropdown.classList.add('hidden');
+                sortDropdown.classList.add('hidden');
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            [filterDropdown, sortDropdown].forEach(dropdown => {
+                if (dropdown) {
+                    dropdown.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                    });
+                }
+            });
+
+            // Parse interest rate from bank card
+            function getBankInterestRate(bank) {
+                const rateText = bank.querySelector('p.text-sm.text-gray-500')?.textContent || '';
+                const match = rateText.match(/([\d.]+)%/);
+                return match ? parseFloat(match[1]) : 0;
+            }
+
+            // Get bank name from card
+            function getBankName(bank) {
+                return bank.querySelector('h3.text-lg')?.textContent.trim() || '';
+            }
+
+            // Apply filters to bank cards
+            function applyFiltersToBanks() {
+                const allBanks = Array.from(document.querySelectorAll('.bank-card'));
+                let visibleCount = 0;
+
+                allBanks.forEach(bank => {
+                    const interestRate = getBankInterestRate(bank);
+
+                    let showBank = true;
+
+                    // Apply interest rate filter
+                    if (currentFilters.interestRate === 'lt8' && interestRate >= 8) {
+                        showBank = false;
+                    } else if (currentFilters.interestRate === '8-10' && (interestRate < 8 || interestRate > 10)) {
+                        showBank = false;
+                    } else if (currentFilters.interestRate === 'gt10' && interestRate <= 10) {
+                        showBank = false;
+                    }
+
+                    // Show/hide bank based on filters
+                    if (showBank) {
+                        bank.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        bank.style.display = 'none';
+                    }
+                });
+
+                // Update view more button visibility
+                updateViewMoreButton(visibleCount);
+
+                // If no banks match filters, show message
+                if (visibleCount === 0) {
+                    showToast('No banks match the selected filters');
+                }
+            }
+
+            // Sort bank cards
+            function sortBanks() {
+                const allBanks = Array.from(document.querySelectorAll('.bank-card'));
+                const container = initialBanks.parentNode;
+
+                allBanks.sort((a, b) => {
+                    const nameA = getBankName(a);
+                    const nameB = getBankName(b);
+                    const rateA = getBankInterestRate(a);
+                    const rateB = getBankInterestRate(b);
+
+                    switch (currentSort) {
+                        case 'name-asc':
+                            return nameA.localeCompare(nameB);
+                        case 'name-desc':
+                            return nameB.localeCompare(nameA);
+                        case 'rate-asc':
+                            return rateA - rateB;
+                        case 'rate-desc':
+                            return rateB - rateA;
+                        default:
+                            return 0;
+                    }
+                });
+
+                // Reorder banks in the DOM
+                allBanks.forEach(bank => {
+                    container.insertBefore(bank, moreBanks);
+                });
+
+                // Update view more button after sorting
+                updateViewMoreButton();
+            }
+
+            // Update view more button visibility
+            function updateViewMoreButton(visibleCount) {
+                if (!viewMoreBtn) return;
+
+                const allBanks = document.querySelectorAll('.bank-card');
+                const visibleBanks = visibleCount !== undefined ?
+                    visibleCount :
+                    Array.from(allBanks).filter(bank =>
+                        !bank.style.display || bank.style.display !== 'none'
+                    ).length;
+
+                if (visibleBanks === 0) {
+                    viewMoreBtn.style.display = 'none';
+                } else {
+                    viewMoreBtn.style.display = 'inline-flex';
+                }
+            }
+
+            // Apply filters
+            const applyFilters = document.getElementById('applyFilters');
+            const resetFilters = document.getElementById('resetFilters');
+            const interestRateFilter = document.getElementById('interestRateFilter');
+            const processingFeeFilter = document.getElementById('processingFeeFilter');
+
+            if (applyFilters && resetFilters) {
+                applyFilters.addEventListener('click', function () {
+                    currentFilters = {
+                        interestRate: interestRateFilter.value,
+                        processingFee: processingFeeFilter.value
+                    };
+
+                    // Apply filters
+                    applyFiltersToBanks();
+
+                    // Close the dropdown
+                    filterDropdown.classList.add('hidden');
+
+                    // Show a toast
+                    showToast('Filters applied successfully!');
+                });
+
+                resetFilters.addEventListener('click', function () {
+                    interestRateFilter.value = 'all';
+                    processingFeeFilter.value = 'all';
+
+                    currentFilters = {
+                        interestRate: 'all',
+                        processingFee: 'all'
+                    };
+
+                    // Reset filters
+                    document.querySelectorAll('.bank-card').forEach(bank => {
+                        bank.style.display = 'block';
+                    });
+
+                    // Show view more button
+                    if (viewMoreBtn) {
+                        viewMoreBtn.style.display = 'inline-flex';
+                    }
+
+                    // Close the dropdown
+                    filterDropdown.classList.add('hidden');
+
+                    // Show a toast
+                    showToast('Filters reset successfully!');
+                });
+            }
+
+            // Handle sort options
+            const sortOptions = document.querySelectorAll('.sort-option');
+            sortOptions.forEach(option => {
+                option.addEventListener('click', function () {
+                    currentSort = this.getAttribute('data-sort');
+
+                    // Sort banks
+                    sortBanks();
+
+                    // Close the dropdown
+                    sortDropdown.classList.add('hidden');
+
+                    // Update sort button text
+                    const sortText = this.textContent.trim();
+                    sortBtn.innerHTML = `<i class="fas fa-sort-amount-down mr-2"></i> ${sortText}`;
+
+                    // Show a toast
+                    showToast(`Sorted by: ${sortText}`);
+                });
+            });
+
+            // Helper function to show toast messages
+            function showToast(message) {
+                // Create toast element if it doesn't exist
+                let toast = document.getElementById('toast');
+                if (!toast) {
+                    toast = document.createElement('div');
+                    toast.id = 'toast';
+                    toast.className = 'fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-md shadow-lg transform transition-all duration-300 translate-y-10 opacity-0 z-50';
+                    document.body.appendChild(toast);
+                }
+
+                // Set message and show toast
+                toast.textContent = message;
+                toast.classList.remove('opacity-0', 'translate-y-10');
+                toast.classList.add('opacity-100', 'translate-y-0');
+
+                // Hide toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('opacity-100', 'translate-y-0');
+                    toast.classList.add('opacity-0', 'translate-y-10');
+                }, 3000);
+            }
+
+            // Add data attributes to bank cards for filtering/sorting
+            const bankCards = document.querySelectorAll('.bank-card');
+            bankCards.forEach(card => {
+                // Add data attributes based on bank name (you would get this from your data)
+                const bankName = card.querySelector('h3').textContent.trim();
+                // For demo purposes, generate random interest rate and processing fee
+                const interestRate = (Math.random() * 5 + 5).toFixed(2);
+                const processingFee = (Math.random() * 2 + 0.5).toFixed(2);
+
+                card.setAttribute('data-interest-rate', interestRate);
+                card.setAttribute('data-processing-fee', processingFee);
+
+                // Update the interest rate and processing fee display
+                const rateElement = card.querySelector('.interest-rate');
+                const feeElement = card.querySelector('.processing-fee');
+
+                if (rateElement) {
+                    rateElement.textContent = `${interestRate}%`;
+                }
+                if (feeElement) {
+                    feeElement.textContent = `${processingFee}%`;
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMenuButton = document.getElementById('close-mobile-menu');
+            const mobileSidebar = document.getElementById('mobile-sidebar');
+            const mobileOverlay = document.getElementById('mobile-sidebar-overlay');
+
+            // Toggle mobile menu
+            function toggleMobileMenu() {
+                if (mobileSidebar && mobileOverlay) {
+                    mobileSidebar.classList.toggle('-translate-x-full');
+                    mobileOverlay.classList.toggle('hidden');
+                    document.body.classList.toggle('overflow-hidden');
+                }
+            }
+
+            // Open mobile menu
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close mobile menu
+            if (closeMenuButton) {
+                closeMenuButton.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close menu when clicking on overlay
+            if (mobileOverlay) {
+                mobileOverlay.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close menu when clicking on menu links
+            document.querySelectorAll('#mobile-sidebar a').forEach(link => {
+                link.addEventListener('click', toggleMobileMenu);
+            });
+
+            // Close menu when pressing Escape key
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !mobileSidebar.classList.contains('-translate-x-full')) {
+                    toggleMobileMenu();
+                }
+            });
+        });
+
+        // =========================== CHECK LOGIN ===========================
+        const token = localStorage.getItem("userToken");
+        if (!token) {
+            window.location.href = "../login.html";
+        }
+
+        // ======================== FETCH USER PROFILE ========================
+        async function loadUser() {
+            try {
+                const res = await fetch("http://localhost:5000/api/user/profile", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    alert("Session expired. Login again.");
+                    logout();
+                    return;
+                }
+
+                const user = data.user;
+
+                // ================== UPDATE NAME ==================
+                document.querySelectorAll(".user-name").forEach(el => {
+                    el.textContent = user.name;
+                });
+
+                // ================== GENERATE INITIALS ==================
+                const nameParts = user.name.trim().split(" ");
+                let initials = "";
+
+                if (nameParts.length === 1) {
+                    initials = nameParts[0][0].toUpperCase();
+                } else {
+                    initials = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+                }
+
+                // ================== UPDATE PROFILE PIC OR INITIALS ==================
+                document.querySelectorAll(".user-avatar").forEach(img => {
+                    if (user.profilePic) {
+                        img.src = `http://localhost:5000/uploads/${user.profilePic}`;
+                    } else {
+                        img.src = `https://ui-avatars.com/api/?name=${initials}&background=7c3aed&color=fff&bold=true`;
+                    }
+                });
+
+
+            } catch (err) {
+                console.log(err);
+                alert("Unable to load user.");
+            }
+        }
+        loadUser();
+    </script>
+
+    <script>
+
+        // ========== To load real time bank details ==========
+        const API_BASE = "http://localhost:5000/api/loans";
+
+        // Load all unique banks dynamically
+        async function loadBanks() {
+            const bankContainer = document.getElementById("bankList");
+            bankContainer.innerHTML = `<div class='col-span-2 text-center p-4'>Loading banks...</div>`;
+
+            try {
+                const res = await fetch(API_BASE);
+                const json = await res.json();
+
+                if (!json.success) {
+                    bankContainer.innerHTML = "<p class='text-center text-red-500'>Could not load banks.</p>";
+                    return;
+                }
+
+                const loans = json.data;
+
+                // Extract unique banks by bankId
+                const banks = {};
+                loans.forEach(loan => {
+                    banks[loan.bankId] = {
+                        bankId: loan.bankId,
+                        bankName: loan.bankName,
+                        bankLogo: loan.bankLogo
+                    };
+                });
+
+                bankContainer.innerHTML = "";
+
+                Object.values(banks).forEach(bank => {
+                    const logo = bank.bankLogo;
+                    const fallbackLogo =
+                        `https://ui-avatars.com/api/?name=${encodeURIComponent(bank.bankName)}&background=4f46e5&color=fff`;
+
+                    const card = document.createElement("div");
+                    card.className =
+                        "p-4 bg-white shadow-lg rounded-xl hover:shadow-2xl transition cursor-pointer";
+
+                    // Calculate interest
+                    const interestRates = loans
+                        .filter(l => l.bankId === bank.bankId)
+                        .map(l => l.minInterestRate);
+                    const minInterest = Math.min(...interestRates);
+
+                    // Calculate processing
+                    const processingFees = loans
+                        .filter(l => l.bankId === bank.bankId)
+                        .map(l => l.minProcessingFee);
+                    const minProcessing = Math.min(...processingFees);
+
+                    // Features tags system
+                    let tags = [];
+
+                    if (minInterest <= 8.5) tags.push({ text: "Low Interest", color: "green", icon: "✔" });
+                    if (minProcessing <= 1) tags.push({ text: "Low Processing Fee", color: "purple", icon: "％" });
+                    if (loans.filter(l => l.bankId === bank.bankId).length >= 3)
+                        tags.push({ text: "Popular", color: "green", icon: "🔥" });
+
+                    let tagHTML = tags.slice(0, 3).map(t => {
+                        let colorClass =
+                            t.color === "green" ? "text-green-600" :
+                                t.color === "purple" ? "text-purple-600" :
+                                    "text-blue-600";
+
+                        return `<span class="${colorClass} text-sm flex items-center gap-1">${t.icon} ${t.text}</span>`;
+                    }).join("");
+
+                    card.innerHTML = `
+    <div class="flex items-center gap-3">
+        <img src="${logo}" class="h-12 w-12 rounded-lg"
+            onerror="this.onerror=null; this.src='${fallbackLogo}'">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900">${bank.bankName}</h2>
+            <p class="text-sm text-gray-600">Interest from ${minInterest}% p.a.</p>
+        </div>
+    </div>
+
+    <div class="mt-3 flex flex-wrap items-center gap-2">
+        ${tagHTML}
+    </div>
+`;
+
+
+                    card.onclick = () => {
+                        sessionStorage.setItem("selectedBankId", bank.bankId);
+                        sessionStorage.setItem("selectedBankName", bank.bankName);
+                        sessionStorage.setItem("selectedBankLogo", bank.bankLogo || fallbackLogo);
+                        window.location.href = "loan-type.html";
+                    };
+
+                    bankContainer.appendChild(card);
+                });
+
+                if (Object.values(banks).length === 0) {
+                    bankContainer.innerHTML =
+                        "<p class='text-center text-gray-500 col-span-2'>No banks available yet.</p>";
+                }
+            } catch (error) {
+                console.error(error);
+                bankContainer.innerHTML =
+                    "<p class='text-center text-red-500 col-span-2'>Error loading banks.</p>";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadBanks);
+    </script>
+
+</body>
+
+</html>
