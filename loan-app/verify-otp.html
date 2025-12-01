@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify OTP - LoanApp</title>
+    <title>Verify OTP - MLC</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -131,11 +131,11 @@
         <!-- Logo -->
         <div class="text-center mb-8 transform transition-all duration-500 hover:scale-105">
             <a href="index.html" class="inline-block">
-                <span class="text-3xl font-bold gradient-text">LoanApp</span>
+                <span class="text-3xl font-bold gradient-text">MLC</span>
             </a>
             <h1 class="mt-4 text-2xl font-bold text-gray-900">Verify Your Account</h1>
-            <p class="text-gray-600">We've sent a 6-digit code to your gmail</p>
-            
+            <!-- <p class="text-gray-600">We've sent a 6-digit code to your gmail</p> -->
+
         </div>
 
         <!-- OTP Verification Card -->
@@ -150,7 +150,11 @@
                 <!-- OTP Form -->
                 <form id="otp-form" class="space-y-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Enter 6-digit OTP</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Enter 6-digit OTP</label>
+                        <p class="text-sm text-gray-700 mb-4">
+                            We've sent a 6-digit code to
+                            <span id="user-email" class="font-black text-black text-base tracking-tight">your email</span>
+                        </p>
                         <div class="otp-input-group" id="otp-container">
                             <input type="text" maxlength="1" class="otp-input" pattern="\d*" inputmode="numeric"
                                 required>
@@ -203,7 +207,8 @@
             <!-- Footer -->
             <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
                 <p class="text-sm text-gray-600">
-                    Having trouble? <a href="https://www.instagram.com/itsmeshubh2026" class="font-medium text-indigo-600 hover:text-indigo-500">Contact
+                    Having trouble? <a href="https://wa.me/qr/3S7QALPXLROCB1"
+                        class="font-medium text-indigo-600 hover:text-indigo-500">Contact
                         Support</a>
                 </p>
             </div>
@@ -227,7 +232,17 @@
 
     <script>
         // =============== INITIAL SETUP ===============
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get email from URL parameters or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            let userEmail = urlParams.get('email') || localStorage.getItem('userEmail') || 'your email';
+
+            // Update the email display
+            const emailElement = document.getElementById('user-email');
+            if (emailElement) {
+                emailElement.textContent = userEmail;
+            }
+
             const mobile = localStorage.getItem("pendingMobile");
             if (!mobile) {
                 alert("No mobile found, please register again");

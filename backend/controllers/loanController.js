@@ -1,15 +1,17 @@
 // backend/controllers/loanController.js
 import asyncHandler from "express-async-handler";
 import Loan from "../models/Loan.js";
+import path from "path";
 
 // @desc    Get all loans (optionally filter by bankId)
 // @route   GET /api/loans
 // @access  protected (or public if you want) - we will leave route protection to routes
 export const getLoans = asyncHandler(async (req, res) => {
-  const { bank } = req.query;
+  const { bank, bankType } = req.query;
 
   const filter = {};
   if (bank) filter.bankId = bank;
+  if (bankType) filter.bankType = bankType;
 
   const loans = await Loan.find(filter).sort({ createdAt: -1 }).lean();
   res.json({ success: true, data: loans });
@@ -47,12 +49,13 @@ export const createLoan = asyncHandler(async (req, res) => {
     bankId: body.bankId,
     bankName: body.bankName,
     bankLogo: body.bankLogo || "",
+    bankType: body.bankType || "BANK",
     loanName: body.loanName,
     description: body.description || "",
     minInterestRate: Number(body.minInterestRate) || 0,
     maxInterestRate: Number(body.maxInterestRate) || 0,
-    minProcessingFee: Number(body.minProcessingFee) || 0,
-    maxProcessingFee: Number(body.maxProcessingFee) || 0,
+    minProcessingFee: body.minProcessingFee,
+    maxProcessingFee: body.maxProcessingFee,
     minLoanAmount: Number(body.minLoanAmount) || 0,
     maxLoanAmount: Number(body.maxLoanAmount) || 0,
     minTenure: Number(body.minTenure) || 0,
@@ -82,9 +85,9 @@ export const updateLoan = asyncHandler(async (req, res) => {
   // Update fields (only those provided)
   const up = {};
   const allow = [
-    "bankId","bankName","bankLogo","loanName","description",
-    "minInterestRate","maxInterestRate","minProcessingFee","maxProcessingFee",
-    "minLoanAmount","maxLoanAmount","minTenure","maxTenure","status"
+    "bankId", "bankName", "bankLogo", "bankType", "loanName", "description",
+    "minInterestRate", "maxInterestRate", "minProcessingFee", "maxProcessingFee",
+    "minLoanAmount", "maxLoanAmount", "minTenure", "maxTenure", "status"
   ];
   allow.forEach(k => {
     if (body[k] !== undefined) up[k] = body[k];
@@ -122,11 +125,42 @@ export const deleteLoan = asyncHandler(async (req, res) => {
   await Loan.deleteOne({ _id: req.params.id });
   res.json({ success: true, msg: "Loan deleted" });
 });
+export const uploadBankLogo = asyncHandler(async (req, res) => {
+  try {
+    const bankId = req.body.bankId || (req.body && req.body.bankId);
+    if (!bankId) {
+      return res.status(400).json({ success: false, msg: "bankId required" });
+    }
+
+    // If no file uploaded, return bad request
+    if (!req.file) {
+      return res.status(400).json({ success: false, msg: "bankLogo file is required" });
+    }
+
+    // Build public URL path to serve the file (adjust if your static files served differently)
+    // If you serve /uploads via express.static, use window origin style URL in frontend.
+    const filePath = path.join("uploads", "bank-logos", req.file.filename);
+    // If your app is served from root and express.static serves /uploads, frontend can use `/${filePath}`
+    const publicUrl = `/${filePath}`;
+
+    // Update all loans with same bankId
+    const update = await Loan.updateMany(
+      { bankId: bankId },
+      { $set: { bankLogo: publicUrl } }
+    );
+
+    return res.json({ success: true, msg: "Bank logo uploaded and loans updated", updatedCount: update.modifiedCount ?? update.nModified, url: publicUrl });
+  } catch (err) {
+    console.error("uploadBankLogo error:", err);
+    return res.status(500).json({ success: false, msg: err.message || "Server error" });
+  }
+});
 
 export default {
   getLoans,
   getLoan,
   createLoan,
   updateLoan,
-  deleteLoan
+  deleteLoan,
+  uploadBankLogo
 };

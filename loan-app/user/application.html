@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Application - LoanApp</title>
+    <title>Loan Application - MLC</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/images/favicon.png">
     <!-- Tailwind CSS -->
@@ -20,6 +20,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="../js/api-fix.js"></script>
     <style>
+        :root {
+            --accent: #4f46e5;
+            /* indigo-600 */
+            --accent-2: #8b5cf6;
+            /* purple */
+            --glass: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
         /* Base styles */
         body {
             font-family: 'Poppins', sans-serif;
@@ -173,10 +182,186 @@
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
 
+        /* Enhanced Form Styling */
+        #loanApplicationForm {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        #loanApplicationForm .space-y-8>div {
+            background-color: #ffffff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease;
+        }
+
+        #loanApplicationForm .space-y-8>div:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        #loanApplicationForm h3 {
+            color: #1f2937;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.2s ease;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            color: #111827;
+            background-color: #ffffff;
+            background-clip: padding-box;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            height: 2.75rem;
+        }
+
         .form-control:focus {
-            border-color: var(--primary-color);
-            outline: 0;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Section headers */
+        #loanApplicationForm h4 {
+            color: #4b5563;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 0.75rem;
+        }
+
+        #loanApplicationForm h4:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.25rem;
+            bottom: 0.25rem;
+            width: 0.25rem;
+            background-color: #4f46e5;
+            border-radius: 0.25rem;
+        }
+
+        /* Form grid spacing */
+        .grid {
+            gap: 1rem;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 640px) {
+            .sm\:grid-cols-6 {
+                grid-template-columns: repeat(6, minmax(0, 1fr));
+            }
+        }
+
+        /* Enhanced form styling */
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.2s ease;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            color: #111827;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            height: 2.75rem;
+        }
+
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+            opacity: 1;
+        }
+
+        /* Select dropdown styling */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        /* Form section styling */
+        .space-y-8>div {
+            background-color: #fff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .space-y-8>div h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        /* Input group with icons */
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        .input-with-icon {
+            padding-left: 2.5rem;
         }
 
         .form-control.is-invalid {
@@ -284,7 +469,10 @@
         <div id="mobile-sidebar"
             class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
             <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
-                <span class="text-white text-xl font-bold">LoanApp</span>
+                <div class="rounded-md p-2" aria-hidden="true"
+                    style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                    <span class="text-white font-bold text-lg">MLC</span>
+                </div>
                 <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
                     <i class="fas fa-times"></i>
                 </button>
@@ -297,17 +485,23 @@
                         Dashboard
                     </a>
                     <a href="applications.html"
-                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
                         <i class="fas fa-file-invoice-dollar mr-3"></i>
                         My Applications
                     </a>
                     <a href="profile.html"
-                        class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                         <i class="fas fa-user-circle mr-3"></i>
                         Profile
                     </a>
+                    <a href="../emi-calculator.html"
+                        target="_blank"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-calculator mr-3"></i>
+                        EMI Calculator
+                    </a>
                 </nav>
-                <div class="p-4 mt-auto border-t border-indigo-500">
+                <!-- <div class="p-4 mt-auto border-t border-indigo-500">
                     <div class="flex items-center">
                         <img class="sidebar-user-avatar w-10 h-10 rounded-full object-cover"
                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"
@@ -317,7 +511,7 @@
                             <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -325,7 +519,10 @@
         <div class="hidden md:flex md:flex-shrink-0">
             <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
                 <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
-                    <span class="text-white text-xl font-bold">LoanApp</span>
+                    <div class="rounded-md p-2" aria-hidden="true"
+                        style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
                 </div>
                 <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
                     <nav class="flex-1 space-y-2">
@@ -335,14 +532,20 @@
                             Dashboard
                         </a>
                         <a href="applications.html"
-                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
                             <i class="fas fa-file-invoice-dollar mr-3"></i>
                             My Applications
                         </a>
                         <a href="profile.html"
-                            class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
+                        </a>
+                        <a href="../emi-calculator.html"
+                        target="_blank"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-calculator mr-3"></i>
+                            EMI Calculator
                         </a>
                     </nav>
                 </div>
@@ -423,7 +626,7 @@
                             </div>
 
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Personal Information</h3>
-                            <p class="mt-1 max-w-2xl text-sm text-gray-500">Please fill in your personal details.</p>
+                            <p class="mt-1 max-w-2xl text-sm text-gray-500">Please fill in your all details.</p>
                         </div>
                         <form id="loanApplicationForm" class="p-6">
                             <!-- ONE-PAGE APPLICATION FORM -->
@@ -435,32 +638,42 @@
                                     <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
 
                                         <div class="sm:col-span-3">
-                                            <label class="form-label">First Name</label>
+                                            <label class="form-label">First Name <span
+                                                    class="text-red-600">*</span></label>
                                             <input id="first-name" type="text" class="form-control">
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label class="form-label">Last Name</label>
+                                            <label class="form-label">Last Name <span
+                                                    class="text-red-600">*</span></label>
                                             <input id="last-name" type="text" class="form-control">
                                         </div>
 
                                         <div class="sm:col-span-4">
-                                            <label class="form-label">Email Address</label>
+                                            <label class="form-label">Email Address <span
+                                                    class="text-red-600">*</span></label>
                                             <input id="email" type="email" class="form-control">
                                         </div>
 
                                         <div class="sm:col-span-4">
-                                            <label class="form-label">Phone Number</label>
+                                            <label class="form-label">Phone Number <span
+                                                    class="text-red-600">*</span></label>
                                             <input id="phone" type="text" class="form-control">
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label class="form-label">Date of Birth</label>
+                                            <label class="form-label">Date of Birth <span
+                                                    class="text-red-600">*</span></label>
                                             <input id="date-of-birth" type="date" class="form-control">
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label class="form-label">Gender</label>
+                                            <label class="form-label">Age <span class="text-red-600">*</span></label>
+                                            <input id="age" type="number" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Gender <span class="text-red-600">*</span></label>
                                             <select id="gender" class="form-control">
                                                 <option>Select Gender</option>
                                                 <option>Male</option>
@@ -470,7 +683,74 @@
                                             </select>
                                         </div>
 
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Mother's Name <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="father-name" type="text" class="form-control">
+                                        </div>
+
+                                        <!-- Current Address -->
+                                        <div class="sm:col-span-6 mt-6">
+                                            <h4 class="text-md font-medium text-gray-700">Current Address <span
+                                                    class="text-red-600">*</span></h4>
+                                        </div>
+
                                         <div class="sm:col-span-6">
+                                            <label class="form-label">Street Address <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="current-address" type="text" class="form-control"
+                                                placeholder="House/Flat no, Building, Street">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">City <span class="text-red-600">*</span></label>
+                                            <input id="current-city" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">State <span class="text-red-600">*</span></label>
+                                            <input id="current-state" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">Postal Code <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="current-postal-code" type="text" class="form-control">
+                                        </div>
+
+                                        <!-- Permanent Address -->
+                                        <div class="sm:col-span-6 mt-6">
+                                            <h4 class="text-md font-medium text-gray-700">Permanent Address <span
+                                                    class="text-red-600">*</span></h4>
+                                        </div>
+
+                                        <div class="sm:col-span-6">
+                                            <label class="form-label">Street Address <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="permanent-address" type="text" class="form-control"
+                                                placeholder="House/Flat no, Building, Street">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">City <span class="text-red-600">*</span></label>
+                                            <input id="permanent-city" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">State <span class="text-red-600">*</span></label>
+                                            <input id="permanent-state" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-2">
+                                            <label class="form-label">Postal Code <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="permanent-postal-code" type="text" class="form-control">
+                                        </div>
+
+
+
+
+                                        <!-- <div class="sm:col-span-6">
                                             <label class="form-label">Address</label>
                                             <input id="address" type="text" class="form-control">
                                         </div>
@@ -488,7 +768,7 @@
                                         <div class="sm:col-span-2">
                                             <label class="form-label">Postal Code</label>
                                             <input id="postal-code" type="text" class="form-control">
-                                        </div>
+                                        </div> -->
 
                                     </div>
                                 </div>
@@ -499,30 +779,65 @@
                                     <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
 
                                         <div class="sm:col-span-3">
-                                            <label class="form-label">Employment Type</label>
+                                            <label class="form-label">Employment Type <span
+                                                    class="text-red-600">*</span></label>
                                             <select id="employment-type" class="form-control">
                                                 <option>Select Employment Type</option>
                                                 <option>Salaried</option>
-                                                <option>Self-Employed</option>
+                                                <!-- <option>Self-Employed</option>
                                                 <option>Business</option>
                                                 <option>Retired</option>
                                                 <option>Student</option>
-                                                <option>Unemployed</option>
+                                                <option>Unemployed</option> -->
                                             </select>
                                         </div>
 
                                         <div class="sm:col-span-3">
-                                            <label class="form-label">Monthly Income</label>
-                                            <input id="monthly-income" type="number" class="form-control">
+                                            <label class="form-label">Monthly Net Salary <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="monthly-income" type="text" class="form-control"
+                                                inputmode="numeric">
                                         </div>
-                                        
+
                                         <div class="sm:col-span-3">
-                                            <label class="form-label">Loan Amount (₹)</label>
-                                            <input id="loan-amount" type="number" class="form-control" required>
+                                            <label class="form-label">Company Name</label>
+                                            <input id="company-name" type="text" class="form-control">
                                         </div>
-                                        
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Company Email (optional)</label>
+                                            <input id="company-email" type="email" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Role / Designation <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="role" type="text" class="form-control">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Current EMI (If any)</label>
+                                            <input id="current-emi" type="text" class="form-control"
+                                                inputmode="numeric">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Credit Card Obligations (If any)</label>
+                                            <input id="credit-obligation" type="text" class="form-control"
+                                                inputmode="numeric">
+                                        </div>
+
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Loan Amount (₹) <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="loan-amount" type="text" class="form-control" required
+                                                inputmode="numeric">
+                                        </div>
+
                                         <div class="sm:col-span-6">
-                                            <label class="form-label">Purpose of Loan</label>
+                                            <label class="form-label">Purpose of Loan <span
+                                                    class="text-red-600">*</span></label>
                                             <select id="loan-purpose" class="form-control" required>
                                                 <option value="">Select a purpose</option>
                                                 <option value="Home Purchase">Home Purchase</option>
@@ -546,14 +861,14 @@
 
                                         <!-- PAN -->
                                         <div class="border p-4 rounded-lg">
-                                            <h5>PAN Card</h5>
+                                            <h5>PAN Card <span class="text-red-600">*</span></h5>
                                             <input type="file" id="pan-card" accept=".pdf,.jpg,.jpeg,.png">
                                             <p id="pan-card-status" class="text-sm mt-1"></p>
                                         </div>
 
                                         <!-- Aadhaar -->
                                         <div class="border p-4 rounded-lg">
-                                            <h5>Aadhaar Card (Front & Back)</h5>
+                                            <h5>Aadhaar Card (Front & Back) <span class="text-red-600">*</span></h5>
                                             <input type="file" id="aadhaar-front" accept=".pdf,.jpg,.jpeg,.png">
                                             <p id="aadhaar-front-status" class="text-sm mt-1"></p>
                                             <input type="file" id="aadhaar-back" accept=".pdf,.jpg,.jpeg,.png"
@@ -563,21 +878,80 @@
 
                                         <!-- Address Proof -->
                                         <div class="border p-4 rounded-lg">
-                                            <h5>Address Proof</h5>
+                                            <h5>Address Proof <span class="text-red-600">*</span></h5>
                                             <input type="file" id="address-proof" accept=".pdf,.jpg,.jpeg,.png">
                                             <p id="address-proof-status" class="text-sm mt-1"></p>
                                         </div>
 
-                                        <!-- Income Proof -->
+                                        <!-- Income Proof
                                         <div class="border p-4 rounded-lg">
-                                            <h5>Income Proof</h5>
+                                            <h5>Income Proof(Last 3-Month Salary Slip)</h5>
                                             <input type="file" id="income-proof" accept=".pdf">
                                             <p id="income-proof-status" class="text-sm mt-1"></p>
+                                        </div> -->
+
+                                        <!-- Salary Slips (3 months) -->
+                                        <div class="border p-4 rounded-lg">
+                                            <h5>Salary Slips (Last 3 Months) <span class="text-red-600">*</span></h5>
+
+                                            <input type="file" id="salary-slip-1" accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="salary-slip-1-status" class="text-sm mt-1"></p>
+
+                                            <input type="text" id="salary-slip-1-password"
+                                                placeholder="Month 1, If protected, enter password"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+
+
+                                            <input type="file" id="salary-slip-2" class="mt-2"
+                                                accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="salary-slip-2-status" class="text-sm mt-1"></p>
+
+                                            <input type="text" id="salary-slip-2-password"
+                                                placeholder="Month 2, If protected, enter password"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+
+
+                                            <input type="file" id="salary-slip-3" class="mt-2"
+                                                accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="salary-slip-3-status" class="text-sm mt-1"></p>
+
+                                            <input type="text" id="salary-slip-3-password"
+                                                placeholder="Month 3, If protected, enter password"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+                                        </div>
+
+                                        <!-- Bank Statements (3 months) -->
+                                        <div class="border p-4 rounded-lg mt-4">
+                                            <h5>Bank Statements (Last 3 Months) <span class="text-red-600">*</span></h5>
+                                            <input type="file" id="bank-statement-1" accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="bank-statement-1-status" class="text-sm mt-1"></p>
+
+                                            <input type="text" id="bank-statement-1-password"
+                                                placeholder="Month 1, If protected, enter password"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+
+
+                                            <input type="file" id="bank-statement-2" class="mt-2"
+                                                accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="bank-statement-2-status" class="text-sm mt-1"></p>
+
+                                            <input type="text" id="bank-statement-2-password"
+                                                placeholder="Month 2, If protected, enter password"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+
+
+                                            <input type="file" id="bank-statement-3" class="mt-2"
+                                                accept=".pdf,.jpg,.jpeg,.png">
+                                            <p id="bank-statement-3-status" class="text-sm mt-1"></p>
+
+                                            <input type="text" id="bank-statement-3-password"
+                                                placeholder="Month 3, If protected, enter password"
+                                                class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
                                         </div>
 
                                         <!-- Photo -->
                                         <div class="border p-4 rounded-lg">
-                                            <h5>Passport Photo</h5>
+                                            <h5>Photo <span class="text-red-600">*</span></h5>
                                             <input type="file" id="photo" accept=".jpg,.jpeg,.png">
                                             <p id="photo-status" class="text-sm mt-1"></p>
                                         </div>
@@ -645,25 +1019,47 @@
 
         (() => {
             // ---------- Config ----------
-            const API_BASE = "http://localhost:5000";
+            const API_BASE = window.location.origin;
             const uploadEndpoint = `${API_BASE}/api/upload/document`;
             const applicationsEndpoint = `${API_BASE}/api/applications`;
+
             const formId = "loanApplicationForm";
 
             const textFields = [
-                "first-name", "last-name", "email", "phone", "date-of-birth", "gender",
-                "address", "city", "state", "postal-code", "employment-type", "monthly-income",
+                "first-name", "last-name", "email", "phone",
+                "date-of-birth", "gender", "father-name", "age",
+
+                "current-address", "current-city", "current-state", "current-postal-code",
+
+                "permanent-address", "permanent-city", "permanent-state", "permanent-postal-code",
+
+                "employment-type", "company-name", "company-email",
+                "role", "current-emi", "credit-obligation", "monthly-income",
+
                 "loan-amount", "loan-purpose"
             ];
+
 
             const uploadConfigs = [
                 { id: 'pan-card', property: 'pan', status: 'pan-card-status' },
                 { id: 'aadhaar-front', property: 'aadhaarFront', status: 'aadhaar-front-status' },
                 { id: 'aadhaar-back', property: 'aadhaarBack', status: 'aadhaar-back-status' },
                 { id: 'address-proof', property: 'addressProof', status: 'address-proof-status' },
-                { id: 'income-proof', property: 'incomeProof', status: 'income-proof-status' },
+
+
+                { id: 'salary-slip-1', property: 'salarySlip1', status: 'salary-slip-1-status' },
+                { id: 'salary-slip-2', property: 'salarySlip2', status: 'salary-slip-2-status' },
+                { id: 'salary-slip-3', property: 'salarySlip3', status: 'salary-slip-3-status' },
+
+
+                { id: 'bank-statement-1', property: 'bankStatement1', status: 'bank-statement-1-status' },
+                { id: 'bank-statement-2', property: 'bankStatement2', status: 'bank-statement-2-status' },
+                { id: 'bank-statement-3', property: 'bankStatement3', status: 'bank-statement-3-status' },
+
+
                 { id: 'photo', property: 'photo', status: 'photo-status' }
             ];
+
 
             // ---------- App state ----------
             let applicationData = { documents: { pan: null, aadhaarFront: null, aadhaarBack: null, addressProof: null, incomeProof: null, photo: null } };
@@ -714,7 +1110,7 @@
                     qs("selectedLoanName").textContent = loan.loanName || loan.name || "-";
                     const interest = loan.interestRate || ((loan.minInterestRate != null && loan.maxInterestRate != null) ? `${loan.minInterestRate}% - ${loan.maxInterestRate}% p.a.` : "-");
                     qs("selectedLoanInterest").textContent = interest;
-                    const processing = loan.processingFee || ((loan.minProcessingFee != null && loan.maxProcessingFee != null) ? `${loan.minProcessingFee}% - ${loan.maxProcessingFee}%` : "-");
+                    const processing = loan.processingFee || ((loan.minProcessingFee != null && loan.maxProcessingFee != null) ? `${loan.minProcessingFee} - ${loan.maxProcessingFee}` : "-");
                     qs("selectedLoanProcessing").textContent = processing;
                     const tenure = loan.tenure || ((loan.minTenure != null && loan.maxTenure != null) ? `${loan.minTenure} - ${loan.maxTenure} years` : "-");
                     qs("selectedLoanTenure").textContent = tenure;
@@ -777,7 +1173,7 @@
                     if (statusEl) { statusEl.textContent = "Uploaded ✓"; statusEl.classList.add("text-green-600"); }
                     const url = data?.url || data?.fileUrl || null;
                     log("Upload success", url);
-                    return url;
+                    return fixUploads(url);
                 } catch (err) {
                     if (statusEl) { statusEl.textContent = "Upload Error ❌"; statusEl.classList.add("text-red-600"); }
                     console.error("Upload error", err);
@@ -879,35 +1275,115 @@
                         try { selectedLoanObj = JSON.parse(selectedLoanRaw); } catch (e) { console.warn("selectedLoan parse", e); }
                     }
 
+                    // Helper function to safely parse numbers
+                    const parseNumber = (value, defaultValue = 0) => {
+                        const num = Number(value);
+                        return isNaN(num) ? defaultValue : num;
+                    };
+
                     const payload = {
-                        fullName: `${qs("first-name")?.value.trim() || ""} ${qs("last-name")?.value.trim() || ""}`.trim(),
-                        email: qs("email")?.value.trim() || "",
-                        phone: qs("phone")?.value.trim() || "",
-                        dob: qs("date-of-birth")?.value.trim() || "",
-                        gender: qs("gender")?.value.trim() || "",
-                        address: qs("address")?.value.trim() || "",
-                        city: qs("city")?.value.trim() || "",
-                        state: qs("state")?.value.trim() || "",
-                        postalCode: qs("postal-code")?.value.trim() || "",
-                        employmentType: qs("employment-type")?.value.trim() || "",
-                        monthlyIncome: qs("monthly-income")?.value.trim() || "",
-                        loanAmount: qs("loan-amount")?.value.trim() || "",
-                        loanPurpose: qs("loan-purpose")?.value.trim() || "",
-                        documents: applicationData.documents || {},
-                        // REQUIRED BY BACKEND
+                        // ---- PERSONAL ----
+                        personal: {
+                            fullName: `${qs("first-name")?.value.trim() || ""} ${qs("last-name")?.value.trim() || ""}`.trim(),
+                            fatherName: qs("father-name")?.value.trim() || "",
+                            age: parseNumber(qs("age")?.value.trim()),
+                            dob: qs("date-of-birth")?.value.trim() || "",
+                            gender: qs("gender")?.value.trim() || "",
+                            email: qs("email")?.value.trim() || "",
+                            phone: qs("phone")?.value.trim() || "",
+                            currentAddress: {
+                                street: qs("current-address")?.value.trim() || "",
+                                city: qs("current-city")?.value.trim() || "",
+                                state: qs("current-state")?.value.trim() || "",
+                                zip: qs("current-postal-code")?.value.trim() || ""
+                            },
+                            permanentAddress: {
+                                street: qs("permanent-address")?.value.trim() || "",
+                                city: qs("permanent-city")?.value.trim() || "",
+                                state: qs("permanent-state")?.value.trim() || "",
+                                zip: qs("permanent-postal-code")?.value.trim() || ""
+                            }
+                        },
+
+                        // ---- EMPLOYMENT ----
+                        employment: {
+                            employmentType: qs("employment-type")?.value.trim() || "",
+                            companyName: qs("company-name")?.value.trim() || "",
+                            companyEmail: qs("company-email")?.value.trim() || "",
+                            role: qs("role")?.value.trim() || "",
+                            income: parseNumber(qs("monthly-income")?.value.replace(/,/g, "").trim() || "0"),
+                            currentEmi: parseNumber(qs("current-emi")?.value.trim() || "0"),
+                            creditObligation: parseNumber(qs("credit-obligation")?.value.trim() || "0")
+                        },
+
+                        // ---- LOAN DETAILS ----
+                        loanAmount: parseNumber(qs("loan-amount")?.value.replace(/,/g, "").trim() || "0"),
+                        loanPurpose: qs("loan-purpose")?.value.trim() || "Personal Use",
+
+                        // ---- DOCUMENTS ----
+                        documents: {
+                            ...applicationData.documents,
+
+                            salarySlip1Password: qs("salary-slip-1-password")?.value.trim() || "",
+                            salarySlip2Password: qs("salary-slip-2-password")?.value.trim() || "",
+                            salarySlip3Password: qs("salary-slip-3-password")?.value.trim() || "",
+
+                            bankStatement1Password: qs("bank-statement-1-password")?.value.trim() || "",
+                            bankStatement2Password: qs("bank-statement-2-password")?.value.trim() || "",
+                            bankStatement3Password: qs("bank-statement-3-password")?.value.trim() || "",
+                        },
+
+
+                        // ---- SYSTEM FIELDS ----
                         bankName: sessionStorage.getItem("selectedBankName") || "",
-                        loanName: selectedLoanObj?.loanName || selectedLoanObj?.name || selectedLoanObj?.loan_type || "",
+                        loanName: selectedLoanObj?.loanName || selectedLoanObj?.name || "",
                         loanId: sessionStorage.getItem("selectedLoanId") || "",
                         bankId: sessionStorage.getItem("selectedBankId") || ""
                     };
 
+
+
                     log("Submitting payload:", payload);
 
                     // basic front validation to avoid empty required fields
-                    if (!payload.fullName || !payload.email || !payload.phone || !payload.address || !payload.dob || !payload.gender) {
-                        alert("Please complete all required fields before submitting.");
+                    if (
+                        !payload.personal.fullName ||
+                        !payload.personal.fatherName ||
+                        !payload.personal.age ||
+                        !payload.personal.dob ||
+                        !payload.personal.gender ||
+                        !payload.personal.email ||
+                        !payload.personal.phone ||
+                        !payload.personal.currentAddress.street ||
+                        !payload.personal.currentAddress.city ||
+                        !payload.personal.currentAddress.state ||
+                        !payload.personal.currentAddress.zip ||
+                        !payload.personal.permanentAddress.street ||
+                        !payload.personal.permanentAddress.city ||
+                        !payload.personal.permanentAddress.state ||
+                        !payload.personal.permanentAddress.zip
+                    ) {
+                        alert("Please fill all required fields (Personal + Address).");
                         return;
                     }
+                    if (
+                        !applicationData.documents.pan ||
+                        !applicationData.documents.aadhaarFront ||
+                        !applicationData.documents.aadhaarBack ||
+                        !applicationData.documents.addressProof ||
+                        !applicationData.documents.salarySlip1 ||
+                        !applicationData.documents.salarySlip2 ||
+                        !applicationData.documents.salarySlip3 ||
+                        !applicationData.documents.bankStatement1 ||
+                        !applicationData.documents.bankStatement2 ||
+                        !applicationData.documents.bankStatement3 ||
+                        !applicationData.documents.photo
+                    ) {
+                        alert("Please upload all required documents.");
+                        return;
+                    }
+
+
 
                     try {
                         const res = await fetch(applicationsEndpoint, {
@@ -947,6 +1423,28 @@
             // ---------- Init sequence ----------
             document.addEventListener("DOMContentLoaded", async () => {
                 console.log("[app] Initializing consolidated script");
+                // Detect NEW application properly
+                const isNew = !sessionStorage.getItem("application_in_progress");
+
+                if (isNew) {
+                    localStorage.removeItem("loanForm_snapshot");
+                    localStorage.removeItem("loanForm_docs");
+                    existingApplication = null;
+
+                    // 🔥 Reset all document URLs so nothing shows as restored
+                    applicationData.documents = {
+                        pan: null,
+                        aadhaarFront: null,
+                        aadhaarBack: null,
+                        addressProof: null,
+                        incomeProof: null,
+                        photo: null
+                    };
+                }
+
+
+                sessionStorage.setItem("application_in_progress", "true");
+
                 // Auth check and UI
                 const token = localStorage.getItem("userToken");
                 if (!token) { window.location.href = "../login.html"; return; }
@@ -963,9 +1461,46 @@
                 attachFormSubmit();
                 attachReloadDebugger();
                 console.log("[app] ready");
+                sessionStorage.setItem("application_in_progress", "yes");
+
             });
 
-        })(); 
+        })();
+
+
+        // ---------- INR Formatting Helpers ----------
+        function formatINR(value) {
+            value = value.toString().replace(/[^0-9]/g, "");
+
+            if (value.length <= 3) return value;
+
+            let lastThree = value.slice(-3);
+            let otherNumbers = value.slice(0, -3);
+
+            otherNumbers = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+
+            return otherNumbers + "," + lastThree;
+        }
+
+
+        function attachINRFormatter(id) {
+            const input = document.getElementById(id);
+            if (!input) return;
+
+            input.addEventListener("input", () => {
+                let plain = input.value.replace(/,/g, "");
+                if (plain === "") { input.value = ""; return; }
+                input.value = formatINR(plain);
+            });
+        }
+
+        // Apply formatter
+        attachINRFormatter("monthly-income");
+        attachINRFormatter("loan-amount");
+        attachINRFormatter("current-emi");
+        attachINRFormatter("credit-obligation");
+
+
     </script>
 
 

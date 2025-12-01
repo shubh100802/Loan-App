@@ -16,6 +16,12 @@ const admins = [
     password: "AnujitaRiya@1608",
     role: "admin",
   },
+  {
+    username: "01abhikarn@gmail.com",
+    password: "@bhikarn0001",
+    role: "admin",
+  },
+
   // ⭐ Add more admins anytime here:
   // { username: "NewAdmin", password: "NewPass123", role: "admin" }
 ];

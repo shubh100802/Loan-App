@@ -1,4 +1,6 @@
-
+function fixUploads(url) {
+    return url.replace("http://localhost:5000", window.location.origin);
+}
 
 
 const BASE_URL = window.location.origin;     
@@ -21,3 +23,34 @@ window.fetch = function (url, options = {}) {
 
     return originalFetch(url, options);
 };
+
+// =========================
+// AUTO LOGOUT AFTER 5 MIN IDLE
+// =========================
+
+let idleTimer;
+const IDLE_LIMIT = 5 * 60 * 1000; 
+
+function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+        logout();   
+    }, IDLE_LIMIT);
+}
+
+// Detect user activity to reset the timer
+window.onload = resetIdleTimer;
+window.onmousemove = resetIdleTimer;
+window.onmousedown = resetIdleTimer;
+window.ontouchstart = resetIdleTimer;
+window.onclick = resetIdleTimer;
+window.onkeypress = resetIdleTimer;
+window.onscroll = resetIdleTimer;
+
+
+// GLOBAL LOGOUT FUNCTION (required by all pages)
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "../index.html"; 
+}
+

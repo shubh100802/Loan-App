@@ -14,6 +14,12 @@ export const register = async (req, res) => {
             return res.status(400).json({ msg: "Mobile number already registered" });
         }
 
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+            return res.status(400).json({ msg: "Email already registered" });
+        }
+
+
         // Hash Password
         const hashed = await bcrypt.hash(password, 10);
 
@@ -26,18 +32,23 @@ export const register = async (req, res) => {
             email,
             password: hashed,
             otp,
-            otpExpires: Date.now() + 5 * 60 * 1000, // 5 mins
+            otpExpires: Date.now() + 5 * 60 * 1000, 
         });
 
         // Email Body
         const html = `
-            <h2>Your LoanApp Verification Code</h2>
+            <h2>Your MLC Verification Code</h2>
             <p>Your OTP is:</p>
             <h1 style="font-size:32px; color:#4f46e5;">${otp}</h1>
             <p>This OTP will expire in 5 minutes.</p>
         `;
 
-        await sendEmail(email, "LoanApp Email Verification", html);
+        const emailSent = await sendEmail(email, "MLC Email Verification", html);
+
+        if (!emailSent) {
+            return res.status(500).json({ msg: "Failed to send OTP. Please try again or use a verified email." });
+        }
+
 
         res.json({ success: true, msg: "OTP sent to email", userId: user._id });
 
@@ -101,12 +112,12 @@ export const resendOtp = async (req, res) => {
         await user.save();
 
         const html = `
-            <h2>Your new LoanApp OTP</h2>
+            <h2>Your new MLC (myloancredit) OTP</h2>
             <h1 style="font-size:32px; color:#4f46e5;">${otp}</h1>
             <p>Expires in 5 minutes.</p>
         `;
 
-        await sendEmail(user.email, "LoanApp - New OTP", html);
+        await sendEmail(user.email, "MLC - New OTP", html);
 
         res.json({ success: true, msg: "New OTP sent" });
 

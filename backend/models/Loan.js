@@ -11,6 +11,12 @@ const LoanSchema = new mongoose.Schema({
   bankId: { type: String, required: true },
   bankName: { type: String, required: true },
   bankLogo: { type: String },
+  bankType: {
+    type: String,
+    enum: ["BANK", "NBFC"],
+    default: "BANK"
+  },
+
 
   loanName: { type: String, required: true },
   description: { type: String },
@@ -18,8 +24,8 @@ const LoanSchema = new mongoose.Schema({
   minInterestRate: { type: Number, required: true },
   maxInterestRate: { type: Number, required: true },
 
-  minProcessingFee: { type: Number, required: true },
-  maxProcessingFee: { type: Number, required: true },
+  minProcessingFee: { type: String, required: true },
+  maxProcessingFee: { type: String, required: true },
 
   minLoanAmount: { type: Number, required: true },
   maxLoanAmount: { type: Number, required: true },

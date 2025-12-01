@@ -9,26 +9,50 @@ const AddressSchema = new mongoose.Schema({
 }, { _id: false });
 
 const PersonalSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  email: String,
-  phone: String,
+  fullName: String,
+  fatherName: String,
+  age: Number,
   dob: String,
   gender: String,
-  address: AddressSchema
+  email: String,
+  phone: String,
+  currentAddress: AddressSchema,
+  permanentAddress: AddressSchema
 }, { _id: false });
+
 
 const EmploymentSchema = new mongoose.Schema({
-  employer: String,
-  jobTitle: String,
+  employmentType: String,
+  companyName: String,
+  companyEmail: String,
+  role: String,
   income: Number,
-  employmentType: String
+  currentEmi: Number,
+  creditObligation: Number
 }, { _id: false });
 
+
 const DocumentSchema = new mongoose.Schema({
-  name: String,
-  url: String
+  pan: String,
+  aadhaarFront: String,
+  aadhaarBack: String,
+  addressProof: String,
+  salarySlip1: String,
+  salarySlip2: String,
+  salarySlip3: String,
+  salarySlip1Password: String,
+  salarySlip2Password: String,
+  salarySlip3Password: String,
+  bankStatement1: String,
+  bankStatement2: String,
+  bankStatement3: String,
+  bankStatement1Password: String,
+  bankStatement2Password: String,
+  bankStatement3Password: String,
+  photo: String
 }, { _id: false });
+
+
 
 const ApplicationSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, // optional if guest
@@ -40,8 +64,8 @@ const ApplicationSchema = new mongoose.Schema({
   loanPurpose: { type: String, required: true, enum: ["Home Purchase", "Home Renovation", "Personal Use", "Education", "Medical", "Business", "Debt Consolidation", "Other"] },
   personal: PersonalSchema,
   employment: EmploymentSchema,
-  documents: [DocumentSchema],
-  status: { type: String, enum: ["draft","submitted","approved","rejected"], default: "submitted" },
+  documents: DocumentSchema,
+  status: { type: String, enum: ["draft", "submitted", "approved", "rejected"], default: "submitted" },
   meta: { type: mongoose.Schema.Types.Mixed }
 }, { timestamps: true });
 

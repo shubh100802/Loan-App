@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Loan Type - LoanApp</title>
+    <title>Select Loan Type - MLC</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/images/favicon.png">
     <!-- Tailwind CSS -->
@@ -18,20 +18,115 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../js/api-fix.js"></script>
     <style>
+        :root {
+            --accent: #4f46e5;
+            /* indigo-600 */
+            --accent-2: #8b5cf6;
+            /* purple */
+            --glass: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
         .loan-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e0e7ff;
+            background: linear-gradient(145deg, #ffffff, #f8faff);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .loan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #8b5cf6);
+            opacity: 0;
             transition: all 0.3s ease;
-            border: 2px solid transparent;
+            z-index: 1;
+        }
+
+        .loan-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0) 70%);
+            border-radius: 50%;
+            transform: translate(40%, -40%);
+            pointer-events: none;
+            transition: all 0.4s ease;
         }
 
         .loan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: #4f46e5;
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.08), 0 10px 10px -5px rgba(79, 70, 229, 0.06);
+            border-color: #c7d2fe;
+        }
+
+        .loan-card:hover::before {
+            opacity: 1;
+            height: 6px;
+        }
+
+        .loan-card:hover::after {
+            transform: translate(30%, -30%) scale(1.1);
+            opacity: 0.8;
         }
 
         .loan-card.selected {
-            border-color: #4f46e5;
-            background-color: #f5f3ff;
+            background: linear-gradient(145deg, #f0f4ff, #eef2ff);
+            border: 2px solid #c7d2fe;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.1), 0 10px 10px -5px rgba(79, 70, 229, 0.08);
+        }
+
+        .loan-card.selected::before {
+            opacity: 1;
+            height: 6px;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+            color: #4f46e5;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .loan-card:hover .feature-icon {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(45deg, #f59e0b, #fbbf24);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
     </style>
 </head>
@@ -43,7 +138,10 @@
         <div class="hidden md:flex md:flex-shrink-0">
             <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
                 <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
-                    <span class="text-white text-xl font-bold">LoanApp</span>
+                    <div class="rounded-md p-2" aria-hidden="true"
+                        style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
                 </div>
                 <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
                     <nav class="flex-1 space-y-2">
@@ -61,6 +159,12 @@
                             class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
+                        </a>
+                        <a href="../emi-calculator.html"
+                            target="_blank"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-calculator mr-3"></i>
+                            EMI Calculator
                         </a>
                     </nav>
                 </div>
@@ -85,7 +189,10 @@
             <div id="mobile-sidebar"
                 class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
                 <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
-                    <span class="text-white text-xl font-bold">LoanApp</span>
+                    <div class="rounded-md p-2" aria-hidden="true"
+                        style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
                     <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
                         <i class="fas fa-times"></i>
                     </button>
@@ -107,8 +214,14 @@
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
                         </a>
+                        <a href="../emi-calculator.html"
+                            target="_blank"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-calculator mr-3"></i>
+                            EMI Calculator
+                        </a>
                     </nav>
-                    <div class="p-4 mt-auto border-t border-indigo-500">
+                    <!-- <div class="p-4 mt-auto border-t border-indigo-500">
                         <div class="flex items-center">
                             <img class="user-avatar w-10 h-10 rounded-full">
                             <div class="ml-3">
@@ -116,7 +229,7 @@
                                 <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- Top Navigation -->
@@ -268,11 +381,9 @@
 
                 // ================== AVATAR OR FALLBACK ==================
                 document.querySelectorAll(".user-avatar").forEach(img => {
-                    if (user.profilePic) {
-                        img.src = `http://localhost:5000/uploads/${user.profilePic}`;
-                    } else {
-                        img.src = `https://ui-avatars.com/api/?name=${initials}&background=7c3aed&color=fff&bold=true`;
-                    }
+                    img.src = user.profilePic
+                        ? `${window.location.origin}/uploads/${user.profilePic}`
+                        : `https://ui-avatars.com/api/?name=${user.name}&background=7c3aed&color=fff`;
                 });
 
             } catch (err) {
@@ -416,6 +527,33 @@
         //  ========== Select Loan Type ==========
 
         const API_BASE = "http://localhost:5000/api/loans";
+        
+        // Helper function to format description into bullet points
+        function formatDescription(description) {
+            if (!description) return '';
+            
+            // Split by newlines or periods followed by space
+            const points = description.split(/\n|\.\s+/)
+                .filter(point => point.trim().length > 0)
+                .map(point => {
+                    // Add period if it's missing
+                    point = point.trim();
+                    if (point && !['.', '!', '?'].includes(point.slice(-1))) {
+                        point += '.';
+                    }
+                    return point;
+                });
+            
+            if (points.length === 0) return '';
+            
+            return `
+                <div class="mt-3">
+                    <ul class="space-y-2 text-sm text-gray-600 list-disc pl-5">
+                        ${points.map(point => `<li>${point}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
 
         // Selected bank
         const bankId = sessionStorage.getItem("selectedBankId");
@@ -449,25 +587,110 @@
 
                 loans.forEach(loan => {
                     const card = document.createElement("div");
-                    card.className =
-                        "p-6 bg-white shadow-md rounded-lg cursor-pointer loan-card hover:shadow-xl transition";
+                    card.className = "p-6 cursor-pointer loan-card relative";
 
                     let interest = `${loan.minInterestRate}% - ${loan.maxInterestRate}% p.a.`;
                     let tenure = `${loan.minTenure} - ${loan.maxTenure} years`;
-                    let amount = `₹${loan.minLoanAmount} - ₹${loan.maxLoanAmount}`;
-                    let processing = `${loan.minProcessingFee}% - ${loan.maxProcessingFee}%`;
+                    let amount = `₹${new Intl.NumberFormat('en-IN').format(loan.minLoanAmount)} - ₹${new Intl.NumberFormat('en-IN').format(loan.maxLoanAmount)}`;
+                    let processing = `${loan.minProcessingFee} - ${loan.maxProcessingFee}`;
+                    
+                    // Check if this is a popular loan type
+                    const isPopular = loan.loanName.toLowerCase().includes('personal') || 
+                                    loan.loanName.toLowerCase().includes('home');
+                    
+                    // Get appropriate icon based on loan type
+                    const getLoanIcon = (loanName) => {
+                        const name = loanName.toLowerCase();
+                        if (name.includes('home')) return 'fa-home';
+                        if (name.includes('car') || name.includes('auto')) return 'fa-car';
+                        if (name.includes('personal')) return 'fa-wallet';
+                        if (name.includes('education')) return 'fa-graduation-cap';
+                        if (name.includes('business')) return 'fa-briefcase';
+                        return 'fa-file-invoice-dollar';
+                    };
+
+                    // Get a subtle color variation based on loan type
+                    const getCardAccent = (loanName) => {
+                        const name = loanName.toLowerCase();
+                        if (name.includes('home')) return 'from-indigo-100/50 to-indigo-50';
+                        if (name.includes('car')) return 'from-blue-100/50 to-blue-50';
+                        if (name.includes('personal')) return 'from-purple-100/50 to-purple-50';
+                        if (name.includes('education')) return 'from-emerald-100/50 to-emerald-50';
+                        if (name.includes('business')) return 'from-amber-100/50 to-amber-50';
+                        return 'from-gray-100/50 to-gray-50';
+                    };
+
+                    const cardAccent = getCardAccent(loan.loanName);
+                    card.className += ` ${cardAccent}`;
 
                     card.innerHTML = `
-                <h3 class="text-xl font-bold">${loan.loanName}</h3>
-                <p class="text-gray-600 mt-1">${loan.description || ""}</p>
-
-                <div class="mt-3 text-sm">
-                    <p><strong>Interest:</strong> ${interest}</p>
-                    <p><strong>Tenure:</strong> ${tenure}</p>
-                    <p><strong>Loan Amount:</strong> ${amount}</p>
-                    <p><strong>Processing Fee:</strong> ${processing}</p>
-                </div>
-            `;
+                        ${isPopular ? '<div class="popular-badge"><i class="fas fa-star text-yellow-100"></i> Popular</div>' : ''}
+                        <div class="relative z-10">
+                            <div class="flex items-start">
+                                <div class="feature-icon mr-4 flex-shrink-0">
+                                    <i class="fas ${getLoanIcon(loan.loanName)}"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold text-gray-900">${loan.loanName}</h3>
+                                    ${formatDescription(loan.description)}
+                                    
+                                    <div class="mt-5 space-y-3 text-sm">
+                                        <div class="flex items-center bg-white/50 backdrop-blur-sm p-2 rounded-lg">
+                                            <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                                <i class="fas fa-percentage text-sm"></i>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-xs text-gray-500">Interest Rate</p>
+                                                <p class="font-medium text-gray-800">${interest}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div class="bg-white/50 backdrop-blur-sm p-2 rounded-lg">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                                        <i class="far fa-calendar-alt text-sm"></i>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <p class="text-xs text-gray-500">Tenure</p>
+                                                        <p class="font-medium text-gray-800 text-sm">${tenure}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="bg-white/50 backdrop-blur-sm p-2 rounded-lg">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                                        <i class="fas fa-file-invoice text-sm"></i>
+                                                    </div>
+                                                    <div class="ml-3">
+                                                        <p class="text-xs text-gray-500">Processing Fee</p>
+                                                        <p class="font-medium text-gray-800 text-sm">${processing}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="bg-white/70 backdrop-blur-sm p-2 rounded-lg">
+                                            <div class="flex items-center">
+                                                <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                                    <i class="fas fa-rupee-sign text-sm"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-xs text-gray-500">Loan Amount</p>
+                                                    <p class="font-medium text-gray-800 text-sm">${amount}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Decorative elements -->
+                        <div class="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-indigo-100/20 blur-xl"></div>
+                        <div class="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-purple-100/20 blur-xl"></div>
+                    `;
 
                     // Card Select Handler
                     card.onclick = () => {
@@ -475,11 +698,11 @@
 
                         // Remove previous highlight
                         if (selectedCard) {
-                            selectedCard.classList.remove("ring-2", "ring-indigo-500");
+                            selectedCard.classList.remove("selected");
                         }
 
                         // Highlight selected card
-                        card.classList.add("ring-2", "ring-indigo-500");
+                        card.classList.add("selected");
                         selectedCard = card;
 
                         // Store full selected loan

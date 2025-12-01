@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Applications - LoanApp</title>
+    <title>My Applications - MLC</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/images/favicon.png">
     <!-- Tailwind CSS -->
@@ -16,6 +16,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
+        :root {
+            --accent: #4f46e5;
+            /* indigo-600 */
+            --accent-2: #8b5cf6;
+            /* purple */
+            --glass: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
         }
@@ -57,7 +66,10 @@
         <div class="hidden md:flex md:flex-shrink-0">
             <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
                 <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
-                    <span class="text-white text-xl font-bold">LoanApp</span>
+                    <div class="rounded-md p-2" aria-hidden="true"
+                        style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
                 </div>
                 <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
                     <nav class="flex-1 space-y-2">
@@ -75,6 +87,12 @@
                             class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
+                        </a>
+                        <a href="../emi-calculator.html"
+                        target="_blank"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-calculator mr-3"></i>
+                            EMI Calculator
                         </a>
                     </nav>
                 </div>
@@ -98,7 +116,10 @@
         <div id="mobile-sidebar"
             class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
             <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
-                <span class="text-white text-xl font-bold">LoanApp</span>
+                <div class="rounded-md p-2" aria-hidden="true"
+                    style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                    <span class="text-white font-bold text-lg">MLC</span>
+                </div>
                 <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
                     <i class="fas fa-times"></i>
                 </button>
@@ -120,8 +141,14 @@
                         <i class="fas fa-user-circle mr-3"></i>
                         Profile
                     </a>
+                    <a href="../emi-calculator.html"
+                        target="_blank"
+                        class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-calculator mr-3"></i>
+                        EMI Calculator
+                    </a>
                 </nav>
-                <div class="p-4 mt-auto border-t border-indigo-500">
+                <!-- <div class="p-4 mt-auto border-t border-indigo-500">
                     <div class="flex items-center">
                         <img class="user-avatar w-10 h-10 rounded-full">
                         <div class="ml-3">
@@ -129,7 +156,7 @@
                             <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -325,11 +352,9 @@
 
                 // ================== UPDATE PROFILE PIC ==================
                 document.querySelectorAll(".user-avatar").forEach(img => {
-                    if (user.profilePic) {
-                        img.src = `http://localhost:5000/uploads/${user.profilePic}`;
-                    } else {
-                        img.src = `https://ui-avatars.com/api/?name=${initials}&background=7c3aed&color=fff&bold=true`;
-                    }
+                    img.src = user.profilePic
+                        ? `${window.location.origin}/uploads/${user.profilePic}`
+                        : `https://ui-avatars.com/api/?name=${user.name}&background=7c3aed&color=fff`;
                 });
 
             } catch (err) {
@@ -403,7 +428,7 @@
         async function loadApplications() {
             const token = localStorage.getItem("userToken");
             const list = document.getElementById("applications-list");
-            
+
             if (!token) {
                 window.location.href = "../login.html";
                 return;
@@ -412,18 +437,18 @@
             try {
                 // Show loading state
                 list.innerHTML = '<div class="p-8 text-center text-gray-500">Loading applications...</div>';
-                
+
                 console.log('Fetching applications from:', `${API_BASE}/api/applications`);
                 const res = await fetch(`${API_BASE}/api/applications`, {
                     method: "GET",
-                    headers: { 
+                    headers: {
                         "Authorization": `Bearer ${token}`,
                         "Content-Type": "application/json"
                     }
                 });
 
                 console.log('Response status:', res.status);
-                
+
                 // Try to parse response as JSON
                 let data;
                 try {
@@ -480,20 +505,20 @@
                     li.className = "application-card";
 
                     // Format status for display (capitalize first letter)
-                    const status = app.status ? 
-                        app.status.charAt(0).toUpperCase() + app.status.slice(1).toLowerCase() : 
+                    const status = app.status ?
+                        app.status.charAt(0).toUpperCase() + app.status.slice(1).toLowerCase() :
                         'Pending';
-                    
+
                     // Format date
-                    const appDate = app.createdAt ? 
-                        new Date(app.createdAt).toLocaleDateString('en-IN', { 
-                            year: 'numeric', 
-                            month: 'short', 
-                            day: 'numeric' 
+                    const appDate = app.createdAt ?
+                        new Date(app.createdAt).toLocaleDateString('en-IN', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
                         }) : 'N/A';
-                    
+
                     // Format loan amount if available
-                    const amount = app.loanAmount ? 
+                    const amount = app.loanAmount ?
                         `₹${parseInt(app.loanAmount).toLocaleString('en-IN')}` : 'N/A';
 
                     li.className = 'bg-white overflow-hidden shadow rounded-lg mb-4';

@@ -3,8 +3,10 @@ import {
     createApplication,
     getApplications,
     getApplication,
-    getAllApplications
+    getAllApplications,
+    deleteApplication
 } from "../controllers/applicationController.js";
+
 
 import { protect } from "../middleware/authMiddleware.js";
 import { protectAdmin } from "../middleware/adminMiddleware.js";
@@ -16,6 +18,8 @@ const router = express.Router();
 // =============================
 router.get("/admin/all", protectAdmin, getAllApplications);
 router.get("/admin/:id", protectAdmin, getApplication);
+router.delete("/admin/:id", protectAdmin, deleteApplication);
+
 
 // =============================
 // USER ROUTES 

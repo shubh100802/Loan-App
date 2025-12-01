@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
+import path from "path";
 
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
@@ -33,6 +34,7 @@ app.use("/api/user", userRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/applications", applicationRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 
 // Default route

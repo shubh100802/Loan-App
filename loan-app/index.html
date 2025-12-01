@@ -2,402 +2,682 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoanApp - Get Instant Loans Online</title>
-    <!-- Tailwind CSS -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>MLC - Get Instant Loans Online</title>
+
+
+    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts -->
+
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        :root {
+            --accent: #4f46e5;
+            /* indigo-600 */
+            --accent-2: #8b5cf6;
+            /* purple */
+            --glass: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        /* subtle page background gradient */
+        body {
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 40%, #f3f4f6 100%);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* header glass */
+        header.bg-glass {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.5));
+            backdrop-filter: blur(6px);
+        }
+
+        /* hero gradient highlight */
+        .hero-accent {
+            background: linear-gradient(90deg, rgba(79, 70, 229, 0.12), rgba(139, 92, 246, 0.06));
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        /* floating cards shrink on small screens */
+        .floating-card {
+            transition: transform .35s cubic-bezier(.2, .9, .2, 1), box-shadow .25s;
+        }
+
+        .floating-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 28px rgba(79, 70, 229, 0.08);
+        }
+
+        /* timeline dot for small screens */
+        .timeline-line {
+            background: linear-gradient(#ede9fe, #e9d5ff);
+        }
+
+        /* smooth anchor scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* accessible focus */
+        a:focus,
+        button:focus {
+            outline: 3px solid rgba(79, 70, 229, 0.16);
+            outline-offset: 3px;
+        }
+
+        /* mobile menu slide */
+        .mobile-panel {
+            transition: transform .28s cubic-bezier(.2, .9, .2, 1);
+        }
+
+        /* small fixes */
+        .trust-logos img {
+            max-height: 34px;
+            opacity: .85;
+        }
+
+        @media (max-width:640px) {
+            .hero-title {
+                font-size: 1.6rem;
+                line-height: 1.15;
+            }
+
+            .floating-card {
+                width: calc(100% - 2rem) !important;
+                left: 50% !important;
+                transform: translateX(-50%);
+                position: relative;
+                margin: 0.75rem auto;
+            }
+        }
+    </style>
 </head>
 
-<body class="font-['Poppins'] bg-gray-50">
-    <!-- 3D Animation Canvas -->
-    <div id="canvas-container" class="fixed inset-0 -z-10 w-screen h-screen overflow-hidden">
+<body class="antialiased text-gray-800">
+
+    <!-- Decorative 3D canvas container (kept z-index behind content) -->
+    <div id="canvas-container" class="fixed inset-0 -z-10 pointer-events-none">
         <style>
             #canvas-container canvas {
-                display: block;
                 width: 100% !important;
-                /* height: 100% !important; */
-                position: absolute;
-                top: 0;
-                left: 0;
+                height: 100% !important;
+                display: block;
             }
         </style>
     </div>
 
     <!-- Header -->
-    <header class="fixed w-full bg-white/90 backdrop-blur-sm shadow-md z-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <header class="fixed w-full z-50 top-0 left-0 bg-glass shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="flex items-center justify-between h-16 md:h-20">
                 <!-- Logo -->
-                <a href="#"
-                    class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    LoanApp
+                <a href="#" class="flex items-center gap-3">
+                    <div class="rounded-md p-2" aria-hidden="true"
+                        style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
+                    <span class="text-lg font-semibold text-gray-800">MyLoanCredit</span>
                 </a>
 
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                <!-- Desktop nav -->
+                <nav class="hidden md:flex items-center gap-3">
                     <a href="#features"
-                        class="px-3 py-2 text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 rounded-lg hover:bg-indigo-50">Features</a>
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">Features</a>
                     <a href="#how-it-works"
-                        class="px-3 py-2 text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 rounded-lg hover:bg-indigo-50">How
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">How
                         It Works</a>
-                    <a href="#testimonials"
-                        class="px-3 py-2 text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 rounded-lg hover:bg-indigo-50">Testimonials</a>
+                    <a href="#offers"
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">Offers</a>
                     <a href="#Footer"
-                        class="px-3 py-2 text-gray-700 hover:text-indigo-600 font-medium transition-colors duration-200 rounded-lg hover:bg-indigo-50">Contact</a>
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">Contact</a>
+                    <a href="emi-calculator.html"
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">EMI
+                        Calculator</a>
                 </nav>
 
-                <!-- Auth Buttons -->
-                <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
                     <a href="login.html"
-                        class="px-3 sm:px-4 py-2 text-sm sm:text-base text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition-all duration-200 hover:shadow-sm">
-                        Log In
-                    </a>
+                        class="hidden sm:inline-block px-3 py-2 rounded-md border border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition">Log
+                        In</a>
                     <a href="register.html"
-                        class="px-3 sm:px-4 py-2 text-sm sm:text-base bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5">
-                        Get Started
-                    </a>
+                        class="hidden sm:inline-block px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition transform hover:-translate-y-0.5">Get
+                        Started</a>
 
-                    <!-- Mobile Menu Button -->
-                    <button id="mobile-menu-button"
-                        class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path class="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <!-- mobile menu button -->
+                    <button id="mobile-toggle" aria-label="Open menu"
+                        class="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400 transition-all duration-200">
+                        <svg id="icon-open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16" />
-                            <path class="close-icon hidden" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                        <span class="sr-only">Open menu</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="md:hidden hidden fixed inset-0 z-40">
-                <!-- Overlay background -->
-                <div class="absolute inset-0 bg-black/30 backdrop-blur-sm" onclick="toggleMobileMenu()"></div>
-                <!-- Menu content -->
-                <div class="relative bg-white w-full max-h-[80vh] overflow-y-auto rounded-t-2xl shadow-2xl transform transition-transform duration-300 ease-in-out -translate-y-full"
-                    id="mobile-menu-content">
-                    <!-- Close button -->
-                    <button class="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                        onclick="toggleMobileMenu()" aria-label="Close menu">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg id="icon-close" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
-                    <div class="p-6 pt-14">
-                        <div class="flex flex-col space-y-4">
-                            <a href="#features"
-                                class="block px-4 py-3 text-lg font-medium text-gray-900 hover:bg-indigo-50 rounded-lg transition-colors"
-                                onclick="toggleMobileMenu()">Features</a>
-                            <a href="#how-it-works"
-                                class="block px-4 py-3 text-lg font-medium text-gray-900 hover:bg-indigo-50 rounded-lg transition-colors"
-                                onclick="toggleMobileMenu()">How It Works</a>
-                            <a href="#testimonials"
-                                class="block px-4 py-3 text-lg font-medium text-gray-900 hover:bg-indigo-50 rounded-lg transition-colors"
-                                onclick="toggleMobileMenu()">Testimonials</a>
-                            <a href="#Footer"
-                                class="block px-4 py-3 text-lg font-medium text-gray-900 hover:bg-indigo-50 rounded-lg transition-colors"
-                                onclick="toggleMobileMenu()">Contact</a>
-                            <div class="pt-4 mt-4 border-t border-gray-200">
-                                <a href="login.html"
-                                    class="block w-full text-center px-4 py-3 text-base font-medium text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors mb-3">
-                                    Log In
-                                </a>
-                                <a href="register.html"
-                                    class="block w-full text-center px-4 py-3 text-base font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors">
-                                    Get Started
-                                </a>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile panel (full-screen slide-up) -->
+        <div id="mobile-panel" class="md:hidden fixed inset-x-0 bottom-0 top-0 z-40 hidden">
+            <div class="absolute inset-0 bg-black/30" onclick="toggleMobile()"></div>
+            <div
+                class="mobile-panel absolute left-0 right-0 top-0 bg-white rounded-t-2xl shadow-2xl max-h-[100vh] overflow-auto">
+                <div class="p-6 pt-20">
+                    <!-- Close button at the top right -->
+                    <button onclick="toggleMobile()" aria-label="Close menu"
+                        class="absolute right-4 top-4 p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                    <nav class="flex flex-col gap-2">
+                        <a href="#features" class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">Features</a>
+                        <a href="#how-it-works"
+                            class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">How It Works</a>
+                        <a href="#offers" class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">Offers</a>
+                        <a href="#Footer" class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">Contact</a>
+                        <a href="emi-calculator.html"
+                            class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">EMI Calculator</a>
+                    </nav>
+
+                    <div class="mt-6 border-t pt-4">
+                        <a href="login.html"
+                            class="block w-full text-center px-4 py-3 mb-3 rounded-md border border-indigo-600 text-indigo-600">Log
+                            In</a>
+                        <a href="register.html"
+                            class="block w-full text-center px-4 py-3 rounded-md bg-indigo-600 text-white">Get
+                            Started</a>
                     </div>
                 </div>
+            </div>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="min-h-[90vh] sm:min-h-screen flex items-center py-12 sm:py-20 px-4 sm:px-6">
-        <div class="container mx-auto max-w-7xl px-4 sm:px-6">
-            <div class="flex flex-col lg:flex-row items-center">
-                <!-- Hero Content -->
-                <div class="w-full lg:w-1/2 mb-12 lg:mb-0 lg:pr-8 xl:pr-12">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-                        Get The <span class="text-indigo-600">Financial Freedom</span> You Deserve
-                    </h1>
-                    <p class="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-lg">
-                        Fast, easy, and secure way to get the loan you need. Get approved in minutes with our simple
-                        online application.
-                    </p>
-                    <div class="flex flex-col xs:flex-row space-y-3 xs:space-y-0 xs:space-x-4">
-                        <a href="register.html"
-                            class="px-6 sm:px-8 py-3 sm:py-4 bg-indigo-600 text-white text-base sm:text-lg font-semibold rounded-lg hover:bg-indigo-700 transition transform hover:-translate-y-1 text-center">
-                            Apply Now
-                        </a>
-                        <a href="#how-it-works"
-                            class="px-6 sm:px-8 py-3 sm:py-4 bg-white text-indigo-600 border-2 border-indigo-600 text-base sm:text-lg font-semibold rounded-lg hover:bg-gray-50 transition transform hover:-translate-y-1 text-center">
-                            Learn More
-                        </a>
-                    </div>
+    <!-- HERO -->
+    <main class="pt-20">
+        <section class="relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-20">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <!-- Left: content -->
+                    <div class="space-y-6 relative z-[5]">
 
-                    <!-- Trust Badges -->
-                    <div class="mt-8 sm:mt-12">
-                        <p class="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">TRUSTED BY OVER <i>Happy </i>CUSTOMERS
-                        </p>
-                        <div class="flex flex-wrap items-center gap-4 sm:gap-6">
-                            <img src="{css,js,images}/hdfc.jpg" alt="HDFC Bank"
-                                class="h-5 sm:h-6 opacity-60 hover:opacity-100 transition">
-                            <img src="{css,js,images}/kotak.jpg" alt="Kotak Mahindra Bank"
-                                class="h-5 sm:h-6 opacity-60 hover:opacity-100 transition">
-                            <img src="{css,js,images}/sbi.jpg" alt="State Bank of India"
-                                class="h-5 sm:h-6 opacity-60 hover:opacity-100 transition">
+                        <h1 class="hero-title relative z-[5] text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+
+                            Get the <span class="relative inline-block px-1" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); 
+             color: white; 
+             border-radius: 4px;">
+                                Financial Freedom
+                            </span>
+                            you deserve
+                        </h1>
+                        <p class="text-gray-600 max-w-xl">Fast, easy and secure loan applications — verified quickly
+                            with transparent rates and flexible repayment plans tailored for you.</p>
+
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-3">
+                            <a href="register.html"
+                                class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-indigo-600 text-white font-semibold shadow hover:shadow-lg transform hover:-translate-y-1 transition">Apply
+                                Now <i class="fas fa-arrow-right ml-3 text-sm"></i></a>
+                            <a href="#how-it-works"
+                                class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white text-indigo-600 border border-indigo-200 font-semibold shadow-sm hover:shadow-md">Learn
+                                More</a>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Hero Image -->
-                <div class="w-full lg:w-1/2 relative mt-12 lg:mt-0">
-                    <div class="relative z-10 mx-auto max-w-md lg:max-w-none">
-                        <!-- Main Hero Image (commented out as per original) -->
-                        <!-- <img src="https://via.placeholder.com/600x500" alt="Happy customer" class="rounded-2xl shadow-2xl w-full max-w-lg mx-auto"> -->
+                        <!-- trust logos -->
+                        <div class="mt-6 flex items-center gap-6 flex-wrap trust-logos">
+                            <span class="text-xs text-gray-500">Trusted by</span>
+                            <img src="{css,js,images}/hdfc.jpg" alt="hdfc" />
+                            <img src="{css,js,images}/kotak.jpg" alt="kotak" />
+                            <img src="{css,js,images}/sbi.jpg" alt="sbi" />
+                        </div>
 
-                        <!-- Floating Card 1 -->
-                        <div
-                            class="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 bg-white p-3 sm:p-4 rounded-xl shadow-lg w-40 sm:w-48 md:w-56 lg:w-64">
-                            <div class="flex items-center">
-                                <div class="bg-green-100 p-2 sm:p-3 rounded-full mr-2 sm:mr-3">
-                                    <i class="fas fa-check-circle text-green-600 text-lg sm:text-xl"></i>
-                                </div>
+                        <!-- small features -->
+                        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="p-3 rounded-lg bg-white shadow-sm flex items-start gap-3">
+                                <div class="p-2 rounded-md bg-green-50"><i
+                                        class="fas fa-check-circle text-green-600"></i></div>
                                 <div>
-                                    <p class="font-semibold text-sm sm:text-base">Quick Approval</p>
-                                    <p class="text-xs sm:text-sm text-gray-500">Get approved in minutes</p>
+                                    <div class="text-sm font-semibold">Quick Approval</div>
+                                    <div class="text-xs text-gray-500">Approved in minutes</div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Floating Card 2 -->
-                        <div
-                            class="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 bg-white p-3 sm:p-4 rounded-xl shadow-lg w-40 sm:w-48 md:w-56 lg:w-64">
-                            <div class="flex items-center">
-                                <div class="bg-blue-100 p-2 sm:p-3 rounded-full mr-2 sm:mr-3">
-                                    <i class="fas fa-percentage text-blue-600 text-lg sm:text-xl"></i>
-                                </div>
+                            <div class="p-3 rounded-lg bg-white shadow-sm flex items-start gap-3">
+                                <div class="p-2 rounded-md bg-indigo-50"><i
+                                        class="fas fa-percentage text-indigo-600"></i></div>
                                 <div>
-                                    <p class="font-semibold text-sm sm:text-base">Low Interest</p>
-                                    <p class="text-xs sm:text-sm text-gray-500">Competitive rates</p>
+                                    <div class="text-sm font-semibold">Low Interest</div>
+                                    <div class="text-xs text-gray-500">Competitive rates</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-20 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Choose LoanApp?</h2>
-                <div class="w-20 h-1 bg-indigo-600 mx-auto mb-6"></div>
-                <p class="text-gray-600">We provide the best loan solutions with the most competitive rates in the
-                    market.</p>
-            </div>
+                    <!-- Right: illustration with floating cards -->
+                    <div class="relative">
+                        <div class="mx-auto max-w-md lg:max-w-none">
+                            <!-- main illustration box (replace with your image if available) -->
+                            <!-- <div class="rounded-2xl bg-gradient-to-br from-white to-indigo-50 p-8 shadow-xl">
+                                <img src="https://via.placeholder.com/640x420?text=Happy+Customer" alt="hero"
+                                    class="w-full rounded-lg shadow-inner object-cover" />
+                            </div> -->
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
-                <div class="bg-gray-50 p-8 rounded-xl text-center hover:shadow-xl transition">
-                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-bolt text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">Quick Approval</h3>
-                    <p class="text-gray-600">Get your loan approved within 24 hours with our fast and easy application
-                        process.</p>
-                </div>
+                            <!-- floating small cards -->
+                            <div
+                                class="floating-card absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg w-44 sm:w-48 lg:w-56">
+                                <div class="flex items-center gap-3">
+                                    <div class="rounded-full bg-green-50 p-2"><i
+                                            class="fas fa-check-circle text-green-600"></i></div>
+                                    <div>
+                                        <div class="font-semibold text-sm">Quick Approval</div>
+                                        <div class="text-xs text-gray-500">Minutes to approve</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                <!-- Feature 2 -->
-                <div class="bg-gray-50 p-8 rounded-xl text-center hover:shadow-xl transition">
-                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-percentage text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">Low Interest Rates</h3>
-                    <p class="text-gray-600">Enjoy the most competitive interest rates in the market with flexible
-                        repayment options.</p>
-                </div>
+                            <div
+                                class="floating-card absolute -top-6 -right-6 bg-white p-4 rounded-xl shadow-lg w-44 sm:w-48 lg:w-56">
+                                <div class="flex items-center gap-3">
+                                    <div class="rounded-full bg-blue-50 p-2"><i
+                                            class="fas fa-hand-holding-usd text-blue-600"></i></div>
+                                    <div>
+                                        <div class="font-semibold text-sm">Flexible EMI</div>
+                                        <div class="text-xs text-gray-500">Tailored repayments</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                <!-- Feature 3 -->
-                <div class="bg-gray-50 p-8 rounded-xl text-center hover:shadow-xl transition">
-                    <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-shield-alt text-indigo-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">100% Secure</h3>
-                    <p class="text-gray-600">Your data is protected with bank-level encryption and security protocols.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+                            <!-- center small badge -->
+                            <div
+                                class="hidden md:block absolute left-1/2 -translate-x-1/2 -top-10 bg-white p-3 rounded-lg shadow-md">
+                                <div class="flex gap-3 items-center">
+                                    <div class="rounded-full bg-indigo-100 p-2"><i
+                                            class="fas fa-shield-alt text-indigo-600"></i></div>
+                                    <div class="text-sm font-medium">Bank-level Security</div>
+                                </div>
+                            </div>
 
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-                <div class="w-20 h-1 bg-indigo-600 mx-auto mb-6"></div>
-                <p class="text-gray-600">Get your loan in just 3 simple steps</p>
-            </div>
-
-            <div class="relative">
-                <!-- Timeline -->
-                <div class="hidden md:block absolute left-1/2 top-0 h-full w-1 bg-indigo-200 -ml-0.5"></div>
-
-                <!-- Step 1 -->
-                <div class="flex flex-col md:flex-row items-center mb-16">
-                    <div class="md:w-1/2 md:pr-12 text-center md:text-right mb-6 md:mb-0">
-                        <div
-                            class="inline-block bg-indigo-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mb-4 md:ml-auto">
-                            1</div>
-                        <h3 class="text-2xl font-semibold mb-3">Create Your Account</h3>
-                        <p class="text-gray-600">Sign up in minutes with your basic details and verify your identity.
-                        </p>
-                    </div>
-                    <div class="md:w-1/2 md:pl-12">
-                        <div class="bg-white p-8 rounded-xl shadow-lg">
-                            <i class="fas fa-user-plus text-5xl text-indigo-600 mb-4"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="flex flex-col md:flex-row items-center mb-16">
-                    <div class="md:w-1/2 md:order-2 md:pl-12 text-center md:text-left mb-6 md:mb-0">
-                        <div
-                            class="inline-block bg-indigo-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                            2</div>
-                        <h3 class="text-2xl font-semibold mb-3">Choose Your Loan</h3>
-                        <p class="text-gray-600">Select from various loan options that suit your needs and financial
-                            situation.</p>
-                    </div>
-                    <div class="md:w-1/2 md:order-1 md:pr-12">
-                        <div class="bg-white p-8 rounded-xl shadow-lg">
-                            <i class="fas fa-hand-holding-usd text-5xl text-indigo-600 mb-4"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 3 -->
-                <div class="flex flex-col md:flex-row items-center">
-                    <div class="md:w-1/2 md:pr-12 text-center md:text-right mb-6 md:mb-0">
-                        <div
-                            class="inline-block bg-indigo-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mb-4 md:ml-auto">
-                            3</div>
-                        <h3 class="text-2xl font-semibold mb-3">Get Approved & Receive Funds</h3>
-                        <p class="text-gray-600">Get instant approval and receive funds directly in your bank account.
-                        </p>
-                    </div>
-                    <div class="md:w-1/2 md:pl-12">
-                        <div class="bg-white p-8 rounded-xl shadow-lg">
-                            <i class="fas fa-check-circle text-5xl text-indigo-600 mb-4"></i>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-indigo-600 text-white">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Get Started?</h2>
-            <p class="text-xl mb-8 max-w-2xl mx-auto">Join thousands of satisfied customers who have already taken
-                control of their financial future.</p>
-            <a href="register.html"
-                class="inline-block px-8 py-4 bg-white text-indigo-600 text-lg font-semibold rounded-lg hover:bg-gray-100 transition transform hover:scale-105">
-                Apply for a Loan Today
-            </a>
-        </div>
-    </section>
+        <!-- OFFERS SECTION (Auto-Scrolling Slider) -->
+        <section id="offers" class="py-20 bg-white relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-center">Exclusive Offers</h2>
+                <div class="mx-auto my-4 w-28 h-1 bg-gradient-to-r from-indigo-500 to-purple-400 rounded"></div>
+                <p class="text-gray-600 text-center max-w-2xl mx-auto">
+                    Special promotions and limited-time offers tailored just for you!
+                </p>
+            </div>
 
-    <!-- Footer -->
-    <footer id="Footer" class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-2xl font-bold mb-4">LoanApp</h3>
-                    <p class="text-gray-400">Making loan applications simple, fast, and secure for everyone.</p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
-                        <li><a href="#features" class="text-gray-400 hover:text-white transition">Features</a></li>
-                        <li><a href="#how-it-works" class="text-gray-400 hover:text-white transition">How It Works</a>
-                        </li>
-                        <li><a href="#testimonials" class="text-gray-400 hover:text-white transition">Testimonials</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Legal</h4>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Terms of Service</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
-                    <ul class="space-y-2">
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope mr-2 text-indigo-400"></i>
-                            <span class="text-gray-400">info@myloancredit.com</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone-alt mr-2 text-indigo-400"></i>
-                            <span class="text-gray-400">+91 9818020320</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mr-2 mt-1 text-indigo-400"></i>
-                            <span class="text-gray-400">B351 4th floor of Canera bank Badarpur, New Delhi, India</span>
-                        </li>
-                    </ul>
+            <!-- Scrolling Image Reel -->
+            <div class="relative overflow-hidden">
+                <div id="offersSlider" class="flex gap-8 animate-scroll-big">
+                    <!-- Replace these images with your actual offer banners -->
+                    <img src="{css,js,images}/Offer1.jpeg" class="offer-card">
+                    <img src="{css,js,images}/Offer2.jpeg" class="offer-card">
+                    <img src="{css,js,images}/Offer3.jpeg" class="offer-card">
+                    <!-- <img src="images/offer4.jpg" class="h-40 rounded-xl shadow-md object-cover" alt="Offer 4"> -->
+
+                    <!-- Duplicate for infinite loop -->
+                    <img src="{css,js,images}/Offer1.jpeg" class="offer-card">
+                    <img src="{css,js,images}/Offer2.jpeg" class="offer-card">
+                    <img src="{css,js,images}/Offer3.jpeg" class="offer-card">
+                    <!-- <img src="images/offer4.jpg" class="h-40 rounded-xl shadow-md object-cover" alt="Offer 4"> -->
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-                <p class="mb-4">&copy; 2025 LoanApp. All rights reserved.</p>
-                <div class="flex justify-center items-center">
-                    <a href="https://www.instagram.com/itsmeshubh2026" target="_blank"
-                        class="inline-flex items-center text-gray-400 hover:text-white transition">
-                        <i class="fab fa-instagram mr-2 text-indigo-400"></i>
-                        For any feedback
-                    </a>
+
+            <style>
+                /* Offer card styling */
+                .offer-card {
+                    height: 280px;
+                    width: 500px;
+                    border-radius: 1rem;
+                    object-fit: cover;
+                    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+                    transition: transform .4s ease, box-shadow .4s ease;
+                }
+
+
+                .offer-card:hover {
+                    transform: scale(1.07);
+                    box-shadow: 0 18px 35px rgba(0, 0, 0, 0.22);
+                }
+
+                /* Big smooth infinite scroll */
+                @keyframes scrollBig {
+                    0% {
+                        transform: translateX(0);
+                    }
+
+                    100% {
+                        transform: translateX(-50%);
+                    }
+                }
+
+                .animate-scroll-big {
+                    animation: scrollBig 18s linear infinite;
+                }
+
+                /* Pause animation when hovering slider */
+                #offersSlider:hover {
+                    animation-play-state: paused;
+                }
+
+                /* Mobile responsiveness */
+                @media (max-width: 640px) {
+                    .offer-card {
+                        height: 300px;
+                        width: 450px;
+                    }
+
+                    .animate-scroll-big {
+                        animation-duration: 18s;
+                    }
+                }
+            </style>
+        </section>
+
+
+
+        <!-- FEATURES -->
+        <section id="features" class="py-16 lg:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold">Why Choose MLC?</h2>
+                    <div class="mx-auto my-4 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-400 rounded"></div>
+                    <p class="text-gray-600">We provide simple loan solutions with transparent pricing and fast
+                        processing.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <article class="p-6 rounded-2xl bg-white shadow hover:shadow-lg transition">
+                        <div class="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mb-4">
+                            <i class="fas fa-bolt text-indigo-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Quick Approval</h3>
+                        <p class="mt-2 text-gray-500 text-sm">Get approved within 24 hours with an intuitive
+                            application.</p>
+                    </article>
+
+                    <article class="p-6 rounded-2xl bg-white shadow hover:shadow-lg transition">
+                        <div class="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mb-4">
+                            <i class="fas fa-percentage text-indigo-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Low Interest Rates</h3>
+                        <p class="mt-2 text-gray-500 text-sm">Competitive rates with flexible repayment terms.</p>
+                    </article>
+
+                    <article class="p-6 rounded-2xl bg-white shadow hover:shadow-lg transition">
+                        <div class="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mb-4">
+                            <i class="fas fa-shield-alt text-indigo-600 text-2xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Secure & Trusted</h3>
+                        <p class="mt-2 text-gray-500 text-sm">We use bank-grade encryption to keep your data safe.</p>
+                    </article>
                 </div>
             </div>
-        </div>
-    </footer>
+        </section>
 
-    <!-- Back to Top Button -->
-    <button id="back-to-top"
-        class="fixed bottom-8 right-8 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1 hidden">
-        <i class="fas fa-arrow-up"></i>
-    </button>
+        <!-- HOW IT WORKS -->
+        <section id="how-it-works" class="py-16 bg-gray-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold">How It Works</h2>
+                    <div class="mx-auto my-4 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-400 rounded"></div>
+                    <p class="text-gray-600">Apply in three simple steps.</p>
+                </div>
 
-    <!-- Three.js -->
+                <div class="relative">
+                    <!-- timeline vertical on larger screens -->
+                    <div class="hidden md:block absolute left-1/2 top-0 h-full w-1 timeline-line -translate-x-1/2">
+                    </div>
+
+                    <div class="space-y-10">
+                        <!-- step -->
+                        <div class="md:flex md:items-center md:gap-8">
+                            <div class="md:w-1/2 md:text-right">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-600 text-white font-bold mb-4 md:ml-auto">
+                                    1</div>
+                                <h3 class="text-xl font-semibold">Create Your Account</h3>
+                                <p class="text-gray-500 mt-2">Sign up with basic details and verify your identity
+                                    quickly.</p>
+                            </div>
+                            <div class="md:w-1/2 mt-6 md:mt-0">
+                                <div class="bg-white p-6 rounded-xl shadow">
+                                    <i class="fas fa-user-plus text-4xl text-indigo-600"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:flex md:items-center md:gap-8">
+                            <div class="md:w-1/2 md:order-2 md:text-left">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-600 text-white font-bold mb-4">
+                                    2</div>
+                                <h3 class="text-xl font-semibold">Choose Your Loan</h3>
+                                <p class="text-gray-500 mt-2">Pick from loan options tailored to your needs.</p>
+                            </div>
+                            <div class="md:w-1/2 md:order-1 mt-6 md:mt-0">
+                                <div class="bg-white p-6 rounded-xl shadow">
+                                    <i class="fas fa-hand-holding-usd text-4xl text-indigo-600"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:flex md:items-center md:gap-8">
+                            <div class="md:w-1/2 md:text-right">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-600 text-white font-bold mb-4 md:ml-auto">
+                                    3</div>
+                                <h3 class="text-xl font-semibold">Get Approved & Receive Funds</h3>
+                                <p class="text-gray-500 mt-2">Receive fast approval and funds directly to your account.
+                                </p>
+                            </div>
+                            <div class="md:w-1/2 mt-6 md:mt-0">
+                                <div class="bg-white p-6 rounded-xl shadow">
+                                    <i class="fas fa-check-circle text-4xl text-indigo-600"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="py-12 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold">Ready to Get Started?</h2>
+                <p class="mt-3 text-lg">Join thousands of satisfied customers and take control of your financial future.
+                </p>
+                <a href="register.html"
+                    class="inline-block mt-6 px-8 py-3 rounded-lg bg-white text-indigo-600 font-semibold hover:scale-105 transition">Apply
+                    for a Loan Today</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="Footer" class="bg-gray-900 text-white py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                        <h3 class="text-2xl font-bold">MLC</h3>
+                        <p class="text-gray-400 mt-2">Making loan applications simple, fast and secure for everyone.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">Quick Links</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#" class="hover:text-white">Home</a></li>
+                            <li><a href="#features" class="hover:text-white">Features</a></li>
+                            <li><a href="#how-it-works" class="hover:text-white">How It Works</a></li>
+                            <li><a href="#testimonials" class="hover:text-white">Testimonials</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">Legal</h4>
+                        <ul class="space-y-2 text-gray-400">
+                            <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                            <li><a href="#" class="hover:text-white">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold mb-3">Contact Us</h4>
+                        <ul class="space-y-3 text-gray-400">
+                            <li class="flex items-center gap-2"><i class="fas fa-envelope text-indigo-400"></i>
+                                info@myloancredit.com</li>
+                            <li class="flex items-center gap-2"><i class="fas fa-phone-alt text-indigo-400"></i> +91
+                                9818020320</li>
+                            <li class="flex items-start gap-2"><i
+                                    class="fas fa-map-marker-alt text-indigo-400 mt-1"></i> B351 4th floor of Canera
+                                bank Badarpur, New Delhi, India</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-10 border-t border-gray-800 pt-6 text-gray-400 text-center">
+
+                    <p>&copy; <span id="year"></span> MLC. All rights reserved.</p>
+                    <div class="mt-4">
+                        <a href="https://www.instagram.com/itsmeshubh2026" target="_blank"
+                            class="inline-flex items-center gap-2 text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram text-indigo-400"></i> For any feedback
+                        </a>
+                    </div>
+                </div>
+                <span class="text-gray-400 text-sm"><i>Last Updated:00:26:40 am 30/11/2025 </i></span>
+            </div>
+        </footer>
+
+        <!-- Back to top -->
+        <button id="backToTop" class="fixed right-6 bottom-8 bg-indigo-600 text-white p-3 rounded-full shadow-lg hidden"
+            aria-label="Back to top">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </main>
+
+    <!-- External libs (kept) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- GSAP for animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <!-- Custom JS -->
+
+    <!-- Your existing main.js (optional) -->
     <script src="js/main.js"></script>
 
+    <!-- Enhanced small JS for UI behaviour -->
+    <script>
+        // set copyright year
+        document.getElementById('year').textContent = new Date().getFullYear();
 
+        // mobile toggle
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileToggleBtn = document.getElementById('mobile-toggle');
+            if (mobileToggleBtn) {
+                mobileToggleBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    toggleMobile();
+                });
+            }
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function (e) {
+                const mobilePanel = document.getElementById('mobile-panel');
+                const mobileToggle = document.getElementById('mobile-toggle');
+
+                if (!mobilePanel.classList.contains('hidden') &&
+                    !mobilePanel.contains(e.target) &&
+                    e.target !== mobileToggle &&
+                    !mobileToggle.contains(e.target)) {
+                    toggleMobile();
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        function toggleMobile() {
+            const panel = document.getElementById('mobile-panel');
+            const mobileToggle = document.getElementById('mobile-toggle');
+            const openIcon = document.getElementById('icon-open');
+            const closeIcon = document.getElementById('icon-close');
+
+            if (panel.classList.contains('hidden')) {
+                // Opening the menu
+                panel.classList.remove('hidden');
+                if (openIcon) openIcon.classList.add('hidden');
+                if (closeIcon) closeIcon.classList.remove('hidden');
+                if (mobileToggle) mobileToggle.classList.add('opacity-0', 'invisible');
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Closing the menu
+                panel.classList.add('hidden');
+                if (openIcon) openIcon.classList.remove('hidden');
+                if (closeIcon) closeIcon.classList.add('hidden');
+                if (mobileToggle) mobileToggle.classList.remove('opacity-0', 'invisible');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('back-to-top');
+        if (backToTopButton) {
+            window.addEventListener('scroll', function () {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                }
+            });
+
+            backToTopButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+
+        mobileToggleBtn?.addEventListener('click', toggleMobile);
+
+
+        // small accessibility: close mobile on escape
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!mobilePanel.classList.contains('hidden')) toggleMobile();
+            }
+        });
+
+        // ensure floating card layout on small screens
+        function adjustFloatingCards() {
+            const cards = document.querySelectorAll('.floating-card');
+            if (window.innerWidth <= 640) {
+                cards.forEach(c => c.style.position = 'relative');
+            } else {
+                cards.forEach(c => c.style.position = 'absolute');
+            }
+        }
+        adjustFloatingCards();
+        window.addEventListener('resize', adjustFloatingCards);
+
+        // You can optionally initialize GSAP/Three.js animations here or keep them in js/main.js
+    </script>
 </body>
 
 </html>

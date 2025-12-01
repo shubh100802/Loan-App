@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - LoanApp</title>
+    <title>Admin Login - MLC</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -210,7 +210,7 @@
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
             <a href="../index.html" class="inline-block">
-                <span class="text-3xl font-bold gradient-text">LoanApp</span>
+                <span class="text-3xl font-bold gradient-text">MLC</span>
             </a>
             <h1 class="mt-4 text-2xl font-bold text-gray-900">Admin Portal</h1>
             <p class="text-gray-600">Sign in to access the admin dashboard</p>
@@ -266,143 +266,150 @@
                         <i class="fas fa-arrow-left mr-1"></i> Back to User Login
                     </a>
                 </div>
+                <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center">
+                    <p class="text-sm text-gray-600">
+                        Having trouble? <a href="https://wa.me/qr/3S7QALPXLROCB1"
+                            class="font-medium text-indigo-600 hover:text-indigo-500">Contact
+                            Support</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
-<script>
-    // ===============================
-    // Toggle Password Visibility
-    // ===============================
-    function togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        const icon = document.querySelector(`#${inputId} + i`);
+    <script>
+        // ===============================
+        // Toggle Password Visibility
+        // ===============================
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.querySelector(`#${inputId} + i`);
 
-        if (input.type === "password") {
-            input.type = "text";
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-        } else {
-            input.type = "password";
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-        }
-    }
-
-    // ===============================
-    // Handle Admin Login
-    // ===============================
-    document.getElementById("adminLoginForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
-        const loginBtn = document.getElementById("loginBtn");
-
-        // Reset UI states
-        document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
-
-        loginBtn.disabled = true;
-        loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Logging in...';
-
-        let isValid = true;
-
-        // Basic Validation
-        if (!username) {
-            document.getElementById("usernameError").textContent = "Username is required";
-            document.getElementById("usernameError").style.display = "block";
-            isValid = false;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
         }
 
-        if (!password) {
-            document.getElementById("passwordError").textContent = "Password is required";
-            document.getElementById("passwordError").style.display = "block";
-            isValid = false;
-        }
+        // ===============================
+        // Handle Admin Login
+        // ===============================
+        document.getElementById("adminLoginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-        if (!isValid) {
-            loginBtn.disabled = false;
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
-            return;
-        }
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            const loginBtn = document.getElementById("loginBtn");
 
-        try {
-            const response = await fetch("http://localhost:5000/api/admin/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    adminId: username,   // ✔ Matches your backend
-                    password: password
-                })
-            });
+            // Reset UI states
+            document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
 
-            const data = await response.json();
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Logging in...';
 
-            if (!response.ok) {
-                throw new Error(data.msg || "Login failed. Please check your credentials.");
+            let isValid = true;
+
+            // Basic Validation
+            if (!username) {
+                document.getElementById("usernameError").textContent = "Username is required";
+                document.getElementById("usernameError").style.display = "block";
+                isValid = false;
             }
 
-            // ===========================
-            // Save Token
-            // ===========================
-            localStorage.setItem("adminToken", data.token);
+            if (!password) {
+                document.getElementById("passwordError").textContent = "Password is required";
+                document.getElementById("passwordError").style.display = "block";
+                isValid = false;
+            }
 
-            // ===========================
-            // Save Complete Admin Data
-            // ===========================
-            localStorage.setItem("adminData", JSON.stringify({
-                id: data.admin?.id,
-                username: data.admin?.username,
-                role: data.admin?.role
-            }));
+            if (!isValid) {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+                return;
+            }
 
-            // ===========================
-            // Save Username for Navbar & Avatar
-            // ===========================
-            localStorage.setItem("adminUsername", data.admin?.username || "Admin");
+            try {
+                const response = await fetch("http://localhost:5000/api/admin/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        adminId: username,   // ✔ Matches your backend
+                        password: password
+                    })
+                });
 
-            // Redirect to Admin Dashboard
-            window.location.href = "admin/index.html";
+                const data = await response.json();
 
-        } catch (error) {
-            document.getElementById("loginError").textContent = error.message || "Login failed";
-            document.getElementById("loginError").style.display = "block";
+                if (!response.ok) {
+                    throw new Error(data.msg || "Login failed. Please check your credentials.");
+                }
 
-            loginBtn.disabled = false;
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
-        }
-    });
+                // ===========================
+                // Save Token
+                // ===========================
+                localStorage.setItem("adminToken", data.token);
 
-    // ===============================
-    // Auto Redirect if Already Logged In
-    // ===============================
-    const adminToken = localStorage.getItem("adminToken");
+                // ===========================
+                // Save Complete Admin Data
+                // ===========================
+                localStorage.setItem("adminData", JSON.stringify({
+                    id: data.admin?.id,
+                    username: data.admin?.username,
+                    role: data.admin?.role
+                }));
 
-    if (adminToken) {
-        try {
-            if (adminToken.split(".").length === 3) {
+                // ===========================
+                // Save Username for Navbar & Avatar
+                // ===========================
+                localStorage.setItem("adminUsername", data.admin?.username || "Admin");
+
+                // Redirect to Admin Dashboard
                 window.location.href = "admin/index.html";
-            } else {
-                // invalid token → clear it
+
+            } catch (error) {
+                document.getElementById("loginError").textContent = error.message || "Login failed";
+                document.getElementById("loginError").style.display = "block";
+
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+            }
+        });
+
+        // ===============================
+        // Auto Redirect if Already Logged In
+        // ===============================
+        const adminToken = localStorage.getItem("adminToken");
+
+        if (adminToken) {
+            try {
+                if (adminToken.split(".").length === 3) {
+                    window.location.href = "admin/index.html";
+                } else {
+                    // invalid token → clear it
+                    localStorage.removeItem("adminToken");
+                    localStorage.removeItem("adminData");
+                    localStorage.removeItem("adminUsername");
+                }
+            } catch (err) {
+                console.error("Token validation error:", err);
                 localStorage.removeItem("adminToken");
                 localStorage.removeItem("adminData");
                 localStorage.removeItem("adminUsername");
             }
-        } catch (err) {
-            console.error("Token validation error:", err);
-            localStorage.removeItem("adminToken");
-            localStorage.removeItem("adminData");
-            localStorage.removeItem("adminUsername");
         }
-    }
 
-    // ===============================
-    // IMPORTANT:
-    // Removed the old broken block:
-    // ❌ if (data.token) { ... }
-    // ===============================
+        // ===============================
+        // IMPORTANT:
+        // Removed the old broken block:
+        // ❌ if (data.token) { ... }
+        // ===============================
 
-</script>
+    </script>
 
 </body>
 

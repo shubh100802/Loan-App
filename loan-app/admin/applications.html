@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loan Applications - Admin Panel</title>
+    <title>Loan Applications -MLC Admin Panel</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <!-- Font Awesome -->
@@ -16,6 +16,16 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <script src="../js/api-fix.js"></script>
+    <style>
+        :root {
+            --accent: #4f46e5;
+            /* indigo-600 */
+            --accent-2: #8b5cf6;
+            /* purple */
+            --glass: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -24,7 +34,10 @@
         <div class="hidden md:flex md:flex-shrink-0">
             <div class="flex flex-col w-64 bg-indigo-700">
                 <div class="flex items-center justify-center h-16 px-6 bg-indigo-800">
-                    <h1 class="text-xl font-bold text-white">LoanApp Admin</h1>
+                    <div class="rounded-md p-2" aria-hidden="true"
+                        style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
                 </div>
                 <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
                     <nav class="flex-1 space-y-2">
@@ -48,7 +61,7 @@
                             <i class="fas fa-tags mr-3"></i>
                             Loan Types
                         </a>
-                        
+
                     </nav>
 
                     <!-- Sidebar admin block (matches index.html) -->
@@ -79,7 +92,10 @@
         <div id="mobile-sidebar"
             class="fixed inset-y-0 left-0 transform -translate-x-full w-64 bg-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
             <div class="flex items-center justify-between h-16 px-4 bg-indigo-800">
-                <span class="text-white text-xl font-bold">LoanApp Admin</span>
+                <div class="rounded-md p-2" aria-hidden="true"
+                    style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                    <span class="text-white font-bold text-lg">MLC</span>
+                </div>
                 <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
                     <i class="fas fa-times"></i>
                 </button>
@@ -106,24 +122,25 @@
                         <i class="fas fa-tags mr-3"></i>
                         Loan Types
                     </a>
-                   
+                    <button onclick="logout()"
+                        class="w-full mt-4 flex items-center justify-center px-4 py-2 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+
                 </nav>
 
                 <!-- Mobile sidebar admin block -->
                 <div class="mt-auto p-4 border-t border-indigo-600">
-                    <div class="flex items-center">
+                    <!-- <div class="flex items-center">
                         <img class="w-10 h-10 rounded-full"
                             src="https://ui-avatars.com/api/?name=Admin+User&background=7c3aed&color=fff" alt="Admin">
                         <div class="ml-3">
                             <p class="text-sm font-medium text-white"><span class="admin-username">Admin</span></p>
                             <p class="text-xs text-indigo-200">Administrator</p>
                         </div>
-                    </div>
-                    <button onclick="logout()"
-                        class="w-full mt-4 flex items-center justify-center px-4 py-2 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
-                        <i class="fas fa-sign-out-alt mr-2"></i>
-                        Logout
-                    </button>
+                    </div> -->
+
                 </div>
             </div>
         </div>
@@ -162,7 +179,7 @@
 
             <!-- Main Content Area -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-4 md:p-6">
-               
+
                 <!-- Applications Table -->
                 <div class="bg-white shadow rounded-lg overflow-hidden">
                     <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
@@ -253,45 +270,66 @@
         </div>
     </div>
 
-    <!-- View Application Modal (kept unchanged) -->
+    <!-- View Application Modal -->
     <style>
+        #viewApplicationModal {
+            -webkit-overflow-scrolling: touch;
+        }
+        
         .modal-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: #c7d2fe #f0f4ff;
+            display: flex;
+            flex-direction: column;
+            max-height: 100%;
+            overflow: hidden;
         }
-
-        .modal-scroll::-webkit-scrollbar {
-            width: 8px;
+        
+        .modal-content {
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            flex: 1;
+            padding: 1rem;
         }
-
-        .modal-scroll::-webkit-scrollbar-track {
+        
+        @media (min-width: 768px) {
+            .modal-scroll {
+                max-height: 90vh;
+                border-radius: 0.5rem;
+            }
+        }
+        
+        /* Scrollbar styling */
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .modal-content::-webkit-scrollbar-track {
             background: #f0f4ff;
             border-radius: 4px;
         }
-
-        .modal-scroll::-webkit-scrollbar-thumb {
+        
+        .modal-content::-webkit-scrollbar-thumb {
             background-color: #c7d2fe;
             border-radius: 4px;
         }
-
+        
         body.modal-open {
             overflow: hidden;
             position: fixed;
             width: 100%;
+            height: 100%;
         }
     </style>
 
-    <div id="viewApplicationModal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden overflow-y-auto py-8">
-        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col modal-scroll">
-            <div class="flex items-center justify-between p-4 border-b">
+    <div id="viewApplicationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden p-0 md:p-6 overflow-y-auto">
+        <div class="bg-white shadow-xl w-full max-w-4xl flex flex-col modal-scroll m-0 md:my-8">
+            <div class="flex-shrink-0 flex items-center justify-between p-4 border-b">
                 <h3 class="text-lg font-medium text-gray-900">Application Details</h3>
                 <button type="button" class="text-gray-400 hover:text-gray-500" id="closeViewModal">
                     <span class="sr-only">Close</span>
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="p-6 overflow-y-auto flex-1">
+            <div class="modal-content">
                 <!-- details omitted for brevity — unchanged -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -310,8 +348,27 @@
                                 <p id="view-applicant-phone"></p>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Address</p>
-                                <p id="view-applicant-address"></p>
+                                <p class="text-sm text-gray-500">Mother's Name</p>
+                                <p id="view-father-name"></p>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">Age</p>
+                                <p id="view-age"></p>
+                            </div>
+
+                            <div>
+                                <p class="text-sm text-gray-500">Gender</p>
+                                <p id="view-gender"></p>
+                            </div>
+
+                            <div class="mb-3">
+                                <p class="text-gray-500 text-sm font-medium">Current Address</p>
+                                <p class="text-gray-800 text-sm mt-1" id="view-applicant-current-address">N/A</p>
+                            </div>
+                            <div class="mb-3">
+                                <p class="text-gray-500 text-sm font-medium">Permanent Address</p>
+                                <p class="text-gray-800 text-sm mt-1" id="view-applicant-permanent-address">N/A</p>
                             </div>
                         </div>
                     </div>
@@ -330,6 +387,40 @@
                                 <p class="text-sm text-gray-500">Loan Amount</p>
                                 <p class="mt-1 text-sm text-gray-900" id="view-loan-amount">₹2,50,000</p>
                             </div>
+                            <div class="mt-8">
+                                <h4 class="text-md font-medium text-gray-900 mb-4">Employment Details</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Employment Type</p>
+                                        <p id="view-employment-type"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Company Name</p>
+                                        <p id="view-company-name"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Company Email</p>
+                                        <p id="view-company-email"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Role</p>
+                                        <p id="view-role"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Monthly Net Salary</p>
+                                        <p id="view-monthly-income"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Current EMI</p>
+                                        <p id="view-current-emi"></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Credit Card Obligations</p>
+                                        <p id="view-credit-obligation"></p>
+                                    </div>
+                                </div>
+                            </div>
+
 
                         </div>
                     </div>
@@ -384,6 +475,9 @@
 
     <!-- Inline UI-only script: auth + avatar + mobile toggle + small helpers -->
     <script>
+        const API_BASE = window.location.origin;
+        const token = localStorage.getItem("adminToken");
+
         // Cache-busted avatar + username + mobile toggle & UI helpers
         (function () {
             // run after DOM
@@ -465,7 +559,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
-            const API_BASE = "http://localhost:5000";
+
             const token = localStorage.getItem("adminToken");
 
             // Redirect if not logged in
@@ -572,42 +666,103 @@
                 }
 
                 filtered.forEach(app => {
-                    const fullName = `${app.personal?.firstName ?? ""} ${app.personal?.lastName ?? ""}`.trim();
-
+                    const fullName = app.personal?.fullName || "N/A";
                     const row = document.createElement("tr");
-                    row.className = "hover:bg-gray-50";
+                    row.style.borderBottom = "1px solid #edf2f7";
+                    row.style.transition = "all 0.2s ease";
+                    row.style.backgroundColor = "#ffffff";
+                    row.onmouseover = function () { this.style.backgroundColor = "#f8fafc"; };
+                    row.onmouseout = function () { this.style.backgroundColor = "#ffffff"; };
 
                     row.innerHTML = `
-                <td class="px-6 py-4">
-                    <div class="font-medium">${app.loanName || "N/A"}</div>
-                    <div class="text-gray-500 text-sm">${app.bankName || ""}</div>
+                <td style="padding: 16px 24px;">
+                    <div style="font-weight: 600; color: #1a202c; font-size: 0.95rem; margin-bottom: 4px;">
+                        <i class="fas fa-file-invoice" style="color: #4f46e5; margin-right: 8px;"></i>
+                        ${app.loanName || "N/A"}
+                    </div>
+                    <div style="color: #64748b; font-size: 0.85rem; display: flex; align-items: center;">
+                        <i class="fas fa-university" style="margin-right: 6px; font-size: 0.8rem;"></i>
+                        ${app.bankName || "Not specified"}
+                    </div>
                 </td>
 
-                <td class="px-6 py-4">
-                    <div class="font-medium">${fullName || "N/A"}</div>
-                    <div class="text-gray-500 text-sm">${app.personal?.email || "-"}</div>
+                <td style="padding: 16px 24px;">
+                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px; display: flex; align-items: center;">
+                        <i class="fas fa-user" style="color: #4f46e5; margin-right: 8px; width: 16px; text-align: center;"></i>
+                        ${fullName || "N/A"}
+                    </div>
+                    <div style="color: #64748b; font-size: 0.85rem; display: flex; align-items: center;">
+                        <i class="fas fa-envelope" style="margin-right: 6px; font-size: 0.8rem; width: 16px; text-align: center;"></i>
+                        ${app.personal?.email || "No email"}
+                    </div>
                 </td>
 
-                <td class="px-6 py-4 font-medium">
-                    ${formatCurrency(app.loanAmount)}
+                <td style="padding: 16px 24px; font-weight: 600; color: #1a202c;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span>${formatCurrency(app.loanAmount)}</span>
+                       
+                    </div>
                 </td>
 
-                <td class="px-6 py-4">
-                    <span class="px-2 py-1 rounded-full text-xs font-semibold ${statusColor(app.status)}">
+                <td style="padding: 16px 24px;">
+                    <span style="
+                        display: inline-flex;
+                        align-items: center;
+                        padding: 4px 12px;
+                        border-radius: 9999px;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        letter-spacing: 0.05em;
+                        text-transform: uppercase;
+                        ${statusColor(app.status).includes('green') ? 'background-color: #dcfce7; color: #166534;' :
+                            statusColor(app.status).includes('yellow') ? 'background-color: #fef9c3; color: #854d0e;' :
+                                statusColor(app.status).includes('red') ? 'background-color: #fee2e2; color: #991b1b;' :
+                                    'background-color: #e0f2fe; color: #075985;'}
+                    ">
+                        <i class="fas ${app.status === 'approved' ? 'fa-check-circle' :
+                            app.status === 'pending' ? 'fa-clock' :
+                                app.status === 'rejected' ? 'fa-times-circle' : 'fa-info-circle'}" 
+                           style="margin-right: 4px;"></i>
                         ${app.status}
                     </span>
                 </td>
 
-                <td class="px-6 py-4 text-sm text-gray-600">
-                    ${formatDate(app.createdAt)}
+                <td style="padding: 16px 24px; color: #4b5563; font-size: 0.9rem;">
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-weight: 500;">${formatDate(app.createdAt)}</span>
+                      
+                    </div>
                 </td>
 
-                <td class="px-6 py-4 text-right">
-                    <button class="text-indigo-600 hover:text-indigo-900 mr-3"
-                        onclick="viewApplication('${app._id}')">
+                <td style="padding: 16px 24px; text-align: right;">
+                    <button style="
+                        background: #eef2ff;
+                        color: #4f46e5;
+                        border: none;
+                        border-radius: 6px;
+                        padding: 6px 12px;
+                        margin-right: 8px;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.background='#e0e7ff'" 
+                      onmouseout="this.style.background='#eef2ff'"
+                      onclick="viewApplication('${app._id}')">
                         <i class="fas fa-eye"></i>
+                        <span style="margin-left: 4px; font-size: 0.85rem;">View</span>
                     </button>
-                  
+                    <button style="
+                        background: #fef2f2;
+                        color: #dc2626;
+                        border: none;
+                        border-radius: 6px;
+                        padding: 6px 12px;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    " onmouseover="this.style.background='#fee2e2'" 
+                      onmouseout="this.style.background='#fef2f2'"
+                      onclick="openDeleteModal('${app._id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </td>
             `;
 
@@ -636,19 +791,52 @@
 
                     // Fill Applicant Info (safe guarded)
                     document.getElementById("view-applicant-name").innerText =
-                        `${app.personal?.firstName ?? ''} ${app.personal?.lastName ?? ''}`.trim() || 'N/A';
+                        app.personal?.fullName || "N/A";
+                    document.getElementById("view-father-name").innerText =
+                        app.personal?.fatherName || "N/A";
+                    document.getElementById("view-age").innerText =
+                        app.personal?.age || "N/A";
+                    document.getElementById("view-gender").innerText =
+                        app.personal?.gender || "N/A";
 
                     document.getElementById("view-applicant-email").innerText = app.personal?.email ?? 'N/A';
                     document.getElementById("view-applicant-phone").innerText = app.personal?.phone ?? 'N/A';
 
-                    const addr = app.personal?.address;
-                    document.getElementById("view-applicant-address").innerText =
-                        addr ? `${addr.street ?? ''}, ${addr.city ?? ''}, ${addr.state ?? ''} - ${addr.zip ?? ''}` : 'N/A';
+                    // Current Address
+                    const currAddr = app.personal?.currentAddress || {};
+                    document.getElementById("view-applicant-current-address").innerText =
+                        currAddr.street ?
+                            `${currAddr.street || ''}, ${currAddr.city || ''}, ${currAddr.state || ''} - ${currAddr.zip || currAddr.postalCode || ''}`.replace(/,\s*,/g, ',').replace(/,\s*$/, '') :
+                            'N/A';
+
+                    // Permanent Address
+                    const permAddr = app.personal?.permanentAddress || {};
+                    document.getElementById("view-applicant-permanent-address").innerText =
+                        permAddr.street ?
+                            `${permAddr.street || ''}, ${permAddr.city || ''}, ${permAddr.state || ''} - ${permAddr.zip || permAddr.postalCode || ''}`.replace(/,\s*,/g, ',').replace(/,\s*$/, '') :
+                            'N/A';
 
                     // Loan info
                     document.getElementById("view-loan-id").innerText = app._id ?? 'N/A';
                     document.getElementById("view-loan-type").innerText = app.loanName ?? (app.loanId?.loanName ?? 'N/A');
                     document.getElementById("view-loan-amount").innerText = formatCurrency(app.loanAmount ?? 0);
+
+                    // Employment Details
+                    document.getElementById("view-employment-type").innerText =
+                        app.employment?.employmentType || "N/A";
+                    document.getElementById("view-company-name").innerText =
+                        app.employment?.companyName || "N/A";
+                    document.getElementById("view-company-email").innerText =
+                        app.employment?.companyEmail || "N/A";
+                    document.getElementById("view-role").innerText =
+                        app.employment?.role || "N/A";
+                    document.getElementById("view-monthly-income").innerText =
+                        app.employment?.income || "N/A";
+                    document.getElementById("view-current-emi").innerText =
+                        app.employment?.currentEmi || "N/A";
+                    document.getElementById("view-credit-obligation").innerText =
+                        app.employment?.creditObligation || "N/A";
+
 
 
                     // -----------------------------
@@ -657,29 +845,30 @@
                     const docsContainer = document.getElementById("documentsContainer");
                     docsContainer.innerHTML = "";
 
-                    (app.documents || []).forEach(doc => {
-                        if (!doc || !doc.url) return;
+                    const docs = app.documents || {};
 
-                        const cleanedUrl = doc.url.startsWith("/") ? doc.url.substring(1) : doc.url;
-                        const fileUrl = `${API_BASE}/${cleanedUrl}`;
+                    Object.entries(docs).forEach(([key, url]) => {
+                        if (!url) return;
+
+                        const fileUrl = fixDocUrl(typeof url === "string" ? url : url?.url);
 
                         docsContainer.innerHTML += `
-        <div class="border p-3 rounded flex items-center">
-            <img src="${fileUrl}" 
-     class="w-12 h-12 object-cover rounded mr-4 border cursor-pointer"
-     onclick="openImagePreview('${fileUrl}')"
-/>
-
-            <p class="flex-1 text-sm">${doc.name}</p>
-            <a href="${fileUrl}" download class="text-blue-600">
-                <i class="fas fa-download"></i>
-            </a>
-        </div>
-    `;
+                            <div class="border p-3 rounded flex items-center">
+                                <img src="${fileUrl}"
+                                    class="w-12 h-12 object-cover rounded mr-4 border cursor-pointer"
+                                    onclick="openImagePreview('${fileUrl}')"
+                                />
+                                <p class="flex-1 text-sm">${key}</p>
+                                <a href="${fileUrl}" download class="text-blue-600">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        `;
                     });
 
 
-                    // Show modal
+
+
                     document.body.classList.add("modal-open");
                     document.getElementById("viewApplicationModal").classList.remove("hidden");
 
@@ -788,6 +977,70 @@
         };
 
     </script>
+
+    <script>
+
+        // ---------- FIX DOCUMENT URL UTIL ----------
+        function fixDocUrl(url) {
+            if (!url || typeof url !== "string") return "";
+
+            // Remove localhost if it exists
+            url = url.replace("http://localhost:5000", "");
+
+            // Remove starting slashes
+            url = url.replace(/^\/+/, "");
+
+            // Convert to full URL using your domain
+            return `${window.location.origin}/${url}`;
+        }
+
+
+        // Open delete modal
+        window.openDeleteModal = function (id) {
+            document.getElementById("deleteAppId").innerText = id;
+            document.getElementById("deleteApplicationModal").classList.remove("hidden");
+
+            // store ID for confirm
+            window.applicationToDelete = id;
+        };
+
+        // Confirm delete
+        document.getElementById("confirmDeleteBtn").onclick = async function () {
+            const id = window.applicationToDelete;
+            if (!id) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/applications/admin/${id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.msg || "Delete failed");
+
+                alert("Application deleted successfully!");
+
+                // Close modal
+                document.getElementById("deleteApplicationModal").classList.add("hidden");
+
+                // Reload table
+                loadApplications();
+
+            } catch (err) {
+                alert(err.message);
+            }
+        };
+
+        // Cancel delete
+        document.getElementById("cancelDeleteBtn").onclick = function () {
+            document.getElementById("deleteApplicationModal").classList.add("hidden");
+        };
+
+    </script>
+
 
 </body>
 

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMI Calculator - MLC</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            background: #f8f9ff;
+            padding: 30px;
+        }
+
+        .calculator-box {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #4b1fea;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .value-box {
+            margin-top: 5px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .result-box {
+            background: #f3efff;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 18px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .chart-box {
+            margin-top: 40px;
+        }
+
+        canvas {
+            max-width: 350px;
+            height: 350px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .btn-reset {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #4b1fea;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-reset:hover {
+            background: #3a15c5;
+        }
+
+        @media (min-width: 1200px) {
+            canvas {
+                max-width: 280px;
+                height: 280px;
+            }
+        }
+
+        /* For mobile screens */
+        @media (max-width: 480px) {
+            canvas {
+                max-width: 260px;
+                height: 260px;
+            }
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- =================== GLOBAL HEADER FROM INDEX PAGE =================== -->
+    <header class="fixed w-full z-50 top-0 left-0 bg-glass shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16 md:h-20">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-3">
+                    <div class="rounded-md p-2" style="background:linear-gradient(90deg, #4f46e5, #8b5cf6);">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
+                    <span class="text-lg font-semibold text-gray-800">MyLoanCredit</span>
+                </a>
+
+
+                <!-- Desktop nav -->
+
+                <nav class="hidden md:flex items-center gap-3">
+                    <a href="index.html"
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">
+                        Home
+                    </a>
+                    <a href="index.html#features"
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">
+                        Features
+                    </a>
+                    <a href="index.html#how-it-works"
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">
+                        How It Works
+                    </a>
+                    <a href="index.html#testimonials"
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">
+                        Testimonials
+                    </a>
+                    <a href="index.html#Footer"
+                        class="px-3 py-2 rounded-md text-gray-700 hover:text-white hover:bg-indigo-600 transition">
+                        Contact
+                    </a>
+
+                </nav>
+
+                <!-- Buttons -->
+                <div class="flex items-center gap-3">
+                    <a href="login.html"
+                        class="hidden sm:inline-block px-3 py-2 rounded-md border border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition">
+                        Log In
+                    </a>
+                    <a href="register.html"
+                        class="hidden sm:inline-block px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition transform hover:-translate-y-0.5">
+                        Get Started
+                    </a>
+
+                    <!-- Mobile toggle -->
+                    <button id="mobile-toggle" aria-label="Open menu"
+                        class="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400 transition-all duration-200">
+                        <svg id="icon-open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="icon-close" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-panel" class="md:hidden fixed inset-x-0 bottom-0 top-0 z-40 hidden">
+            <div class="absolute inset-0 bg-black/30" onclick="toggleMobile()"></div>
+
+            <div
+                class="mobile-panel absolute left-0 right-0 top-0 bg-white rounded-t-2xl shadow-2xl max-h-[100vh] overflow-auto">
+                <div class="p-6 pt-20">
+                    <button onclick="toggleMobile()"
+                        class="absolute right-4 top-4 p-2 text-gray-600 hover:bg-gray-100 rounded-full">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+
+                    <nav class="flex flex-col gap-2">
+
+                        <a href="index.html" class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">Home</a>
+
+                        <a href="index.html#features"
+                            class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">Features</a>
+
+                        <a href="index.html#how-it-works"
+                            class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">How It Works</a>
+
+                        <a href="index.html#testimonials"
+                            class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">Testimonials</a>
+
+                        <a href="index.html#Footer"
+                            class="block px-4 py-3 rounded-md text-lg font-medium hover:bg-indigo-50"
+                            onclick="toggleMobile()">Contact</a>
+
+                    </nav>
+
+                    <div class="mt-6 border-t pt-4">
+                        <a href="login.html"
+                            class="block w-full text-center px-4 py-3 mb-3 rounded-md border border-indigo-600 text-indigo-600">Log
+                            In</a>
+                        <a href="register.html"
+                            class="block w-full text-center px-4 py-3 rounded-md bg-indigo-600 text-white">Get
+                            Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Add spacing since header is fixed -->
+    <div class="pt-24"></div>
+
+    <!-- =================== / GLOBAL HEADER =================== -->
+
+
+
+    <div class="calculator-box">
+        <h1>Loan EMI Calculator</h1>
+
+        <!-- Loan Amount -->
+        <div class="section">
+            <div class="label-row">
+                <span>Loan Amount (₹)</span>
+                <span id="loanAmountLabel">50,000</span>
+            </div>
+            <input type="range" min="10000" max="50000000" value="50000" id="loanAmount" />
+            <input type="text" id="loanAmountInput" class="value-box" value="50000" oninput="allowINR(this)" />
+
+        </div>
+
+        <!-- Interest Rate -->
+        <div class="section">
+            <div class="label-row">
+                <span>Interest Rate (% per annum)</span>
+                <span id="interestLabel">10%</span>
+            </div>
+            <input type="range" min="5" max="25" step="0.1" value="10" id="interestRate" />
+            <input type="text" id="interestInput" class="value-box" value="10" oninput="allowDecimal(this)" />
+
+        </div>
+
+        <!-- Loan Tenure -->
+        <div class="section">
+            <div class="label-row">
+                <span>Tenure (Months)</span>
+                <span id="tenureLabel">60</span>
+            </div>
+            <input type="range" min="6" max="360" value="60" id="tenure" />
+            <input type="text" id="tenureInput" class="value-box" value="60" />
+        </div>
+
+        <!-- Results -->
+        <div class="result-box">
+            <div class="result-row">
+                <strong>Your EMI :</strong>
+                <span id="emiResult">₹ 0</span>
+            </div>
+
+            <div class="result-row">
+                <strong>Total Interest :</strong>
+                <span id="interestResult">₹ 0</span>
+            </div>
+
+            <div class="result-row">
+                <strong>Total Payment :</strong>
+                <span id="totalPayment">₹ 0</span>
+            </div>
+        </div>
+
+        <button class="btn-reset" onclick="resetFields()">Reset Calculator</button>
+
+        <!-- Chart -->
+        <div class="chart-box">
+            <canvas id="emiChart"></canvas>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        let panel, openIcon, closeIcon;
+
+        function toggleMobile() {
+            if (panel.classList.contains("hidden")) {
+                panel.classList.remove("hidden");
+                openIcon.classList.add("hidden");
+                closeIcon.classList.remove("hidden");
+                document.body.style.overflow = "hidden";
+            } else {
+                panel.classList.add("hidden");
+                openIcon.classList.remove("hidden");
+                closeIcon.classList.add("hidden");
+                document.body.style.overflow = "";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const mobileToggle = document.getElementById("mobile-toggle");
+            panel = document.getElementById("mobile-panel");
+            openIcon = document.getElementById("icon-open");
+            closeIcon = document.getElementById("icon-close");
+
+            if (mobileToggle) {
+                mobileToggle.addEventListener("click", toggleMobile);
+            }
+        });
+    </script>
+
+
+
+    <script>
+        const loanAmount = document.getElementById("loanAmount");
+        const loanAmountInput = document.getElementById("loanAmountInput");
+        const interestRate = document.getElementById("interestRate");
+        const interestInput = document.getElementById("interestInput");
+        const tenure = document.getElementById("tenure");
+        const tenureInput = document.getElementById("tenureInput");
+
+        const emiResult = document.getElementById("emiResult");
+        const interestResult = document.getElementById("interestResult");
+        const totalPayment = document.getElementById("totalPayment");
+
+        const loanAmountLabel = document.getElementById("loanAmountLabel");
+        const interestLabel = document.getElementById("interestLabel");
+        const tenureLabel = document.getElementById("tenureLabel");
+
+        let chart;
+
+        function formatINR(amount) {
+            return amount.toLocaleString("en-IN");
+        }
+
+        function allowINR(el) {
+            el.value = el.value.replace(/[^0-9]/g, "");
+            if (el.value !== "") {
+                el.value = parseInt(el.value).toLocaleString("en-IN");
+            }
+        }
+
+
+        function allowDecimal(el) {
+            el.value = el.value.replace(/[^0-9.]/g, '');
+            const parts = el.value.split('.');
+            if (parts.length > 2) {
+                el.value = parts[0] + "." + parts[1];
+            }
+        }
+
+
+        function calculateEMI() {
+            let P = parseInt(loanAmount.value);
+            let r = parseFloat(interestRate.value) / 12 / 100;
+            let n = parseInt(tenure.value);
+
+            // EMI Formula
+            let EMI = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+
+            let totalAmt = EMI * n;
+            let totalInterest = totalAmt - P;
+
+            // Display results
+            emiResult.innerHTML = "₹ " + formatINR(Math.round(EMI));
+            interestResult.innerHTML = "₹ " + formatINR(Math.round(totalInterest));
+            totalPayment.innerHTML = "₹ " + formatINR(Math.round(totalAmt));
+
+            updateChart(P, totalInterest);
+        }
+
+        function updateChart(principal, interest) {
+            if (chart) chart.destroy();
+
+            const ctx = document.getElementById("emiChart");
+
+            chart = new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: ["Principal", "Interest"],
+                    datasets: [
+                        {
+                            data: [principal, interest],
+                            backgroundColor: ["#4b1fea", "#ff8c00"],
+                        },
+                    ],
+                },
+            });
+        }
+
+        function syncFields() {
+
+            // Loan Amount
+            loanAmountInput.value = formatINR(parseInt(loanAmount.value));
+            loanAmountLabel.innerText = formatINR(parseInt(loanAmount.value));
+
+            // Interest Rate (do NOT override if user is typing)
+            if (document.activeElement !== interestInput) {
+                interestInput.value = interestRate.value;
+            }
+            interestLabel.innerText = interestRate.value + "%";
+
+            // Tenure
+            if (document.activeElement !== tenureInput) {
+                tenureInput.value = tenure.value;
+            }
+            tenureLabel.innerText = tenure.value;
+
+            calculateEMI();
+        }
+
+
+        // Sync Listeners
+        loanAmount.oninput = syncFields;
+        interestRate.oninput = syncFields;
+        tenure.oninput = syncFields;
+
+        loanAmountInput.oninput = () => {
+            let raw = loanAmountInput.value.replace(/,/g, '');
+            loanAmount.value = raw;
+            syncFields();
+        }
+
+
+        interestInput.oninput = () => {
+            interestRate.value = interestInput.value;
+            syncFields();
+        };
+
+        tenureInput.oninput = () => {
+            tenure.value = tenureInput.value;
+            syncFields();
+        };
+
+        function resetFields() {
+            loanAmount.value = 500000;
+            interestRate.value = 10;
+            tenure.value = 60;
+            syncFields();
+        }
+
+        syncFields();
+
+    </script>
+
+
+
+</body>
+
+</html>

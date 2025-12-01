@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - LoanApp</title>
+    <title>My Profile - MLC</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="../assets/images/favicon.png">
     <!-- Tailwind CSS -->
@@ -16,6 +16,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
+        :root {
+            --accent: #4f46e5;
+            /* indigo-600 */
+            --accent-2: #8b5cf6;
+            /* purple */
+            --glass: rgba(255, 255, 255, 0.6);
+            font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
         }
@@ -70,7 +79,10 @@
     <div id="mobile-sidebar"
         class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-64 bg-gradient-to-b from-indigo-600 to-indigo-700 z-50 transition-transform duration-300 ease-in-out md:hidden">
         <div class="flex items-center justify-between h-16 px-4 bg-indigo-700">
-            <span class="text-white text-xl font-bold">LoanApp</span>
+            <div class="rounded-md p-2" aria-hidden="true"
+                style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                <span class="text-white font-bold text-lg">MLC</span>
+            </div>
             <button id="close-mobile-menu" class="text-white p-2 focus:outline-none">
                 <i class="fas fa-times"></i>
             </button>
@@ -92,8 +104,13 @@
                     <i class="fas fa-user-circle mr-3"></i>
                     Profile
                 </a>
+                <a href="../emi-calculator.html"
+                    class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                    <i class="fas fa-calculator mr-3"></i>
+                    EMI Calculator
+                </a>
             </nav>
-            <div class="p-4 mt-auto border-t border-indigo-500">
+            <!-- <div class="p-4 mt-auto border-t border-indigo-500">
                 <div class="flex items-center">
                     <img class="user-avatar w-10 h-10 rounded-full" alt="User">
                     <div class="ml-3">
@@ -101,7 +118,7 @@
                         <a href="profile.html" class="text-xs text-indigo-200 hover:text-white">View Profile</a>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
     </div>
@@ -111,7 +128,10 @@
         <div class="hidden md:flex md:flex-shrink-0">
             <div class="flex flex-col w-64 bg-gradient-to-b from-indigo-600 to-indigo-700">
                 <div class="flex items-center justify-center h-16 px-4 bg-indigo-700">
-                    <span class="text-white text-xl font-bold">LoanApp</span>
+                    <div class="rounded-md p-2" aria-hidden="true"
+                        style="background:linear-gradient(90deg,var(--accent),var(--accent-2));">
+                        <span class="text-white font-bold text-lg">MLC</span>
+                    </div>
                 </div>
                 <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
                     <nav class="flex-1 space-y-2">
@@ -129,6 +149,12 @@
                             class="flex items-center px-4 py-3 text-sm font-medium text-white bg-indigo-800 rounded-lg">
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
+                        </a>
+                        <a href="../emi-calculator.html"
+                        target="_blank"
+                            class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
+                            <i class="fas fa-calculator mr-3"></i>
+                            EMI Calculator
                         </a>
                     </nav>
                 </div>
@@ -181,7 +207,10 @@
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                                         <i class="fas fa-user-circle mr-2"></i> Your Profile
                                     </a>
-
+                                    <a href="../emi-calculator.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                        <i class="fas fa-calculator mr-2"></i> EMI Calculator
+                                    </a>
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                         role="menuitem" onclick="logout()">
                                         <i class="fas fa-sign-out-alt mr-2"></i> Sign out
@@ -211,7 +240,10 @@
                         <i class="fas fa-user-circle mr-3"></i>
                         Profile
                     </a>
-                    ttings
+                    <a href="../emi-calculator.html"
+                        class="flex items-center px-3 py-2 text-base font-medium text-gray-600 rounded-md hover:bg-gray-50">
+                        <i class="fas fa-calculator mr-3 text-gray-500"></i>
+                        EMI Calculator
                     </a>
                 </div>
             </div>
@@ -687,8 +719,9 @@
                 // Avatar (top-right and sidebar)
                 document.querySelectorAll(".user-avatar").forEach(img => {
                     img.src = user.profilePic
-                        ? `http://localhost:5000/uploads/${user.profilePic}`
+                        ? `${window.location.origin}/uploads/${user.profilePic}`
                         : `https://ui-avatars.com/api/?name=${user.name}&background=7c3aed&color=fff`;
+
                 });
 
 
@@ -710,10 +743,11 @@
 
                 // PROFILE PIC
                 const pic = user.profilePic
-                    ? `http://localhost:5000/uploads/${user.profilePic}`
+                    ? `${window.location.origin}/uploads/${user.profilePic}`
                     : `https://ui-avatars.com/api/?name=${user.name}&background=7c3aed&color=fff&size=256`;
 
                 document.getElementById("profilePhoto").src = pic;
+
 
 
                 /* -------- EDIT MODE -------- */
@@ -829,13 +863,32 @@
             wrapper.dataset.docId = doc._id;
             wrapper.querySelector(".doc-view").addEventListener("click", () => {
                 // open in new tab (if pdf/image supported)
-                window.open(`http://localhost:5000/uploads/${doc.filename}`, "_blank");
+                window.open(`${window.location.origin}/uploads/${doc.filename}`, "_blank");
             });
 
-            wrapper.querySelector(".doc-download").addEventListener("click", () => {
-                // trigger download route (uses proper original filename)
-                window.location.href = `http://localhost:5000/api/user/documents/download/${doc._id}`;
+            wrapper.querySelector(".doc-download").addEventListener("click", async () => {
+
+                const url = `${window.location.origin}/api/user/documents/download/${doc._id}`;
+
+                const res = await fetch(url, {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!res.ok) {
+                    alert("Failed to download file");
+                    return;
+                }
+
+                const blob = await res.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = downloadUrl;
+                a.download = doc.originalname;
+                a.click();
             });
+
 
             wrapper.querySelector(".doc-delete").addEventListener("click", async () => {
                 if (!confirm("Delete this document?")) return;
@@ -868,7 +921,8 @@
         // load documents and render into documentsList
         async function loadDocuments() {
             try {
-                const res = await fetch("http://localhost:5000/api/user/documents", {
+                const res = await fetch(`${window.location.origin}/api/user/documents`, {
+
                     method: "GET",
                     headers: { "Authorization": "Bearer " + token }
                 });
@@ -917,7 +971,7 @@
                 formData.append("document", file);
 
                 try {
-                    const res = await fetch("http://localhost:5000/api/user/upload-document", {
+                    const res = await fetch(`${window.location.origin}/api/user/upload-document`, {
                         method: "POST",
                         headers: { "Authorization": "Bearer " + token },
                         body: formData
@@ -940,27 +994,28 @@
         }
 
         // ================= LOAD DOCUMENTS ==================
-async function loadDocuments() {
-    try {
-        const res = await fetch("http://localhost:5000/api/user/documents", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + token
-            }
-        });
+        async function loadDocuments() {
+            try {
+                const res = await fetch(`${window.location.origin}/api/user/documents`, {
 
-        const data = await res.json();
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
 
-        if (!data.success) {
-            console.error("Failed to load documents");
-            return;
-        }
+                const data = await res.json();
 
-        const docsContainer = document.getElementById("documentsList");
-        docsContainer.innerHTML = "";
+                if (!data.success) {
+                    console.error("Failed to load documents");
+                    return;
+                }
 
-        data.documents.forEach(doc => {
-            docsContainer.innerHTML += `
+                const docsContainer = document.getElementById("documentsList");
+                docsContainer.innerHTML = "";
+
+                data.documents.forEach(doc => {
+                    docsContainer.innerHTML += `
                 <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-center justify-between">
                     <div class="flex items-center">
                         <div class="bg-indigo-100 p-3 rounded-lg mr-4">
@@ -976,10 +1031,11 @@ async function loadDocuments() {
                     </div>
 
                     <div class="flex space-x-3">
-                        <a href="http://localhost:5000/api/user/documents/download/${doc._id}"
-                           class="text-gray-600 hover:text-indigo-600">
-                           <i class="fas fa-download"></i>
-                        </a>
+                     <button onclick="downloadDocument('${doc._id}', '${doc.originalname}')" 
+        class="text-gray-600 hover:text-indigo-600">
+    <i class="fas fa-download"></i>
+</button>
+
 
                         <button onclick="deleteDocument('${doc._id}')"
                             class="text-gray-600 hover:text-red-600">
@@ -988,28 +1044,28 @@ async function loadDocuments() {
                     </div>
                 </div>
             `;
-        });
+                });
 
-    } catch (err) {
-        console.error(err);
-    }
-}
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
 
-async function deleteDocument(id) {
-    if (!confirm("Delete this document?")) return;
+        async function deleteDocument(id) {
+            if (!confirm("Delete this document?")) return;
 
-    try {
-        await fetch(`http://localhost:5000/api/user/documents/${id}`, {
-            method: "DELETE",
-            headers: { "Authorization": "Bearer " + token }
-        });
+            try {
+                await fetch(`http://localhost:5000/api/user/documents/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + token }
+                });
 
-        loadDocuments(); // refresh list
-    } catch (err) {
-        console.error(err);
-    }
-}
+                loadDocuments(); // refresh list
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
 
 
@@ -1022,6 +1078,30 @@ async function deleteDocument(id) {
             localStorage.removeItem("userToken");
             localStorage.removeItem("userName");
             window.location.href = "../login.html";
+        }
+
+
+        async function downloadDocument(docId, originalName) {
+            const url = `${window.location.origin}/api/user/documents/download/${docId}`;
+
+            const res = await fetch(url, {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            if (!res.ok) {
+                alert("Unauthorized or file not found");
+                return;
+            }
+
+            const blob = await res.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = downloadUrl;
+            a.download = originalName;
+            a.click();
         }
 
     </script>
