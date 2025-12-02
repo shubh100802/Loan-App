@@ -387,7 +387,7 @@
                         class="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white shadow">
                         Banks
                     </button>
-                    
+
                     <button id="tabNBFC" class="px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-700 border">
                         NBFCs
                     </button>
@@ -395,7 +395,7 @@
 
                 <!-- Dynamic Bank Grid -->
                 <div class="mb-6">
-                    
+
                     <!-- BANK LIST -->
                     <div id="bankList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     </div>
@@ -416,6 +416,84 @@
                             <i class="fas fa-chevron-down ml-2 transition-transform duration-200" id="viewMoreIcon"></i>
                         </button>
                     </div> -->
+
+                <!-- DASHBOARD OFFERS SECTION -->
+                <section id="offers" class="py-10 mt-6 bg-white rounded-xl shadow-sm">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-10">
+                        <h2 class="text-2xl md:text-3xl font-bold text-center">Exclusive Offers</h2>
+                        <div class="mx-auto my-3 w-20 h-1 bg-gradient-to-r from-indigo-500 to-purple-400 rounded"></div>
+                        <p class="text-gray-600 text-center max-w-2xl mx-auto text-sm sm:text-base">
+                            Tap any offer to view complete details.
+                        </p>
+                    </div>
+
+                    <!-- Auto Scroll Slider -->
+                    <div class="relative overflow-hidden">
+                        <div id="dashOffersSlider" class="flex gap-6 animate-scroll-big cursor-pointer"
+                            onclick="window.location.href='../all-offers.html'">
+
+                            <img src="../{css,js,images}/Offer1.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer2.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer3.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer4.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer5.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer6.jpeg" class="offer-card-dash">
+
+                            <!-- Duplicate for infinite loop -->
+                            <img src="../{css,js,images}/Offer1.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer2.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer3.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer4.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer5.jpeg" class="offer-card-dash">
+                            <img src="../{css,js,images}/Offer6.jpeg" class="offer-card-dash">
+                        </div>
+                    </div>
+
+                    <!-- Inline Styling -->
+                    <style>
+                        .offer-card-dash {
+                            height: 200px;
+                            width: 400px;
+                            border-radius: 1rem;
+                            object-fit: contain;
+                            background: #f9fafb;
+                            padding: 10px;
+                            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
+                            transition: transform .3s ease, box-shadow .3s ease;
+                        }
+
+                        .offer-card-dash:hover {
+                            transform: scale(1.06);
+                            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.20);
+                        }
+
+                        @keyframes scrollBig {
+                            0% {
+                                transform: translateX(0);
+                            }
+
+                            100% {
+                                transform: translateX(-50%);
+                            }
+                        }
+
+                        .animate-scroll-big {
+                            animation: scrollBig 14s linear infinite;
+                        }
+
+                        @media (max-width: 640px) {
+                            .offer-card-dash {
+                                height: 260px;
+                                width: 420px;
+                            }
+
+                            .animate-scroll-big {
+                                animation-duration: 12s;
+                            }
+                        }
+                    </style>
+                </section>
+
             </main>
         </div>
     </div>
