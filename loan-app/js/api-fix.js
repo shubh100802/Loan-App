@@ -50,7 +50,10 @@ window.onscroll = resetIdleTimer;
 
 // GLOBAL LOGOUT FUNCTION (required by all pages)
 function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "../index.html"; 
+    localStorage.removeItem("userToken");  
+    localStorage.removeItem("adminToken"); 
+    localStorage.removeItem("token");      
+    window.location.href = "../index.html";
 }
+
 

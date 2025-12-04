@@ -344,26 +344,49 @@
             </div>
 
             <!-- Scrolling Image Reel -->
-            <div class="relative overflow-hidden">
-                <div id="offersSlider" class="flex gap-8 animate-scroll-big">
-                    <!-- Replace these images with your actual offer banners -->
-                    <img src="{css,js,images}/Offer1.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer2.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer3.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer4.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer5.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer6.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer7.jpeg" class="offer-card">
+            <div class="relative overflow-hidden select-none">
 
-                    <!-- Duplicate for infinite loop -->
-                    <img src="{css,js,images}/Offer1.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer2.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer3.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer4.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer5.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer6.jpeg" class="offer-card">
-                    <img src="{css,js,images}/Offer7.jpeg" class="offer-card">
+                <!-- Prev Button -->
+                <button id="prevBtn"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-xl shadow-md p-3 rounded-full z-20 hover:bg-white transition">
+                    <i class="fas fa-chevron-left text-indigo-600 text-xl"></i>
+                </button>
+
+                <!-- Slider Wrapper -->
+                <div id="offersWrapper" class="overflow-hidden w-full">
+                    <div id="offersSlider" class="flex gap-8 will-change-transform">
+                        <!-- ORIGINAL IMAGES -->
+                        <img src="{css,js,images}/Offer1.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer2.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer3.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer4.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer5.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer6.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer7.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer8.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer9.jpeg" class="offer-card" />
+                        <!-- <img src="{css,js,images}/Offer10.jpeg" class="offer-card" /> -->
+
+                        <!-- DUPLICATES FOR INFINITE LOOP -->
+                        <img src="{css,js,images}/Offer1.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer2.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer3.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer4.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer5.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer6.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer7.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer8.jpeg" class="offer-card" />
+                        <img src="{css,js,images}/Offer9.jpeg" class="offer-card" />
+                        <!-- <img src="{css,js,images}/Offer10.jpeg" class="offer-card" /> -->
+                    </div>
                 </div>
+
+                <!-- Next Button -->
+                <button id="nextBtn"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-xl shadow-md p-3 rounded-full z-20 hover:bg-white transition">
+                    <i class="fas fa-chevron-right text-indigo-600 text-xl"></i>
+                </button>
+
                 <!-- More Offers Button -->
                 <div class="text-center mt-10">
                     <a href="all-offers.html" class="inline-block px-8 py-3 rounded-lg bg-indigo-600 text-white font-semibold shadow-md 
@@ -372,7 +395,9 @@
                     </a>
                 </div>
 
+
             </div>
+
 
             <style>
                 /* Offer card styling */
@@ -392,34 +417,16 @@
                 }
 
                 /* Big smooth infinite scroll */
-                @keyframes scrollBig {
-                    0% {
-                        transform: translateX(0);
-                    }
-
-                    100% {
-                        transform: translateX(-50%);
-                    }
+                #offersWrapper {
+                    overflow: hidden;
+                    width: 100%;
+                    position: relative;
                 }
 
-                .animate-scroll-big {
-                    animation: scrollBig 18s linear infinite;
-                }
-
-                /* Pause animation when hovering slider */
-                #offersSlider:hover {
-                    animation-play-state: paused;
-                }
-
-                /* Mobile responsiveness */
-                @media (max-width: 640px) {
+                @media(max-width:640px) {
                     .offer-card {
                         height: 300px;
                         width: 450px;
-                    }
-
-                    .animate-scroll-big {
-                        animation-duration: 18s;
                     }
                 }
             </style>
@@ -751,6 +758,104 @@
             }
         });
     </script>
+
+    <script>
+        let slider = document.getElementById("offersSlider");
+        let wrapper = document.getElementById("offersWrapper");
+
+        let cardWidth = slider.children[0].offsetWidth + 32; // width + gap
+        let scrollX = 0;
+        let autoScroll = null;
+        let isDragging = false;
+        let startX = 0;
+
+        // -------------- SAFE AUTO SCROLL (NEVER DOUBLE START) --------------
+        function startAuto() {
+            if (autoScroll) return; // prevent multiple intervals
+
+            autoScroll = setInterval(() => {
+                scrollX += 1; // smooth
+                updateSlider();
+            }, 20);
+        }
+
+        function stopAuto() {
+            clearInterval(autoScroll);
+            autoScroll = null;
+        }
+
+        // Update transform cleanly
+        function updateSlider() {
+            let half = slider.scrollWidth / 2;
+            if (scrollX >= half) scrollX = 0;
+            if (scrollX < 0) scrollX = half - cardWidth;
+
+            slider.style.transform = `translateX(-${scrollX}px)`;
+        }
+
+        // -------------- BUTTON ACTIONS (MOVE BY 1 CARD) --------------
+        function moveNext() {
+            stopAuto();
+            scrollX += cardWidth;
+            updateSlider();
+            setTimeout(startAuto, 800); // restart AFTER delay
+        }
+
+        function movePrev() {
+            stopAuto();
+            scrollX -= cardWidth;
+            updateSlider();
+            setTimeout(startAuto, 800);
+        }
+
+        // Attach buttons
+        document.getElementById("nextBtn").onclick = moveNext;
+        document.getElementById("prevBtn").onclick = movePrev;
+
+
+        // -------------- DRAG SUPPORT (DESKTOP) --------------
+        wrapper.addEventListener("mousedown", (e) => {
+            stopAuto();
+            isDragging = true;
+            startX = e.pageX + scrollX;
+        });
+
+        window.addEventListener("mouseup", () => {
+            isDragging = false;
+            setTimeout(startAuto, 800);
+        });
+
+        wrapper.addEventListener("mousemove", (e) => {
+            if (!isDragging) return;
+            scrollX = startX - e.pageX;
+            updateSlider();
+        });
+
+
+        // -------------- SWIPE SUPPORT (MOBILE) --------------
+        wrapper.addEventListener("touchstart", (e) => {
+            stopAuto();
+            isDragging = true;
+            startX = e.touches[0].pageX + scrollX;
+        }, { passive: true });
+
+        wrapper.addEventListener("touchend", () => {
+            isDragging = false;
+            setTimeout(startAuto, 800);
+        }, { passive: true });
+
+        wrapper.addEventListener("touchmove", (e) => {
+            if (!isDragging) return;
+            scrollX = startX - e.touches[0].pageX;
+            updateSlider();
+        }, { passive: true });
+
+        // -------------- START AUTO SCROLL --------------
+        startAuto();
+
+
+    </script>
+
 
 
 </body>

@@ -4,7 +4,8 @@ import {
     getApplications,
     getApplication,
     getAllApplications,
-    deleteApplication
+    deleteApplication,
+    updateApplicationStatus
 } from "../controllers/applicationController.js";
 
 
@@ -19,6 +20,7 @@ const router = express.Router();
 router.get("/admin/all", protectAdmin, getAllApplications);
 router.get("/admin/:id", protectAdmin, getApplication);
 router.delete("/admin/:id", protectAdmin, deleteApplication);
+router.patch("/admin/:id", protectAdmin, updateApplicationStatus);
 
 
 // =============================

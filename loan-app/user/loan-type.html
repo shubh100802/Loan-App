@@ -160,8 +160,7 @@
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
                         </a>
-                        <a href="../emi-calculator.html"
-                            target="_blank"
+                        <a href="../emi-calculator.html" target="_blank"
                             class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                             <i class="fas fa-calculator mr-3"></i>
                             EMI Calculator
@@ -214,8 +213,7 @@
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
                         </a>
-                        <a href="../emi-calculator.html"
-                            target="_blank"
+                        <a href="../emi-calculator.html" target="_blank"
                             class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                             <i class="fas fa-calculator mr-3"></i>
                             EMI Calculator
@@ -306,6 +304,14 @@
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">Available Loan Types</h2>
 
                     <div id="loanList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+                    <div id="loanPlaceholder"
+                        class="hidden md:block bg-white shadow p-6 rounded-xl text-center text-gray-500">
+                        <i class="fas fa-briefcase text-indigo-500 text-3xl mb-4"></i>
+                        <h3 class="text-lg font-semibold mb-2">Business Loans Coming Soon</h3>
+                        <p class="text-sm">We’re working on bringing the best business loan offers for you.</p>
+                    </div>
+
 
 
                     <!-- Next Button -->
@@ -527,11 +533,11 @@
         //  ========== Select Loan Type ==========
 
         const API_BASE = "http://localhost:5000/api/loans";
-        
+
         // Helper function to format description into bullet points
         function formatDescription(description) {
             if (!description) return '';
-            
+
             // Split by newlines or periods followed by space
             const points = description.split(/\n|\.\s+/)
                 .filter(point => point.trim().length > 0)
@@ -543,9 +549,9 @@
                     }
                     return point;
                 });
-            
+
             if (points.length === 0) return '';
-            
+
             return `
                 <div class="mt-3">
                     <ul class="space-y-2 text-sm text-gray-600 list-disc pl-5">
@@ -593,11 +599,11 @@
                     let tenure = `${loan.minTenure} - ${loan.maxTenure} years`;
                     let amount = `₹${new Intl.NumberFormat('en-IN').format(loan.minLoanAmount)} - ₹${new Intl.NumberFormat('en-IN').format(loan.maxLoanAmount)}`;
                     let processing = `${loan.minProcessingFee} - ${loan.maxProcessingFee}`;
-                    
+
                     // Check if this is a popular loan type
-                    const isPopular = loan.loanName.toLowerCase().includes('personal') || 
-                                    loan.loanName.toLowerCase().includes('home');
-                    
+                    const isPopular = loan.loanName.toLowerCase().includes('personal') ||
+                        loan.loanName.toLowerCase().includes('home');
+
                     // Get appropriate icon based on loan type
                     const getLoanIcon = (loanName) => {
                         const name = loanName.toLowerCase();
@@ -718,7 +724,35 @@
 
 
                     container.appendChild(card);
+
+                    // Auto-select Personal Loan by default
+                    if (loan.loanName.toLowerCase().includes("personal") && !selectedLoan) {
+                        selectedLoan = loan;
+                        selectedCard = card;
+
+                        card.classList.add("selected");
+
+                        // auto-enable button
+                        const nextBtn = document.getElementById('nextButton');
+                        if (nextBtn) {
+                            nextBtn.disabled = false;
+                            nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
+
+                        sessionStorage.setItem("selectedLoan", JSON.stringify(loan));
+                    }
+
                 });
+                // Check if business loan exists
+                const hasBusiness = loans.some(l =>
+                    l.loanName.toLowerCase().includes("business")
+                );
+
+                // Show placeholder if business loan NOT available
+                if (!hasBusiness) {
+                    document.getElementById("loanPlaceholder").classList.remove("hidden");
+                }
+
 
             } catch (err) {
                 console.error(err);

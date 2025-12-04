@@ -428,26 +428,53 @@
                     </div>
 
                     <!-- Auto Scroll Slider -->
-                    <div class="relative overflow-hidden">
-                        <div id="dashOffersSlider" class="flex gap-6 animate-scroll-big cursor-pointer"
-                            onclick="window.location.href='../all-offers.html'">
+                    <!-- Auto Scroll Slider -->
+                    <div class="relative overflow-hidden select-none">
 
-                            <img src="../{css,js,images}/Offer1.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer2.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer3.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer4.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer5.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer6.jpeg" class="offer-card-dash">
+                        <!-- Prev Button -->
+                        <button id="dashPrevBtn"
+                            class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-xl shadow-md p-3 rounded-full z-20 hover:bg-white transition">
+                            <i class="fas fa-chevron-left text-indigo-600 text-xl"></i>
+                        </button>
 
-                            <!-- Duplicate for infinite loop -->
-                            <img src="../{css,js,images}/Offer1.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer2.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer3.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer4.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer5.jpeg" class="offer-card-dash">
-                            <img src="../{css,js,images}/Offer6.jpeg" class="offer-card-dash">
+                        <!-- Slider Wrapper -->
+                        <div id="dashOffersWrapper" class="overflow-hidden w-full">
+                            <div id="dashOffersSlider" class="flex gap-6 will-change-transform cursor-pointer"
+                                onclick="window.location.href='../all-offers.html'">
+
+                                <!-- ORIGINAL IMAGES -->
+                                <img src="../{css,js,images}/Offer1.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer2.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer3.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer4.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer5.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer6.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer7.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer8.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer9.jpeg" class="offer-card-dash">
+
+                                <!-- DUPLICATES FOR INFINITE LOOP -->
+                                <img src="../{css,js,images}/Offer1.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer2.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer3.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer4.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer5.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer6.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer7.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer8.jpeg" class="offer-card-dash">
+                                <img src="../{css,js,images}/Offer9.jpeg" class="offer-card-dash">
+
+                            </div>
                         </div>
+
+                        <!-- Next Button -->
+                        <button id="dashNextBtn"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-xl shadow-md p-3 rounded-full z-20 hover:bg-white transition">
+                            <i class="fas fa-chevron-right text-indigo-600 text-xl"></i>
+                        </button>
+
                     </div>
+
 
                     <!-- Inline Styling -->
                     <style>
@@ -1194,6 +1221,93 @@
             };
         });
     </script>
+
+    <script>
+        let dSlider = document.getElementById("dashOffersSlider");
+        let dWrapper = document.getElementById("dashOffersWrapper");
+
+        let dCardWidth = dSlider.children[0].offsetWidth + 24;
+        let dScrollX = 0;
+        let dAuto = null;
+        let dDragging = false;
+        let dStartX = 0;
+
+        // --- AUTO SCROLL ---
+        function dashStartAuto() {
+            if (dAuto) return;
+
+            dAuto = setInterval(() => {
+                dScrollX += 1;
+                dashUpdate();
+            }, 20);
+        }
+        function dashStopAuto() {
+            clearInterval(dAuto);
+            dAuto = null;
+        }
+        function dashUpdate() {
+            let dHalf = dSlider.scrollWidth / 2;
+            if (dScrollX >= dHalf) dScrollX = 0;
+            if (dScrollX < 0) dScrollX = dHalf - dCardWidth;
+
+            dSlider.style.transform = `translateX(-${dScrollX}px)`;
+        }
+
+        // --- BUTTONS ---
+        function dashNext() {
+            dashStopAuto();
+            dScrollX += dCardWidth;
+            dashUpdate();
+            setTimeout(dashStartAuto, 800);
+        }
+        function dashPrev() {
+            dashStopAuto();
+            dScrollX -= dCardWidth;
+            dashUpdate();
+            setTimeout(dashStartAuto, 800);
+        }
+
+        document.getElementById("dashNextBtn").onclick = dashNext;
+        document.getElementById("dashPrevBtn").onclick = dashPrev;
+
+        // --- DRAG (DESKTOP) ---
+        dWrapper.addEventListener("mousedown", (e) => {
+            dashStopAuto();
+            dDragging = true;
+            dStartX = e.pageX + dScrollX;
+        });
+        window.addEventListener("mouseup", () => {
+            dDragging = false;
+            setTimeout(dashStartAuto, 800);
+        });
+        dWrapper.addEventListener("mousemove", (e) => {
+            if (!dDragging) return;
+            dScrollX = dStartX - e.pageX;
+            dashUpdate();
+        });
+
+        // --- TOUCH (MOBILE) ---
+        dWrapper.addEventListener("touchstart", (e) => {
+            dashStopAuto();
+            dDragging = true;
+            dStartX = e.touches[0].pageX + dScrollX;
+        }, { passive: true });
+
+        dWrapper.addEventListener("touchend", () => {
+            dDragging = false;
+            setTimeout(dashStartAuto, 800);
+        }, { passive: true });
+
+        dWrapper.addEventListener("touchmove", (e) => {
+            if (!dDragging) return;
+            dScrollX = dStartX - e.touches[0].pageX;
+            dashUpdate();
+        }, { passive: true });
+
+        // --- START AUTO ---
+        dashStartAuto();
+    </script>
+
 
 </body>
 

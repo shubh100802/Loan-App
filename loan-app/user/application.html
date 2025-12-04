@@ -494,8 +494,7 @@
                         <i class="fas fa-user-circle mr-3"></i>
                         Profile
                     </a>
-                    <a href="../emi-calculator.html"
-                        target="_blank"
+                    <a href="../emi-calculator.html" target="_blank"
                         class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                         <i class="fas fa-calculator mr-3"></i>
                         EMI Calculator
@@ -541,8 +540,7 @@
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
                         </a>
-                        <a href="../emi-calculator.html"
-                        target="_blank"
+                        <a href="../emi-calculator.html" target="_blank"
                             class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                             <i class="fas fa-calculator mr-3"></i>
                             EMI Calculator
@@ -724,6 +722,14 @@
                                                     class="text-red-600">*</span></h4>
                                         </div>
 
+                                        <div class="sm:col-span-6 flex items-center gap-2 mb-2">
+                                            <input type="checkbox" id="same-address"
+                                                class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                            <label for="same-address" class="text-sm text-gray-700">Permanent address
+                                                same as current address</label>
+                                        </div>
+
+
                                         <div class="sm:col-span-6">
                                             <label class="form-label">Street Address <span
                                                     class="text-red-600">*</span></label>
@@ -853,6 +859,73 @@
                                     </div>
                                 </div>
 
+                                <!-- Reference Details -->
+                                <div class="mt-10">
+                                    <h3 class="text-lg font-semibold mb-4">Reference Details (Two References Preferred)
+                                    </h3>
+
+                                    <div class="grid grid-cols-1 sm:grid-cols-6 gap-6">
+
+                                        <!-- Reference 1 -->
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Reference Name 1 <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="ref1-name" type="text" class="form-control"
+                                                placeholder="Person who knows you well">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Relationship 1 <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="ref1-relationship" type="text" class="form-control"
+                                                placeholder="Friend / Colleague / Relative">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Reference Phone 1 <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="ref1-phone" type="text" class="form-control" inputmode="numeric"
+                                                placeholder="10-digit mobile number">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Reference Address 1 (optional)</label>
+                                            <input id="ref1-address" type="text" class="form-control"
+                                                placeholder="City / Area">
+                                        </div>
+
+                                        <!-- Reference 2 -->
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Reference Name 2 <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="ref2-name" type="text" class="form-control"
+                                                placeholder="Person who knows you well">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Relationship 2 <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="ref2-relationship" type="text" class="form-control"
+                                                placeholder="Friend / Colleague / Relative">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Reference Phone 2 <span
+                                                    class="text-red-600">*</span></label>
+                                            <input id="ref2-phone" type="text" class="form-control" inputmode="numeric"
+                                                placeholder="10-digit mobile number">
+                                        </div>
+
+                                        <div class="sm:col-span-3">
+                                            <label class="form-label">Reference Address 2 (optional)</label>
+                                            <input id="ref2-address" type="text" class="form-control"
+                                                placeholder="City / Area">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
                                 <!-- Documents -->
                                 <div>
                                     <h3 class="text-lg font-semibold mb-4">Document Uploads</h3>
@@ -892,7 +965,8 @@
 
                                         <!-- Salary Slips (3 months) -->
                                         <div class="border p-4 rounded-lg">
-                                            <h5>Salary Slips (Last 3 Months) <span class="text-red-600">*</span></h5>
+                                            <h5>Salary Slips (Last 3 Months) <span class="text-red-600">*</span>
+                                            </h5>
 
                                             <input type="file" id="salary-slip-1" accept=".pdf,.jpg,.jpeg,.png">
                                             <p id="salary-slip-1-status" class="text-sm mt-1"></p>
@@ -922,7 +996,8 @@
 
                                         <!-- Bank Statements (3 months) -->
                                         <div class="border p-4 rounded-lg mt-4">
-                                            <h5>Bank Statements (Last 3 Months) <span class="text-red-600">*</span></h5>
+                                            <h5>Bank Statements (Last 3 Months) <span class="text-red-600">*</span>
+                                            </h5>
                                             <input type="file" id="bank-statement-1" accept=".pdf,.jpg,.jpeg,.png">
                                             <p id="bank-statement-1-status" class="text-sm mt-1"></p>
 
@@ -1316,6 +1391,22 @@
                             creditObligation: parseNumber(qs("credit-obligation")?.value.trim() || "0")
                         },
 
+                        reference: {
+                            ref1: {
+                                name: qs("ref1-name")?.value.trim() || "",
+                                relationship: qs("ref1-relationship")?.value.trim() || "",
+                                phone: qs("ref1-phone")?.value.trim() || "",
+                                address: qs("ref1-address")?.value.trim() || ""
+                            },
+                            ref2: {
+                                name: qs("ref2-name")?.value.trim() || "",
+                                relationship: qs("ref2-relationship")?.value.trim() || "",
+                                phone: qs("ref2-phone")?.value.trim() || "",
+                                address: qs("ref2-address")?.value.trim() || ""
+                            }
+                        },
+
+
                         // ---- LOAN DETAILS ----
                         loanAmount: parseNumber(qs("loan-amount")?.value.replace(/,/g, "").trim() || "0"),
                         loanPurpose: qs("loan-purpose")?.value.trim() || "Personal Use",
@@ -1369,14 +1460,14 @@
                     if (
                         !applicationData.documents.pan ||
                         !applicationData.documents.aadhaarFront ||
-                        !applicationData.documents.aadhaarBack ||
+                        // !applicationData.documents.aadhaarBack ||
                         !applicationData.documents.addressProof ||
                         !applicationData.documents.salarySlip1 ||
-                        !applicationData.documents.salarySlip2 ||
-                        !applicationData.documents.salarySlip3 ||
+                        // !applicationData.documents.salarySlip2 ||
+                        // !applicationData.documents.salarySlip3 ||
                         !applicationData.documents.bankStatement1 ||
-                        !applicationData.documents.bankStatement2 ||
-                        !applicationData.documents.bankStatement3 ||
+                        // !applicationData.documents.bankStatement2 ||
+                        // !applicationData.documents.bankStatement3 ||
                         !applicationData.documents.photo
                     ) {
                         alert("Please upload all required documents.");
@@ -1504,10 +1595,42 @@
     </script>
 
 
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
 
+            const checkbox = document.getElementById("same-address");
 
+            const current = {
+                street: document.getElementById("current-address"),
+                city: document.getElementById("current-city"),
+                state: document.getElementById("current-state"),
+                zip: document.getElementById("current-postal-code")
+            };
 
+            const permanent = {
+                street: document.getElementById("permanent-address"),
+                city: document.getElementById("permanent-city"),
+                state: document.getElementById("permanent-state"),
+                zip: document.getElementById("permanent-postal-code")
+            };
 
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    // Copy values
+                    permanent.street.value = current.street.value;
+                    permanent.city.value = current.city.value;
+                    permanent.state.value = current.state.value;
+                    permanent.zip.value = current.zip.value;
+
+                    // Make readonly
+                    Object.values(permanent).forEach(field => field.setAttribute("readonly", true));
+                } else {
+                    // Remove readonly
+                    Object.values(permanent).forEach(field => field.removeAttribute("readonly"));
+                }
+            });
+        });
+    </script>
 
 
 </body>

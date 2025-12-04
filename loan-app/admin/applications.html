@@ -25,6 +25,47 @@
             --glass: rgba(255, 255, 255, 0.6);
             font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
         }
+
+        .filter-default {
+            background-color: #ffffff;
+            color: #374151;
+        }
+
+        .filter-submitted {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .filter-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .filter-inreview {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+        }
+
+        .filter-approved {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .filter-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .filter-disbursed {
+            background-color: #ede9fe;
+            color: #5b21b6;
+        }
+
+        #statusFilter {
+            transition: all 0.3s ease;
+            font-weight: 600;
+            border-radius: 8px;
+        }
     </style>
 </head>
 
@@ -200,11 +241,9 @@
                                     class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                     <option value="">All Statuses</option>
                                     <option value="submitted">Submitted</option>
-                                    <option value="pending">Pending</option>
                                     <option value="in review">In Review</option>
                                     <option value="approved">Approved</option>
                                     <option value="rejected">Rejected</option>
-                                    <option value="disbursed">Disbursed</option>
                                 </select>
                             </div>
                         </div>
@@ -275,43 +314,43 @@
         #viewApplicationModal {
             -webkit-overflow-scrolling: touch;
         }
-        
+
         .modal-scroll {
             display: flex;
             flex-direction: column;
             max-height: 100%;
             overflow: hidden;
         }
-        
+
         .modal-content {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             flex: 1;
             padding: 1rem;
         }
-        
+
         @media (min-width: 768px) {
             .modal-scroll {
                 max-height: 90vh;
                 border-radius: 0.5rem;
             }
         }
-        
+
         /* Scrollbar styling */
         .modal-content::-webkit-scrollbar {
             width: 6px;
         }
-        
+
         .modal-content::-webkit-scrollbar-track {
             background: #f0f4ff;
             border-radius: 4px;
         }
-        
+
         .modal-content::-webkit-scrollbar-thumb {
             background-color: #c7d2fe;
             border-radius: 4px;
         }
-        
+
         body.modal-open {
             overflow: hidden;
             position: fixed;
@@ -320,7 +359,8 @@
         }
     </style>
 
-    <div id="viewApplicationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden p-0 md:p-6 overflow-y-auto">
+    <div id="viewApplicationModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 hidden p-0 md:p-6 overflow-y-auto">
         <div class="bg-white shadow-xl w-full max-w-4xl flex flex-col modal-scroll m-0 md:my-8">
             <div class="flex-shrink-0 flex items-center justify-between p-4 border-b">
                 <h3 class="text-lg font-medium text-gray-900">Application Details</h3>
@@ -425,6 +465,36 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="mt-8">
+                    <h4 class="text-md font-medium text-gray-900 mb-4">Reference Details</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <div class="border p-4 rounded">
+                            <h5 class="text-sm font-semibold text-gray-700 mb-2">Reference 1</h5>
+                            <p><span class="text-gray-500 text-sm">Name:</span> <span id="view-ref1-name">N/A</span></p>
+                            <p><span class="text-gray-500 text-sm">Relationship:</span> <span
+                                    id="view-ref1-relationship">N/A</span></p>
+                            <p><span class="text-gray-500 text-sm">Phone:</span> <span id="view-ref1-phone">N/A</span>
+                            </p>
+                            <p><span class="text-gray-500 text-sm">Address:</span> <span
+                                    id="view-ref1-address">N/A</span></p>
+                        </div>
+
+                        <div class="border p-4 rounded">
+                            <h5 class="text-sm font-semibold text-gray-700 mb-2">Reference 2</h5>
+                            <p><span class="text-gray-500 text-sm">Name:</span> <span id="view-ref2-name">N/A</span></p>
+                            <p><span class="text-gray-500 text-sm">Relationship:</span> <span
+                                    id="view-ref2-relationship">N/A</span></p>
+                            <p><span class="text-gray-500 text-sm">Phone:</span> <span id="view-ref2-phone">N/A</span>
+                            </p>
+                            <p><span class="text-gray-500 text-sm">Address:</span> <span
+                                    id="view-ref2-address">N/A</span></p>
+                        </div>
+
+                    </div>
+                </div>
+
 
                 <div class="mt-8">
                     <h4 class="text-md font-medium text-gray-900 mb-4">Documents</h4>
@@ -705,27 +775,27 @@
                 </td>
 
                 <td style="padding: 16px 24px;">
-                    <span style="
-                        display: inline-flex;
-                        align-items: center;
-                        padding: 4px 12px;
-                        border-radius: 9999px;
-                        font-size: 0.75rem;
-                        font-weight: 600;
-                        letter-spacing: 0.05em;
-                        text-transform: uppercase;
-                        ${statusColor(app.status).includes('green') ? 'background-color: #dcfce7; color: #166534;' :
-                            statusColor(app.status).includes('yellow') ? 'background-color: #fef9c3; color: #854d0e;' :
-                                statusColor(app.status).includes('red') ? 'background-color: #fee2e2; color: #991b1b;' :
-                                    'background-color: #e0f2fe; color: #075985;'}
-                    ">
-                        <i class="fas ${app.status === 'approved' ? 'fa-check-circle' :
-                            app.status === 'pending' ? 'fa-clock' :
-                                app.status === 'rejected' ? 'fa-times-circle' : 'fa-info-circle'}" 
-                           style="margin-right: 4px;"></i>
-                        ${app.status}
-                    </span>
+                    <select
+                        onchange="updateStatus('${app._id}', this.value)"
+                        style="
+                            border-radius: 9999px;
+                            padding: 4px 12px;
+                            font-size: 0.75rem;
+                            font-weight: 600;
+                            text-transform: uppercase;
+                            background-color: #e0f2fe;
+                            color: #075985;
+                            border: none;
+                            outline: none;
+                        "
+                    >
+                        <option value="submitted" ${app.status === 'submitted' ? 'selected' : ''}>Submitted</option>
+                        <option value="in review" ${app.status === 'in review' ? 'selected' : ''}>In Review</option>
+                        <option value="approved" ${app.status === 'approved' ? 'selected' : ''}>Approved</option>
+                        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                    </select>
                 </td>
+
 
                 <td style="padding: 16px 24px; color: #4b5563; font-size: 0.9rem;">
                     <div style="display: flex; flex-direction: column;">
@@ -837,6 +907,24 @@
                     document.getElementById("view-credit-obligation").innerText =
                         app.employment?.creditObligation || "N/A";
 
+                    // Reference Details
+                    document.getElementById("view-ref1-name").innerText =
+                        app.reference?.ref1?.name || "N/A";
+                    document.getElementById("view-ref1-relationship").innerText =
+                        app.reference?.ref1?.relationship || "N/A";
+                    document.getElementById("view-ref1-phone").innerText =
+                        app.reference?.ref1?.phone || "N/A";
+                    document.getElementById("view-ref1-address").innerText =
+                        app.reference?.ref1?.address || "N/A";
+
+                    document.getElementById("view-ref2-name").innerText =
+                        app.reference?.ref2?.name || "N/A";
+                    document.getElementById("view-ref2-relationship").innerText =
+                        app.reference?.ref2?.relationship || "N/A";
+                    document.getElementById("view-ref2-phone").innerText =
+                        app.reference?.ref2?.phone || "N/A";
+                    document.getElementById("view-ref2-address").innerText =
+                        app.reference?.ref2?.address || "N/A";
 
 
                     // -----------------------------
@@ -1038,6 +1126,31 @@
         document.getElementById("cancelDeleteBtn").onclick = function () {
             document.getElementById("deleteApplicationModal").classList.add("hidden");
         };
+
+        function updateFilterColor() {
+            const filter = document.getElementById("statusFilter");
+            const value = filter.value.toLowerCase().replace(" ", "");
+
+            // Remove old classes
+            filter.classList.remove(
+                "filter-default",
+                "filter-submitted",
+                "filter-inreview",
+                "filter-approved",
+                "filter-rejected"  
+            );
+
+            // Apply new one
+            if (value === "") filter.classList.add("filter-default");
+            else filter.classList.add("filter-" + value);
+        }
+
+        // Run when dropdown changes
+        document.getElementById("statusFilter").addEventListener("change", updateFilterColor);
+
+        // Run at page load (so filter shows correct color)
+        updateFilterColor();
+
 
     </script>
 

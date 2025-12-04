@@ -206,9 +206,24 @@ export const createApplication = asyncHandler(async (req, res) => {
       companyEmail: employment.companyEmail || "",
       role: employment.role || "",
       income: employment.income || 0,
-      currentEmi: employment.currentEmi || 0,
+      currentEmi: body.currentEmi || employment.currentEmi || 0,
       creditObligation: employment.creditObligation || 0
     },
+    reference: {
+      ref1: {
+        name: body.reference?.ref1?.name || "",
+        relationship: body.reference?.ref1?.relationship || "",
+        phone: body.reference?.ref1?.phone || "",
+        address: body.reference?.ref1?.address || ""
+      },
+      ref2: {
+        name: body.reference?.ref2?.name || "",
+        relationship: body.reference?.ref2?.relationship || "",
+        phone: body.reference?.ref2?.phone || "",
+        address: body.reference?.ref2?.address || ""
+      }
+    },
+
     documents: {
       pan: normalizeDoc(docsSrc.pan),
       aadhaarFront: normalizeDoc(docsSrc.aadhaarFront),
@@ -296,6 +311,26 @@ export const deleteApplication = async (req, res) => {
   }
 };
 
+export const updateApplicationStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body;
+  const { id } = req.params;
+
+  const validStatuses = ["submitted", "pending", "in review", "approved", "rejected", "disbursed"];
+
+  if (!validStatuses.includes(status.toLowerCase())) {
+    return res.status(400).json({ success: false, msg: "Invalid status" });
+  }
+
+  const app = await Application.findById(id);
+  if (!app) return res.status(404).json({ success: false, msg: "Application not found" });
+
+  app.status = status.toLowerCase();
+  await app.save();
+
+  return res.json({ success: true, msg: "Status updated successfully", data: app });
+});
 
 
-export default { createApplication, getApplications, getApplication, deleteApplication };
+
+
+export default { createApplication, getApplications, getApplication, deleteApplication, updateApplicationStatus };

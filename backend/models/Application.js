@@ -31,6 +31,14 @@ const EmploymentSchema = new mongoose.Schema({
   creditObligation: Number
 }, { _id: false });
 
+const ReferenceSchema = new mongoose.Schema({
+  name: String,
+  relationship: String,
+  phone: String,
+  address: String
+}, { _id: false });
+
+
 
 const DocumentSchema = new mongoose.Schema({
   pan: String,
@@ -64,8 +72,16 @@ const ApplicationSchema = new mongoose.Schema({
   loanPurpose: { type: String, required: true, enum: ["Home Purchase", "Home Renovation", "Personal Use", "Education", "Medical", "Business", "Debt Consolidation", "Other"] },
   personal: PersonalSchema,
   employment: EmploymentSchema,
+  reference: {
+    ref1: ReferenceSchema,
+    ref2: ReferenceSchema
+  },
   documents: DocumentSchema,
-  status: { type: String, enum: ["draft", "submitted", "approved", "rejected"], default: "submitted" },
+  status: { 
+  type: String, 
+  enum: ["draft", "submitted", "pending", "in review", "approved", "rejected"], 
+  default: "submitted" 
+},
   meta: { type: mongoose.Schema.Types.Mixed }
 }, { timestamps: true });
 
