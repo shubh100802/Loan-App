@@ -50,7 +50,7 @@ export const adminLogin = async (req, res) => {
 
 export const getAllUsers = asyncHandler(async (req, res) => {
 
-  const users = await User.find({}, "name email mobile isVerified createdAt").sort({ createdAt: -1 });
+  const users = await User.find({}, "name email mobile isVerified called createdAt").sort({ createdAt: -1 });
   res.json({ success: true, users });
 });
 
@@ -75,13 +75,13 @@ export const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) return res.status(404).json({ success: false, msg: "User not found" });
 
-  const { name, email, mobile, isVerified } = req.body;
+  const { name, email, mobile, isVerified, called } = req.body;
 
   if (name !== undefined) user.name = name;
   if (email !== undefined) user.email = email;
   if (mobile !== undefined) user.mobile = mobile;
   if (isVerified !== undefined) user.isVerified = isVerified;
-
+  if (called !== undefined) user.called = called;
   await user.save();
   res.json({ success: true, msg: "User updated", user });
 });

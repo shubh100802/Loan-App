@@ -23,6 +23,26 @@
             --glass: rgba(255, 255, 255, 0.6);
             font-family: 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
         }
+
+        .row-rejected {
+            background-color: #ffecec !important;
+        }
+
+        .row-submitted {
+            background-color: #f1f5f9 !important;
+        }
+
+        .row-approved {
+            background-color: #e8fbe8 !important;
+        }
+
+        .row-inreview {
+            background-color: #e8f1ff !important;
+        }
+
+        .row-pending {
+            background-color: #fff7cc !important;
+        }
     </style>
 </head>
 
@@ -379,7 +399,7 @@
                     if (!response.ok) throw new Error("Failed to load applications");
 
                     const responseData = await response.json();
-                    const applications = responseData.data || responseData; // support both formats
+                    const applications = responseData.data || responseData; 
 
                     if (!Array.isArray(applications)) throw new Error("Invalid format from API");
 
@@ -395,33 +415,33 @@
 
                     latest.forEach(app => {
                         container.innerHTML += `
-                <div class="p-6 hover:bg-gray-50 transition-colors">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
-                                <i class="fas fa-user text-indigo-600"></i>
+                            <div class="p-6 transition-colors rounded-xl ${getRowBg(app.status)}">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                            <i class="fas fa-user text-indigo-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <h4 class="text-sm font-medium text-gray-900">
+                                                ${app.personal?.fullName || "Unknown"}
+                                            </h4>
+                                            <p class="text-sm text-gray-500">
+                                                ${app.loanName || "Loan"} - ₹${app.loanAmount || 0}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                            ${getStatusBadge(app.status)}">
+                                            ${app.status}
+                                        </span>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            ${new Date(app.createdAt).toLocaleString()}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="ml-4">
-                                <h4 class="text-sm font-medium text-gray-900">
-                                    ${app.personal?.fullName || "Unknown"}
-                                </h4>
-                                <p class="text-sm text-gray-500">
-                                    ${app.loanName || "Loan"} - ₹${app.loanAmount || 0}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                ${getStatusBadge(app.status)}">
-                                ${app.status}
-                            </span>
-                            <p class="text-sm text-gray-500 mt-1">
-                                ${new Date(app.createdAt).toLocaleString()}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            `;
+                        `;
                     });
 
                 } catch (err) {
@@ -445,6 +465,21 @@
             };
             return map[status?.toLowerCase()] || "bg-gray-100 text-gray-800";
         }
+
+        function getRowBg(status) {
+            const s = status?.toLowerCase();
+
+            const map = {
+                "rejected": "row-rejected",
+                "submitted": "row-submitted",
+                "approved": "row-approved",
+                "in review": "row-inreview",
+                "pending": "row-pending"
+            };
+
+            return map[s] || "";
+        }
+
 
 
 

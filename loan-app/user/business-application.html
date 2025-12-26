@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Loan Application</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --success: #10b981;
+      --text-primary: #1f2937;
+      --text-secondary: #4b5563;
+      --border: #e5e7eb;
+      --error: #ef4444;
+    }
+
+    body { 
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-primary);
+      line-height: 1.6;
+      background-color: #f9fafb;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease;
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .upload-box {
+      border: 2px dashed var(--primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      background-color: var(--primary-light);
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .upload-box:hover {
+      border-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .upload-box.optional {
+      border-color: var(--border);
+      background-color: #f9fafb;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="date"],
+    input[type="file"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      font-size: 0.9375rem;
+      transition: all 0.2s ease;
+      background-color: white;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    input[type="file"] {
+      padding: 0.5rem 0;
+      border: none;
+      background: transparent;
+    }
+
+    input[type="file"]:focus {
+      box-shadow: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.875rem 2rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title i {
+      color: var(--primary);
+      font-size: 1.1em;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-helper {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .required:after {
+      content: ' *';
+      color: var(--error);
+    }
+
+    /* Loading animation */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+<div class="max-w-4xl mx-auto p-4 md:p-8 space-y-8">
+
+  <!-- HEADER -->
+  <div class="card p-6 md:p-8 bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-100">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-indigo-800">Business Loan Application</h1>
+        <p class="text-sm text-indigo-600 mt-1">Complete all required fields to submit your application</p>
+      </div>
+      <!-- <div class="mt-4 md:mt-0">
+        <div class="inline-flex items-center px-4 py-2 bg-white rounded-full text-sm font-medium text-indigo-700 border border-indigo-200">
+          <span class="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span>
+          <span id="formProgress">Step 1 of 3</span>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 rounded-lg bg-indigo-50">
+            <i class="fas fa-university text-indigo-600"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-gray-500">Bank</p>
+            <p class="font-medium text-gray-900" id="selectedBankName">-</p>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center space-x-3">
+          <div class="p-2 rounded-lg bg-indigo-50">
+            <i class="fas fa-file-invoice-dollar text-indigo-600"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-gray-500">Loan Type</p>
+            <p class="font-medium text-gray-900" id="selectedLoanName">Business Loan</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+        <div class="flex items-center space-x-3">
+          <div class="p-2 rounded-lg bg-indigo-50">
+            <i class="fas fa-percentage text-indigo-600"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-gray-500">Interest Rate</p>
+            <p class="font-medium text-gray-900" id="selectedLoanInterest">-</p>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center space-x-3">
+          <div class="p-2 rounded-lg bg-indigo-50">
+            <i class="far fa-calendar-alt text-indigo-600"></i>
+          </div>
+          <div>
+            <p class="text-xs font-medium text-gray-500">Tenure</p>
+            <p class="font-medium text-gray-900" id="selectedLoanTenure">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BASIC APPLICANT DETAILS -->
+  <div class="card p-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+      <h3 class="section-title"><i class="fas fa-user-circle"></i> Basic Applicant Details</h3>
+      <div class="flex items-center mt-2 md:mt-0">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+          <span class="w-2 h-2 mr-1.5 bg-indigo-600 rounded-full"></span>
+          Personal Information
+        </span>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+      <!-- Full Name -->
+      <div class="md:col-span-3">
+        <label for="fullName" class="form-label required">Full Name</label>
+        <div class="relative">
+          <input type="text" id="fullName" class="pl-10" placeholder="Enter your full name" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="far fa-user text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Parent's Name -->
+      <div class="md:col-span-3">
+        <label for="parentName" class="form-label required">Father / Mother Name</label>
+        <div class="relative">
+          <input type="text" id="parentName" class="pl-10" placeholder="Enter parent's name" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-users text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="md:col-span-2">
+        <label for="dob" class="form-label required">Date of Birth</label>
+        <div class="relative">
+          <input type="date" id="dob" class="pl-10" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="far fa-calendar text-gray-400"></i>
+          </div>
+        </div>
+        <p class="mt-1 text-xs text-gray-500">DD/MM/YYYY</p>
+      </div>
+      
+      <!-- Gender -->
+      <div class="md:col-span-2">
+        <label for="gender" class="form-label required">Gender</label>
+        <div class="grid grid-cols-3 gap-2">
+          <label class="gender-option">
+            <input type="radio" name="gender" value="Male" class="sr-only peer" required>
+            <div class="flex items-center justify-center p-3 border rounded-lg cursor-pointer peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:ring-1 peer-checked:ring-indigo-500">
+              <i class="fas fa-male text-gray-500 peer-checked:text-indigo-600 mr-2"></i>
+              <span class="text-sm">Male</span>
+            </div>
+          </label>
+          <label class="gender-option">
+            <input type="radio" name="gender" value="Female" class="sr-only peer">
+            <div class="flex items-center justify-center p-3 border rounded-lg cursor-pointer peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:ring-1 peer-checked:ring-indigo-500">
+              <i class="fas fa-female text-gray-500 peer-checked:text-indigo-600 mr-2"></i>
+              <span class="text-sm">Female</span>
+            </div>
+          </label>
+          <label class="gender-option">
+            <input type="radio" name="gender" value="Other" class="sr-only peer">
+            <div class="flex items-center justify-center p-3 border rounded-lg cursor-pointer peer-checked:border-indigo-500 peer-checked:bg-indigo-50 peer-checked:ring-1 peer-checked:ring-indigo-500">
+              <i class="fas fa-genderless text-gray-500 peer-checked:text-indigo-600 mr-2"></i>
+              <span class="text-sm">Other</span>
+            </div>
+          </label>
+        </div>
+      </div>
+      
+      <!-- Marital Status -->
+      <div class="md:col-span-2">
+        <label for="maritalStatus" class="form-label">Marital Status</label>
+        <div class="relative">
+          <select id="maritalStatus" class="pl-10">
+            <option value="">Select status</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+            <option value="Widowed">Widowed</option>
+          </select>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-heart text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="md:col-span-6 mt-4 pt-4 border-t border-gray-100">
+        <h4 class="text-sm font-medium text-gray-700 mb-4 flex items-center">
+          <i class="fas fa-address-card text-indigo-500 mr-2"></i>
+          Contact Information
+        </h4>
+      </div>
+
+      <!-- Email -->
+      <div class="md:col-span-3">
+        <label for="email" class="form-label required">Email Address</label>
+        <div class="relative">
+          <input type="email" id="email" class="pl-10" placeholder="your.email@example.com" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="far fa-envelope text-gray-400"></i>
+          </div>
+        </div>
+        <p class="form-helper">We'll send important updates to this email</p>
+      </div>
+      
+      <!-- Mobile Number -->
+      <div class="md:col-span-3">
+        <label for="mobile" class="form-label required">Mobile Number</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <i class="fas fa-mobile-alt text-gray-400"></i>
+          </div>
+          <div class="flex">
+            <div class="flex items-center justify-center px-3 border border-r-0 rounded-l-md bg-gray-50 text-gray-500 text-sm ml-7">
+              +91
+            </div>
+            <input type="tel" id="mobile" class="rounded-r-md rounded-l-none flex-1 pl-2" placeholder="Enter 10-digit number" pattern="[0-9]{10}" required>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Alternate Mobile -->
+      <div class="md:col-span-3">
+        <label for="alternateMobile" class="form-label">Alternate Mobile (Optional)</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <i class="fas fa-phone-alt text-gray-400"></i>
+          </div>
+          <div class="flex">
+            <div class="flex items-center justify-center px-3 border border-r-0 rounded-l-md bg-gray-50 text-gray-500 text-sm ml-7">
+              +91
+            </div>
+            <input type="tel" id="alternateMobile" class="rounded-r-md rounded-l-none flex-1 pl-2" placeholder="Enter 10-digit number" pattern="[0-9]{10}">
+          </div>
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="md:col-span-6 mt-2">
+        <label for="residentialAddress" class="form-label required">Residential Address</label>
+        <div class="relative">
+          <textarea id="residentialAddress" rows="2" class="pl-10 pt-3" placeholder="Enter your complete address" required></textarea>
+          <div class="absolute top-3 left-3">
+            <i class="fas fa-map-marker-alt text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- City, State, Pincode -->
+      <div class="md:col-span-2">
+        <label for="city" class="form-label required">City</label>
+        <div class="relative">
+          <input type="text" id="city" class="pl-10" placeholder="Enter city" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-city text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="state" class="form-label required">State</label>
+        <div class="relative">
+          <select id="state" class="pl-10" required>
+            <option value="">Select state</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <!-- Add more states as needed -->
+          </select>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-map-marked-alt text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="pincode" class="form-label required">Pincode</label>
+        <div class="relative">
+          <input type="text" id="pincode" class="pl-10" placeholder="Enter pincode" pattern="[0-9]{6}" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-map-pin text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUSINESS DETAILS -->
+  <div class="card p-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+      <h3 class="section-title"><i class="fas fa-briefcase"></i> Business Details</h3>
+      <div class="flex items-center mt-2 md:mt-0">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+          <span class="w-2 h-2 mr-1.5 bg-indigo-600 rounded-full"></span>
+          Business Information
+        </span>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-6">
+      <!-- Business Name -->
+      <div class="md:col-span-3">
+        <label for="businessName" class="form-label required">Business Name</label>
+        <div class="relative">
+          <input type="text" id="businessName" class="pl-10" placeholder="Your business name" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-building text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Business Type -->
+      <div class="md:col-span-3">
+        <label for="businessType" class="form-label required">Type of Business</label>
+        <div class="relative">
+          <select id="businessType" class="pl-10" required>
+            <option value="">Select business type</option>
+            <option value="Proprietorship">Proprietorship</option>
+            <option value="Partnership">Partnership</option>
+            <option value="LLP">Limited Liability Partnership (LLP)</option>
+            <option value="Private">Private Limited</option>
+            <option value="Public">Public Limited</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-sitemap text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Category -->
+      <div class="md:col-span-3">
+        <label for="businessCategory" class="form-label required">Business Category</label>
+        <div class="relative">
+          <select id="businessCategory" class="pl-10" required>
+            <option value="">Select category</option>
+            <option value="Manufacturing">Manufacturing</option>
+            <option value="Retail">Retail</option>
+            <option value="Wholesale">Wholesale</option>
+            <option value="Services">Services</option>
+            <option value="IT">IT & Software</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="Hospitality">Hospitality & Tourism</option>
+            <option value="Construction">Construction</option>
+            <option value="Logistics">Logistics & Transport</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-tags text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Years in Business -->
+      <div class="md:col-span-3">
+        <label for="yearsInBusiness" class="form-label required">Years in Business</label>
+        <div class="relative">
+          <select id="yearsInBusiness" class="pl-10" required>
+            <option value="">Select years</option>
+            <option value="<1">Less than 1 year</option>
+            <option value="1-3">1-3 years</option>
+            <option value="3-5">3-5 years</option>
+            <option value="5-10">5-10 years</option>
+            <option value="10+">More than 10 years</option>
+          </select>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="far fa-calendar-alt text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Information -->
+      <div class="md:col-span-6 mt 4 pt-4 border-t border-gray-100">
+        <h4 class="text-sm font-medium text-gray-700 mb-4 flex items-center">
+          <i class="fas fa-chart-line text-indigo-500 mr-2"></i>
+          Financial Information
+        </h4>
+      </div>
+
+      <!-- PAN Number -->
+      <div class="md:col-span-3">
+        <label for="panNumber" class="form-label required">PAN Number</label>
+        <div class="relative">
+          <input type="text" id="panNumber" class="pl-10 uppercase" placeholder="ABCDE1234F" 
+                 pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" 
+                 oninput="this.value = this.value.toUpperCase()" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="far fa-address-card text-gray-400"></i>
+          </div>
+        </div>
+        <p class="form-helper">Format: ABCDE1234F</p>
+      </div>
+
+      <!-- GST Number (Optional) -->
+      <div class="md:col-span-3">
+        <label for="gstNumber" class="form-label">GST Number (Optional)</label>
+        <div class="relative">
+          <input type="text" id="gstNumber" class="pl-10 uppercase" placeholder="22AAAAA0000A1Z5"
+                 oninput="this.value = this.value.toUpperCase()">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-file-invoice text-gray-400"></i>
+          </div>
+        </div>
+        <p class="form-helper">Format: 22AAAAA0000A1Z5</p>
+      </div>
+
+      <!-- Annual Turnover -->
+      <div class="md:col-span-3">
+        <label for="annualTurnover" class="form-label required">Annual Turnover (₹)</label>
+        <div class="relative">
+          <input type="text" id="annualTurnover" class="pl-10" placeholder="5,00,000" required
+                 oninput="formatCurrency(this)">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-rupee-sign text-gray-400"></i>
+          </div>
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 text-sm">INR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loan Amount Required -->
+      <div class="md:col-span-3">
+        <label for="loanAmount" class="form-label required">Loan Amount Required (₹)</label>
+        <div class="relative">
+          <input type="text" id="loanAmount" class="pl-10" placeholder="10,00,000" required
+                 oninput="formatCurrency(this)">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-hand-holding-usd text-gray-400"></i>
+          </div>
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 text-sm">INR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Address -->
+      <div class="md:col-span-6 mt-4 pt-4 border-t border-gray-100">
+        <h4 class="text-sm font-medium text-gray-700 mb-4 flex items-center">
+          <i class="fas fa-map-marker-alt text-indigo-500 mr-2"></i>
+          Business Address
+        </h4>
+      </div>
+
+      <!-- Company Address -->
+      <div class="md:col-span-6">
+        <label for="companyAddress" class="form-label required">Registered Business Address</label>
+        <div class="relative">
+          <textarea id="companyAddress" rows="2" class="pl-10 pt-3" placeholder="Full business address with landmark" required></textarea>
+          <div class="absolute top-3 left-3">
+            <i class="fas fa-map-marker-alt text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- City, State, Pincode -->
+      <div class="md:col-span-2">
+        <label for="businessCity" class="form-label required">City</label>
+        <div class="relative">
+          <input type="text" id="businessCity" class="pl-10" placeholder="Enter city" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-city text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="businessState" class="form-label required">State</label>
+        <div class="relative">
+          <select id="businessState" class="pl-10" required>
+            <option value="">Select state</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <!-- Add more states as needed -->
+          </select>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-map-marked-alt text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
+        <label for="businessPincode" class="form-label required">Pincode</label>
+        <div class="relative">
+          <input type="text" id="businessPincode" class="pl-10" placeholder="Enter pincode" pattern="[0-9]{6}" required>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-map-pin text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="md:col-span-6 mt-4 pt-4 border-t border-gray-100">
+        <h4 class="text-sm font-medium text-gray-700 mb-4 flex items-center">
+          <i class="fas fa-phone-alt text-indigo-500 mr-2"></i>
+          Business Contact Information
+        </h4>
+      </div>
+
+      <!-- Official Email -->
+      <div class="md:col-span-3">
+        <label for="companyEmail" class="form-label">Official Email</label>
+        <div class="relative">
+          <input type="email" id="companyEmail" class="pl-10" placeholder="contact@yourbusiness.com">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="far fa-envelope text-gray-400"></i>
+          </div>
+        </div>
+        <p class="form-helper">For official communication only</p>
+      </div>
+
+      <!-- Business Phone -->
+      <div class="md:col-span-3">
+        <label for="businessPhone" class="form-label">Business Phone</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <i class="fas fa-phone-alt text-gray-400"></i>
+          </div>
+          <div class="flex">
+            <div class="flex items-center justify-center px-3 border border-r-0 rounded-l-md bg-gray-50 text-gray-500 text-sm ml-7">
+              +91
+            </div>
+            <input type="tel" id="businessPhone" class="rounded-r-md rounded-l-none flex-1 pl-2" placeholder="Landline or mobile">
+          </div>
+        </div>
+      </div>
+
+      <!-- Website (Optional) -->
+      <div class="md:col-span-3">
+        <label for="website" class="form-label">Website (Optional)</label>
+        <div class="relative">
+          <input type="url" id="website" class="pl-10" placeholder="https://yourbusiness.com">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-globe text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Number of Employees -->
+      <div class="md:col-span-3">
+        <label for="employeeCount" class="form-label">Number of Employees</label>
+        <div class="relative">
+          <select id="employeeCount" class="pl-10">
+            <option value="">Select range</option>
+            <option value="1-10">1-10</option>
+            <option value="11-50">11-50</option>
+            <option value="51-200">51-200</option>
+            <option value="201-500">201-500</option>
+            <option value="501-1000">501-1000</option>
+            <option value="1000+">1000+</option>
+          </select>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-users text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS UPLOAD SECTION -->
+  <div class="card p-6">
+    <h3 class="section-title"><i class="fas fa-cloud-upload-alt"></i> Documents Upload</h3>
+    <p class="text-gray-600 text-sm mb-6">Please upload all required documents in the specified formats. Maximum file size: 5MB per file.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Aadhaar Card -->
+      <div class="upload-box group" id="aadhaarUpload">
+        <div class="text-center p-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-3">
+            <i class="fas fa-id-card text-indigo-600 text-xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-1">Aadhaar Card <span class="text-red-500">*</span></h4>
+          <p class="text-xs text-gray-500 mb-3">PDF, JPG or PNG (max 5MB)</p>
+          <div class="mt-2">
+            <label class="cursor-pointer bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-md text-sm font-medium border border-indigo-200 inline-flex items-center">
+              <i class="fas fa-cloud-upload-alt mr-2"></i>Choose File
+              <input type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png" required>
+            </label>
+          </div>
+          <p class="text-xs text-gray-500 mt-2" id="aadhaarFileName">No file chosen</p>
+        </div>
+      </div>
+
+      <!-- PAN Card -->
+      <div class="upload-box group" id="panUpload">
+        <div class="text-center p-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-3">
+            <i class="fas fa-address-card text-indigo-600 text-xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-1">PAN Card <span class="text-red-500">*</span></h4>
+          <p class="text-xs text-gray-500 mb-3">PDF, JPG or PNG (max 5MB)</p>
+          <div class="mt-2">
+            <label class="cursor-pointer bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-md text-sm font-medium border border-indigo-200 inline-flex items-center">
+              <i class="fas fa-cloud-upload-alt mr-2"></i>Choose File
+              <input type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png" required>
+            </label>
+          </div>
+          <p class="text-xs text-gray-500 mt-2" id="panFileName">No file chosen</p>
+        </div>
+      </div>
+
+      <!-- Photograph -->
+      <div class="upload-box group" id="photoUpload">
+        <div class="text-center p-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-3">
+            <i class="fas fa-camera text-indigo-600 text-xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-1">Photograph <span class="text-red-500">*</span></h4>
+          <p class="text-xs text-gray-500 mb-3">Passport size (35x45mm, JPG/PNG, max 2MB)</p>
+          <div class="flex flex-col space-y-2">
+            <label class="cursor-pointer bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-md text-sm font-medium border border-indigo-200 inline-flex items-center justify-center">
+              <i class="fas fa-camera-retro mr-2"></i>Take Photo
+              <input type="file" class="hidden" accept="image/*" capture="user" required>
+            </label>
+            <label class="cursor-pointer bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-md text-sm font-medium border border-indigo-200 inline-flex items-center justify-center">
+              <i class="fas fa-folder-open mr-2"></i>Choose from Device
+              <input type="file" class="hidden" accept="image/*" required>
+            </label>
+          </div>
+          <p class="text-xs text-gray-500 mt-2" id="photoFileName">No file chosen</p>
+        </div>
+      </div>
+
+      <!-- Bank Statement -->
+      <div class="upload-box group" id="bankStatementUpload">
+        <div class="text-center p-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-3">
+            <i class="fas fa-file-invoice-dollar text-indigo-600 text-xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-1">6-Month Bank Statement <span class="text-red-500">*</span></h4>
+          <p class="text-xs text-gray-500 mb-3">PDF preferred (max 10MB)</p>
+          <div class="mt-2">
+            <label class="cursor-pointer bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-md text-sm font-medium border border-indigo-200 inline-flex items-center">
+              <i class="fas fa-cloud-upload-alt mr-2"></i>Choose File
+              <input type="file" class="hidden" accept=".pdf" required>
+            </label>
+          </div>
+          <p class="text-xs text-gray-500 mt-2" id="statementFileName">No file chosen</p>
+          <div class="mt-3">
+            <div class="relative">
+              <input type="password" class="w-full px-3 py-2 border rounded-md text-sm" placeholder="Statement Password (if any)">
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <button type="button" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                  <i class="far fa-eye-slash text-sm"></i>
+                </button>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">Leave blank if not password protected</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GST Returns (Optional) -->
+      <div class="upload-box optional group" id="gstUpload">
+        <div class="text-center p-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gray-100 mb-3">
+            <i class="fas fa-file-invoice text-gray-500 text-xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-1">GST Returns</h4>
+          <p class="text-xs text-gray-500 mb-3">Last 2 years (PDF, max 5MB each)</p>
+          <div class="space-y-2">
+            <div class="file-upload-item">
+              <label class="cursor-pointer bg-white text-gray-700 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-medium border border-gray-200 inline-flex items-center">
+                <i class="fas fa-plus mr-1"></i> Add File 1
+                <input type="file" class="hidden" accept=".pdf">
+              </label>
+              <p class="text-xs text-gray-500 mt-1 text-left" id="gstFile1">No file chosen</p>
+            </div>
+            <div class="file-upload-item">
+              <label class="cursor-pointer bg-white text-gray-700 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-medium border border-gray-200 inline-flex items-center">
+                <i class="fas fa-plus mr-1"></i> Add File 2
+                <input type="file" class="hidden" accept=".pdf">
+              </label>
+              <p class="text-xs text-gray-500 mt-1 text-left" id="gstFile2">No file chosen</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITR (Optional) -->
+      <div class="upload-box optional group" id="itrUpload">
+        <div class="text-center p-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gray-100 mb-3">
+            <i class="fas fa-file-alt text-gray-500 text-xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-1">Income Tax Returns</h4>
+          <p class="text-xs text-gray-500 mb-3">Last 2 years (PDF, max 5MB each)</p>
+          <div class="space-y-2">
+            <div class="file-upload-item">
+              <label class="cursor-pointer bg-white text-gray-700 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-medium border border-gray-200 inline-flex items-center">
+                <i class="fas fa-plus mr-1"></i> Add File 1
+                <input type="file" class="hidden" accept=".pdf">
+              </label>
+              <p class="text-xs text-gray-500 mt-1 text-left" id="itrFile1">No file chosen</p>
+            </div>
+            <div class="file-upload-item">
+              <label class="cursor-pointer bg-white text-gray-700 hover:bg-gray-50 px-3 py-1.5 rounded-md text-xs font-medium border border-gray-200 inline-flex items-center">
+                <i class="fas fa-plus mr-1"></i> Add File 2
+                <input type="file" class="hidden" accept=".pdf">
+              </label>
+              <p class="text-xs text-gray-500 mt-1 text-left" id="itrFile2">No file chosen</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MSME Certificate (Optional) -->
+      <div class="upload-box optional group" id="msmeUpload">
+        <div class="text-center p-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gray-100 mb-3">
+            <i class="fas fa-certificate text-gray-500 text-xl"></i>
+          </div>
+          <h4 class="font-medium text-gray-900 mb-1">MSME Certificate</h4>
+          <p class="text-xs text-gray-500 mb-3">If registered (PDF/JPG/PNG, max 5MB)</p>
+          <div class="mt-2">
+            <label class="cursor-pointer bg-white text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-md text-sm font-medium border border-gray-200 inline-flex items-center">
+              <i class="fas fa-cloud-upload-alt mr-2"></i>Choose File
+              <input type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
+            </label>
+          </div>
+          <p class="text-xs text-gray-500 mt-2" id="msmeFileName">No file chosen</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <div class="flex items-center justify-between mb-4">
+      <!-- <div class="flex items-center">
+        <input type="checkbox" id="termsAgree" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" required>
+        <label for="termsAgree" class="ml-2 block text-sm text-gray-700">
+          I agree to the <a href="/t&c/terms-and-conditions.html" class="text-indigo-600 hover:text-indigo-500">Terms & Conditions</a> and 
+          <a href="/t&c/privacy-policy.html" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+        </label>
+      </div> -->
+      <div id="formError" class="text-red-600 text-sm font-medium hidden">
+        Please fill all required fields
+      </div>
+    </div>
+    
+    <button type="submit" id="submitBtn" class="w-full bg-indigo-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-indigo-700 transition-all duration-200 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center">
+      <span id="submitText">Submit Business Loan Application</span>
+      <span id="submitSpinner" class="hidden ml-3">
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </span>
+    </button>
+    
+    <!-- <p class="mt-3 text-center text-sm text-gray-500">
+      <i class="fas fa-lock mr-1"></i> Your information is secure and will be encrypted
+    </p> -->
+  </div>
+
+</div>
+
+<script>
+  // File upload handling
+  document.querySelectorAll('input[type="file"]').forEach(input => {
+    input.addEventListener('change', function(e) {
+      const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
+      const displayElement = document.getElementById(`${this.id}FileName`);
+      if (displayElement) {
+        displayElement.textContent = fileName;
+        
+        // Add success styling
+        if (this.files[0]) {
+          displayElement.classList.add('text-green-600', 'font-medium');
+          this.closest('.upload-box').classList.add('border-green-400', 'bg-green-50');
+        } else {
+          displayElement.classList.remove('text-green-600', 'font-medium');
+          this.closest('.upload-box').classList.remove('border-green-400', 'bg-green-50');
+        }
+      }
+    });
+  });
+  
+  // Toggle password visibility
+  document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function() {
+      const input = this.previousElementSibling;
+      const icon = this.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+  });
+  
+  // Form submission
+  document.getElementById('submitBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    const form = document.querySelector('form');
+    const requiredFields = form.querySelectorAll('[required]');
+    let isValid = true;
+    
+    // Validate required fields
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        field.classList.add('border-red-500');
+        isValid = false;
+      } else {
+        field.classList.remove('border-red-500');
+      }
+    });
+    
+    if (!isValid) {
+      document.getElementById('formError').classList.remove('hidden');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      return;
+    }
+    
+    // Show loading state
+    this.disabled = true;
+    document.getElementById('submitText').textContent = 'Submitting...';
+    document.getElementById('submitSpinner').classList.remove('hidden');
+    
+    // Simulate form submission
+    setTimeout(() => {
+      // Here you would typically submit the form data to your server
+      console.log('Form submitted successfully!');
+      
+      // Show success message
+      alert('Your application has been submitted successfully! We will contact you soon.');
+      
+      // Reset form
+      form.reset();
+      document.querySelectorAll('[id$="FileName"]').forEach(el => {
+        el.textContent = 'No file chosen';
+      });
+      
+      // Reset button state
+      this.disabled = false;
+      document.getElementById('submitText').textContent = 'Submit Business Loan Application';
+      document.getElementById('submitSpinner').classList.add('hidden');
+      
+    }, 2000);
+  });
+  
+  // Load saved data from session storage
+  document.addEventListener('DOMContentLoaded', function() {
+    const stored = sessionStorage.getItem("selectedLoan");
+    if (stored) {
+      const loan = JSON.parse(stored);
+      document.getElementById("selectedBankName").textContent = loan.bankName || "-";
+      document.getElementById("selectedLoanName").textContent = loan.loanName || "Business Loan";
+      document.getElementById("selectedLoanInterest").textContent = 
+        `${loan.minInterestRate || "-"}% - ${loan.maxInterestRate || "-"}%`;
+      document.getElementById("selectedLoanTenure").textContent = 
+        `${loan.minTenure || "-"} - ${loan.maxTenure || "-"} months`;
+    }
+  });
+  const stored = sessionStorage.getItem("selectedLoan");
+  if (stored) {
+    const loan = JSON.parse(stored);
+    document.getElementById("selectedBankName").innerText = loan.bankName || "-";
+    document.getElementById("selectedLoanName").innerText = loan.loanName || "Business Loan";
+    document.getElementById("selectedLoanInterest").innerText =
+      `${loan.minInterestRate || "-"}% - ${loan.maxInterestRate || "-"}%`;
+    document.getElementById("selectedLoanTenure").innerText =
+      `${loan.minTenure || "-"} - ${loan.maxTenure || "-"} months`;
+  }
+</script>
+
+</body>
+</html>

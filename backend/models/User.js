@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema({
   otp: { type: String },
   otpExpires: { type: Date },
   isVerified: { type: Boolean, default: false },
+  called: {
+  type: String,
+  enum: ["no", "pending", "yes"],
+  default: "no"
+},
   dob: { type: String, default: "" },
   address: { type: String, default: "" },
   employmentStatus: { type: String, default: "" },

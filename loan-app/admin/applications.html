@@ -66,6 +66,36 @@
             font-weight: 600;
             border-radius: 8px;
         }
+
+        .status-submitted {
+            background-color: #e5e7eb !important;
+            color: #374151 !important;
+        }
+
+        .status-inreview {
+            background-color: #dbeafe !important;
+            color: #1e3a8a !important;
+        }
+
+        .status-approved {
+            background-color: #d1fae5 !important;
+            color: #065f46 !important;
+        }
+
+        .status-rejected {
+            background-color: #fee2e2 !important;
+            color: #991b1b !important;
+        }
+
+        .status-pending {
+            background-color: #fef3c7 !important;
+            color: #92400e !important;
+        }
+
+        .status-disbursed {
+            background-color: #ede9fe !important;
+            color: #5b21b6 !important;
+        }
     </style>
 </head>
 
@@ -702,6 +732,27 @@
             // =======================================
             // RENDER TABLE
             // =======================================
+
+            function applyStatusColor(selectEl) {
+                const value = selectEl.value.toLowerCase().replace(" ", "");
+
+                selectEl.className = ""; // clear existing classes
+                selectEl.classList.add(
+                    "px-3", "py-1", "rounded-full", "font-semibold", "text-xs", "uppercase"
+                );
+
+                const map = {
+                    submitted: "status-submitted",
+                    inreview: "status-inreview",
+                    approved: "status-approved",
+                    rejected: "status-rejected",
+                    pending: "status-pending",
+                    disbursed: "status-disbursed"
+                };
+
+                selectEl.classList.add(map[value] || "status-submitted");
+            }
+
             function renderApplications(apps) {
 
                 tableBody.innerHTML = "";
@@ -745,99 +796,92 @@
                     row.onmouseout = function () { this.style.backgroundColor = "#ffffff"; };
 
                     row.innerHTML = `
-                <td style="padding: 16px 24px;">
-                    <div style="font-weight: 600; color: #1a202c; font-size: 0.95rem; margin-bottom: 4px;">
-                        <i class="fas fa-file-invoice" style="color: #4f46e5; margin-right: 8px;"></i>
-                        ${app.loanName || "N/A"}
-                    </div>
-                    <div style="color: #64748b; font-size: 0.85rem; display: flex; align-items: center;">
-                        <i class="fas fa-university" style="margin-right: 6px; font-size: 0.8rem;"></i>
-                        ${app.bankName || "Not specified"}
-                    </div>
-                </td>
+                    <td style="padding: 16px 24px;">
+                        <div style="font-weight: 600; color: #1a202c; font-size: 0.95rem; margin-bottom: 4px;">
+                            <i class="fas fa-file-invoice" style="color: #4f46e5; margin-right: 8px;"></i>
+                            ${app.loanName || "N/A"}
+                        </div>
+                        <div style="color: #64748b; font-size: 0.85rem; display: flex; align-items: center;">
+                            <i class="fas fa-university" style="margin-right: 6px; font-size: 0.8rem;"></i>
+                            ${app.bankName || "Not specified"}
+                        </div>
+                    </td>
 
-                <td style="padding: 16px 24px;">
-                    <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px; display: flex; align-items: center;">
-                        <i class="fas fa-user" style="color: #4f46e5; margin-right: 8px; width: 16px; text-align: center;"></i>
-                        ${fullName || "N/A"}
-                    </div>
-                    <div style="color: #64748b; font-size: 0.85rem; display: flex; align-items: center;">
-                        <i class="fas fa-envelope" style="margin-right: 6px; font-size: 0.8rem; width: 16px; text-align: center;"></i>
-                        ${app.personal?.email || "No email"}
-                    </div>
-                </td>
+                    <td style="padding: 16px 24px;">
+                        <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px; display: flex; align-items: center;">
+                            <i class="fas fa-user" style="color: #4f46e5; margin-right: 8px; width: 16px; text-align: center;"></i>
+                            ${fullName || "N/A"}
+                        </div>
+                        <div style="color: #64748b; font-size: 0.85rem; display: flex; align-items: center;">
+                            <i class="fas fa-envelope" style="margin-right: 6px; font-size: 0.8rem; width: 16px; text-align: center;"></i>
+                            ${app.personal?.email || "No email"}
+                        </div>
+                    </td>
 
-                <td style="padding: 16px 24px; font-weight: 600; color: #1a202c;">
-                    <div style="display: flex; flex-direction: column;">
-                        <span>${formatCurrency(app.loanAmount)}</span>
-                       
-                    </div>
-                </td>
+                    <td style="padding: 16px 24px; font-weight: 600; color: #1a202c;">
+                        <div style="display: flex; flex-direction: column;">
+                            <span>${formatCurrency(app.loanAmount)}</span>
+                        
+                        </div>
+                    </td>
 
-                <td style="padding: 16px 24px;">
-                    <select
-                        onchange="updateStatus('${app._id}', this.value)"
-                        style="
-                            border-radius: 9999px;
-                            padding: 4px 12px;
-                            font-size: 0.75rem;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                            background-color: #e0f2fe;
-                            color: #075985;
+                    <td style="padding: 16px 24px;">
+                        <select
+                            onchange="updateStatus('${app._id}', this.value); applyStatusColor(this);"
+                            class="px-3 py-1 rounded-full font-semibold text-xs uppercase"
+                            >
+                            <option value="submitted" ${app.status === "submitted" ? "selected" : ""}>Submitted</option>
+                            <option value="in review" ${app.status === "in review" ? "selected" : ""}>In Review</option>
+                            <option value="approved" ${app.status === "approved" ? "selected" : ""}>Approved</option>
+                            <option value="rejected" ${app.status === "rejected" ? "selected" : ""}>Rejected</option>
+                        </select>
+
+                    </td>
+
+
+                    <td style="padding: 16px 24px; color: #4b5563; font-size: 0.9rem;">
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 500;">${formatDate(app.createdAt)}</span>
+                        
+                        </div>
+                    </td>
+
+                    <td style="padding: 16px 24px; text-align: right;">
+                        <button style="
+                            background: #eef2ff;
+                            color: #4f46e5;
                             border: none;
-                            outline: none;
-                        "
-                    >
-                        <option value="submitted" ${app.status === 'submitted' ? 'selected' : ''}>Submitted</option>
-                        <option value="in review" ${app.status === 'in review' ? 'selected' : ''}>In Review</option>
-                        <option value="approved" ${app.status === 'approved' ? 'selected' : ''}>Approved</option>
-                        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Rejected</option>
-                    </select>
-                </td>
-
-
-                <td style="padding: 16px 24px; color: #4b5563; font-size: 0.9rem;">
-                    <div style="display: flex; flex-direction: column;">
-                        <span style="font-weight: 500;">${formatDate(app.createdAt)}</span>
-                      
-                    </div>
-                </td>
-
-                <td style="padding: 16px 24px; text-align: right;">
-                    <button style="
-                        background: #eef2ff;
-                        color: #4f46e5;
-                        border: none;
-                        border-radius: 6px;
-                        padding: 6px 12px;
-                        margin-right: 8px;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.background='#e0e7ff'" 
-                      onmouseout="this.style.background='#eef2ff'"
-                      onclick="viewApplication('${app._id}')">
-                        <i class="fas fa-eye"></i>
-                        <span style="margin-left: 4px; font-size: 0.85rem;">View</span>
-                    </button>
-                    <button style="
-                        background: #fef2f2;
-                        color: #dc2626;
-                        border: none;
-                        border-radius: 6px;
-                        padding: 6px 12px;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                    " onmouseover="this.style.background='#fee2e2'" 
-                      onmouseout="this.style.background='#fef2f2'"
-                      onclick="openDeleteModal('${app._id}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            `;
+                            border-radius: 6px;
+                            padding: 6px 12px;
+                            margin-right: 8px;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                        " onmouseover="this.style.background='#e0e7ff'" 
+                        onmouseout="this.style.background='#eef2ff'"
+                        onclick="viewApplication('${app._id}')">
+                            <i class="fas fa-eye"></i>
+                            <span style="margin-left: 4px; font-size: 0.85rem;">View</span>
+                        </button>
+                        <button style="
+                            background: #fef2f2;
+                            color: #dc2626;
+                            border: none;
+                            border-radius: 6px;
+                            padding: 6px 12px;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                        " onmouseover="this.style.background='#fee2e2'" 
+                        onmouseout="this.style.background='#fef2f2'"
+                        onclick="openDeleteModal('${app._id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                    `;
 
                     tableBody.appendChild(row);
                 });
+                document.querySelectorAll("#applicationsTable select").forEach(s => applyStatusColor(s));
+
             }
 
             // -----------------------------
@@ -900,12 +944,12 @@
                         app.employment?.companyEmail || "N/A";
                     document.getElementById("view-role").innerText =
                         app.employment?.role || "N/A";
-                    document.getElementById("view-monthly-income").innerText =
-                        app.employment?.income || "N/A";
-                    document.getElementById("view-current-emi").innerText =
-                        app.employment?.currentEmi || "N/A";
-                    document.getElementById("view-credit-obligation").innerText =
-                        app.employment?.creditObligation || "N/A";
+                    document.getElementById("view-monthly-income").innerText = 
+                        app.employment?.income !== undefined ? '₹' + Number(app.employment.income).toLocaleString('en-IN') : "N/A";
+                    document.getElementById("view-current-emi").innerText = 
+                        app.employment?.currentEmi !== undefined ? '₹' + Number(app.employment.currentEmi).toLocaleString('en-IN') : "N/A";
+                    document.getElementById("view-credit-obligation").innerText = 
+                        app.employment?.creditObligation !== undefined ? '₹' + Number(app.employment.creditObligation).toLocaleString('en-IN') : "N/A"
 
                     // Reference Details
                     document.getElementById("view-ref1-name").innerText =
@@ -1137,7 +1181,7 @@
                 "filter-submitted",
                 "filter-inreview",
                 "filter-approved",
-                "filter-rejected"  
+                "filter-rejected"
             );
 
             // Apply new one

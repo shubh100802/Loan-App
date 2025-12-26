@@ -1109,7 +1109,7 @@
                 "permanent-address", "permanent-city", "permanent-state", "permanent-postal-code",
 
                 "employment-type", "company-name", "company-email",
-                "role", "current-emi", "credit-obligation", "monthly-income",
+                "role", "monthly-income",
 
                 "loan-amount", "loan-purpose"
             ];
@@ -1386,9 +1386,10 @@
                             companyName: qs("company-name")?.value.trim() || "",
                             companyEmail: qs("company-email")?.value.trim() || "",
                             role: qs("role")?.value.trim() || "",
-                            income: parseNumber(qs("monthly-income")?.value.replace(/,/g, "").trim() || "0"),
-                            currentEmi: parseNumber(qs("current-emi")?.value.trim() || "0"),
-                            creditObligation: parseNumber(qs("credit-obligation")?.value.trim() || "0")
+                            income: parseNumber((qs("monthly-income")?.value || "0").replace(/[^0-9.]/g, "").trim()),
+                            currentEmi: parseNumber((qs("current-emi")?.value || "0").replace(/[^0-9.]/g, "").trim()),
+                            creditObligation: parseNumber((qs("credit-obligation")?.value || "0").replace(/[^0-9.]/g, "").trim()),
+
                         },
 
                         reference: {

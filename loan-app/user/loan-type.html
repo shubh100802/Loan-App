@@ -446,18 +446,21 @@
             try {
                 const stored = sessionStorage.getItem('selectedLoan');
                 if (stored) {
-                    // We have a selected loan saved by the card click handler
-                    // Don't overwrite; keep the stored loan object
-                    // Redirect to application page (after verifying page exists)
-                    fetch('application.html')
+                    const loan = JSON.parse(stored);
+                    const loanName = (loan.loanName || '').toLowerCase();
+                    const targetPage = loanName.includes('business')
+                        ? 'business-application.html'
+                        : 'application.html';
+
+                    fetch(targetPage)
                         .then(response => {
                             if (response.ok) {
-                                window.location.href = 'application.html';
+                                window.location.href = targetPage;
                             } else {
-                                // fallback
                                 window.location.href = 'applications.html';
                             }
                         })
+
                         .catch(err => {
                             console.error('Error fetching application.html:', err);
                             window.location.href = 'applications.html';
@@ -773,6 +776,27 @@
             window.location.href = "application.html";
         };
 
+    </script>
+
+
+    <!-- Chatbot Integration -->
+    <div id="mlc-chatbot-container"></div>
+
+    <link rel="stylesheet" href="../chatbot/chatbot.css">
+
+    <script>
+        fetch("../chatbot/chatbot.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("mlc-chatbot-container").innerHTML = html;
+
+                // Load chatbot JS ONLY after HTML is injected
+                const script = document.createElement("script");
+                script.src = "../chatbot/chatbot.js";
+                script.defer = true;
+                document.body.appendChild(script);
+            })
+            .catch(err => console.error("Chatbot load error:", err));
     </script>
 
 </body>

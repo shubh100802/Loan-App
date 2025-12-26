@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLC Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="chatbot.css">
+</head>
+
+<body>
+    <!-- Chatbot Floating Button -->
+    <button id="mlc-chatbot-btn" class="pulse">
+        <i class="fas fa-comment-dots"></i>
+        <span class="notification-badge"></span>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="mlc-chatbot">
+        <div class="mlc-header">
+            <div class="mlc-header-info">
+                <div class="mlc-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <div class="mlc-title">MLC Assistant</div>
+                    <div class="mlc-status">Online</div>
+                </div>
+            </div>
+            <div class="mlc-actions">
+                <button class="mlc-minimize" id="mlc-minimize-btn">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="mlc-close" id="mlc-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mlc-messages" class="mlc-messages"></div>
+
+        <div class="mlc-typing-indicator" id="mlc-typing">
+            <span></span><span></span><span></span>
+        </div>
+
+        <div class="mlc-quick-options">
+            <p>Quick Actions:</p>
+            <div class="quick-buttons">
+                <button class="quick-action" data-action="loan">
+                    <i class="fas fa-file-invoice-dollar"></i> Loan Status
+                </button>
+                <button class="quick-action" data-action="emi">
+                    <i class="fas fa-calculator"></i> EMI Calculator
+                </button>
+                <button class="quick-action" data-action="documents">
+                    <i class="fas fa-file-alt"></i> Documents
+                </button>
+                <button class="quick-action" data-action="eligibility">
+                    <i class="fas fa-check-circle"></i> Check Eligibility
+                </button>
+                <button class="quick-action" data-action="interest">
+                    <i class="fas fa-percentage"></i> Interest Rates
+                </button>
+                <button class="quick-action" data-action="processing">
+                    <i class="fas fa-clock"></i> Processing Time
+                </button>
+                <button id="whatsapp-btn" class="whatsapp-btn" style="display:none;">
+                    <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                </button>
+
+            </div>
+        </div>
+
+        <div class="mlc-input-container">
+            <div id="mlc-suggestions" class="mlc-suggestions"></div>
+
+            <input type="text" id="mlc-user-input" placeholder="Type your message...">
+            <button id="mlc-voice-btn">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button id="mlc-send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="chatbot.js"></script>
+</body>
+
+</html>

@@ -205,9 +205,9 @@ export const createApplication = asyncHandler(async (req, res) => {
       companyName: employment.companyName || "",
       companyEmail: employment.companyEmail || "",
       role: employment.role || "",
-      income: employment.income || 0,
-      currentEmi: body.currentEmi || employment.currentEmi || 0,
-      creditObligation: employment.creditObligation || 0
+      income: Number(employment.income) || 0,
+      currentEmi: Number(employment.currentEmi) || 0,
+      creditObligation: Number(employment.creditObligation) || 0,
     },
     reference: {
       ref1: {

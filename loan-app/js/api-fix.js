@@ -29,7 +29,7 @@ window.fetch = function (url, options = {}) {
 // =========================
 
 let idleTimer;
-const IDLE_LIMIT = 5 * 60 * 1000; 
+const IDLE_LIMIT = 10 * 60 * 1000; 
 
 function resetIdleTimer() {
     clearTimeout(idleTimer);

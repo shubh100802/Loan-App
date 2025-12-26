@@ -88,8 +88,7 @@
                             <i class="fas fa-user-circle mr-3"></i>
                             Profile
                         </a>
-                        <a href="../emi-calculator.html"
-                        target="_blank"
+                        <a href="../emi-calculator.html" target="_blank"
                             class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                             <i class="fas fa-calculator mr-3"></i>
                             EMI Calculator
@@ -141,8 +140,7 @@
                         <i class="fas fa-user-circle mr-3"></i>
                         Profile
                     </a>
-                    <a href="../emi-calculator.html"
-                        target="_blank"
+                    <a href="../emi-calculator.html" target="_blank"
                         class="flex items-center px-4 py-3 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800 rounded-lg transition-colors">
                         <i class="fas fa-calculator mr-3"></i>
                         EMI Calculator
@@ -566,6 +564,27 @@
 
         // Load on page load
         document.addEventListener("DOMContentLoaded", loadApplications);
+    </script>
+
+
+    <!-- Chatbot Integration -->
+    <div id="mlc-chatbot-container"></div>
+
+    <link rel="stylesheet" href="../chatbot/chatbot.css">
+
+    <script>
+        fetch("../chatbot/chatbot.html")
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById("mlc-chatbot-container").innerHTML = html;
+
+                // Load chatbot JS ONLY after HTML is injected
+                const script = document.createElement("script");
+                script.src = "../chatbot/chatbot.js";
+                script.defer = true;
+                document.body.appendChild(script);
+            })
+            .catch(err => console.error("Chatbot load error:", err));
     </script>
 
 
