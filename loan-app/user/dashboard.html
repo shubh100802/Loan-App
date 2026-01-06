@@ -147,6 +147,12 @@
         .select-bank-btn i {
             margin-right: 0.5rem;
         }
+
+        .tab-active {
+            background-color: #eef2ff;
+            color: #4338ca;
+            box-shadow: inset 0 -2px 0 #6366f1;
+        }
     </style>
 </head>
 
@@ -383,17 +389,21 @@
 
                 <!-- BANK | NBFC TAB SWITCH -->
                 <div class="flex gap-3 mb-4">
-                    <button id="tabBank"
-                        class="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white shadow">
+                    <button id="tabBank" class="px-4 py-2 rounded-lg text-sm font-medium border text-gray-700">
                         Banks
                     </button>
 
-                    <button id="tabNBFC" class="px-4 py-2 rounded-lg text-sm font-medium bg-white text-gray-700 border">
+                    <button id="tabNBFC" class="px-4 py-2 rounded-lg text-sm font-medium border text-gray-700">
                         NBFCs
+                    </button>
+
+                    <button id="tabFeedback" class="px-4 py-2 rounded-lg text-sm font-medium border text-gray-700">
+                        Feedback
                     </button>
                 </div>
 
-                <!-- Dynamic Bank Grid -->
+
+                <!-- Dynamic Bank / NBFC / Feedback Grid -->
                 <div class="mb-6">
 
                     <!-- BANK LIST -->
@@ -403,6 +413,13 @@
                     <!-- NBFC LIST -->
                     <div id="nbfcList"
                         class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    </div>
+
+                    <!-- FEEDBACK LIST -->
+
+                    <div id="feedbackListTab" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                        <!-- feedback cards load here -->
                     </div>
 
                 </div>
@@ -1190,37 +1207,44 @@
     </script>
 
     <script>
-        // TAB SWITCH HANDLER
         document.addEventListener("DOMContentLoaded", () => {
-            const tabBank = document.getElementById("tabBank");
-            const tabNBFC = document.getElementById("tabNBFC");
+            const tabs = {
+                tabBank: document.getElementById("bankList"),
+                tabNBFC: document.getElementById("nbfcList"),
+                tabFeedback: document.getElementById("feedbackListTab")
+            };
 
-            const bankList = document.getElementById("bankList");
-            const nbfcList = document.getElementById("nbfcList");
+            function resetTabs() {
+                Object.keys(tabs).forEach(tabId => {
+                    document.getElementById(tabId).classList.remove("tab-active");
+                    tabs[tabId].classList.add("hidden");
+                });
+            }
 
-            tabBank.onclick = () => {
-                tabBank.classList.add("bg-indigo-600", "text-white");
-                tabBank.classList.remove("bg-white", "text-gray-700", "border");
-
-                tabNBFC.classList.remove("bg-indigo-600", "text-white");
-                tabNBFC.classList.add("bg-white", "text-gray-700", "border");
-
+            document.getElementById("tabBank").onclick = () => {
+                resetTabs();
+                tabBank.classList.add("tab-active");
                 bankList.classList.remove("hidden");
-                nbfcList.classList.add("hidden");
             };
 
-            tabNBFC.onclick = () => {
-                tabNBFC.classList.add("bg-indigo-600", "text-white");
-                tabNBFC.classList.remove("bg-white", "text-gray-700", "border");
-
-                tabBank.classList.remove("bg-indigo-600", "text-white");
-                tabBank.classList.add("bg-white", "text-gray-700", "border");
-
+            document.getElementById("tabNBFC").onclick = () => {
+                resetTabs();
+                tabNBFC.classList.add("tab-active");
                 nbfcList.classList.remove("hidden");
-                bankList.classList.add("hidden");
             };
+
+            document.getElementById("tabFeedback").onclick = () => {
+                resetTabs();
+                tabFeedback.classList.add("tab-active");
+                feedbackListTab.classList.remove("hidden");
+                loadFeedbackTab();
+            };
+
+            // default tab
+            tabBank.classList.add("tab-active");
         });
     </script>
+
 
     <script>
         let dSlider = document.getElementById("dashOffersSlider");
@@ -1326,6 +1350,56 @@
                 document.body.appendChild(script);
             })
             .catch(err => console.error("Chatbot load error:", err));
+    </script>
+
+
+    <script>
+        async function loadFeedbackTab() {
+            const container = document.getElementById("feedbackListTab");
+            container.innerHTML = "<p class='text-gray-500'>Loading feedback...</p>";
+
+            try {
+                const res = await fetch("/api/reviews");
+                const reviews = await res.json();
+
+                if (!reviews.length) {
+                    container.innerHTML =
+                        "<p class='text-gray-500'>No feedback available yet.</p>";
+                    return;
+                }
+
+                container.innerHTML = "";
+
+                reviews.forEach(r => {
+                   container.innerHTML += `
+                        <div class="p-5 rounded-2xl
+                                    bg-gray-300/70
+                                    border border-gray-400/40
+                                    shadow-sm hover:shadow-md transition">
+
+                            <div class="flex justify-between items-center mb-2">
+                                <p class="font-semibold text-gray-900 text-sm">
+                                    ${r.name}
+                                </p>
+
+                                <span class="text-yellow-500 text-sm">
+                                    ${"⭐".repeat(r.rating)}
+                                </span>
+                            </div>
+
+                            <p class="text-sm text-gray-700 leading-relaxed">
+                                ${r.message}
+                            </p>
+                        </div>
+                    `;
+
+                });
+
+            } catch (err) {
+                container.innerHTML =
+                    "<p class='text-red-500'>Failed to load feedback.</p>";
+            }
+        }
     </script>
 
 

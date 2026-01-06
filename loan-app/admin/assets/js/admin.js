@@ -1,30 +1,30 @@
 // Admin Dashboard JavaScript
 
 // DOM Ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) {
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
     // Initialize mobile menu
     initMobileMenu();
-    
+
     // Initialize charts
     initCharts();
-    
+
     // Initialize data tables if any
     initDataTables();
-    
+
     // Initialize form validations
     initFormValidations();
-    
+
     // Initialize button handlers
     initButtonHandlers();
-    
+
     // Fix for iOS elastic scrolling
-    document.body.addEventListener('touchmove', function(e) {
+    document.body.addEventListener('touchmove', function (e) {
         // Prevent scrolling when at the top or bottom of the page
         if (window.scrollY <= 0 || (window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
             e.preventDefault();
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initButtonHandlers() {
     // Handle view buttons
     document.querySelectorAll('[data-action="view"]').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const userId = this.getAttribute('data-user-id');
             viewUser(userId);
         });
@@ -44,7 +44,7 @@ function initButtonHandlers() {
 
     // Handle edit buttons
     document.querySelectorAll('[data-action="edit"]').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const userId = this.getAttribute('data-user-id');
             editUser(userId);
         });
@@ -52,7 +52,7 @@ function initButtonHandlers() {
 
     // Handle delete buttons
     document.querySelectorAll('[data-action="delete"]').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const userId = this.getAttribute('data-user-id');
             const userName = this.getAttribute('data-user-name');
             deleteUser(userId, userName);
@@ -61,7 +61,7 @@ function initButtonHandlers() {
 
     // Handle status toggles
     document.querySelectorAll('.status-toggle').forEach(toggle => {
-        toggle.addEventListener('change', function() {
+        toggle.addEventListener('change', function () {
             const userId = this.getAttribute('data-user-id');
             const status = this.checked ? 'active' : 'inactive';
             updateUserStatus(userId, status);
@@ -87,7 +87,7 @@ function viewUser(userId) {
     console.log('Viewing user:', userId);
     // Show a notification with better positioning
     showNotification(
-        `Viewing details for user ID: ${userId}`, 
+        `Viewing details for user ID: ${userId}`,
         'info',
         { position: 'top-right', autoClose: 3000 }
     );
@@ -109,7 +109,7 @@ function deleteUser(userId, userName) {
     // Create a custom confirmation dialog
     const dialog = document.createElement('div');
     dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-    
+
     dialog.innerHTML = `
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div class="flex items-center justify-between mb-4">
@@ -132,33 +132,33 @@ function deleteUser(userId, userName) {
             </div>
         </div>
     `;
-    
+
     // Add to body
     document.body.appendChild(dialog);
-    
+
     // Add event listeners
     const closeBtn = dialog.querySelector('button:first-child');
     const cancelBtn = dialog.querySelector('button:nth-child(2)');
     const confirmBtn = dialog.querySelector('button:last-child');
-    
+
     const closeDialog = () => {
         document.body.removeChild(dialog);
     };
-    
+
     closeBtn.addEventListener('click', closeDialog);
     cancelBtn.addEventListener('click', closeDialog);
-    
+
     confirmBtn.addEventListener('click', () => {
         console.log('Deleting user:', userId);
         // In a real app, you would make an API call to delete the user
-        
+
         // Show success notification
         showNotification(
             `User ${userName} has been deleted.`,
             'success',
             { position: 'top-right', autoClose: 3000 }
         );
-        
+
         // Remove the user row from the table
         const row = document.querySelector(`[data-user-row="${userId}"]`);
         if (row) {
@@ -166,17 +166,17 @@ function deleteUser(userId, userName) {
             row.style.transition = 'all 0.3s ease-out';
             row.style.opacity = '0';
             row.style.transform = 'translateX(100%)';
-            
+
             // Remove from DOM after animation
             setTimeout(() => {
                 row.remove();
             }, 300);
         }
-        
+
         // Close dialog
         closeDialog();
     });
-    
+
     // Close on outside click
     dialog.addEventListener('click', (e) => {
         if (e.target === dialog) {
@@ -197,7 +197,7 @@ function showAddUserModal() {
     // Create modal overlay
     const modal = document.createElement('div');
     modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-    
+
     modal.innerHTML = `
         <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between p-4 border-b">
@@ -256,47 +256,47 @@ function showAddUserModal() {
             </div>
         </div>
     `;
-    
+
     // Add to body
     document.body.appendChild(modal);
-    
+
     // Add event listeners
     const closeBtn = modal.querySelector('button:first-child');
     const cancelBtn = modal.querySelector('button:nth-last-child(2)');
     const submitBtn = modal.querySelector('button:last-child');
     const form = document.getElementById('addUserForm');
-    
+
     const closeModal = () => {
         document.body.removeChild(modal);
     };
-    
+
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
-    
+
     // Close on outside click
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();
         }
     });
-    
+
     // Handle form submission
     submitBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        
+
         // In a real app, you would validate the form and submit to an API
         const formData = new FormData(form);
         const formValues = Object.fromEntries(formData.entries());
-        
+
         console.log('Form submitted:', formValues);
-        
+
         // Show success message
         showNotification(
             'New user added successfully!',
             'success',
             { position: 'top-right', autoClose: 3000 }
         );
-        
+
         // Close modal
         closeModal();
     });
@@ -307,12 +307,12 @@ function exportUsers() {
     console.log('Exporting users data');
     // In a real app, you would generate and download a CSV/Excel file
     showNotification('Exporting users data...', 'info');
-    
+
     // Simulate file download
     const data = 'Name,Email,Role,Status\n' +
-                 'Rajesh Kumar,rajesh.kumar@example.com,Admin,Active\n' +
-                 'Priya Sharma,priya.sharma@example.com,Manager,Active';
-    
+        'Rajesh Kumar,rajesh.kumar@example.com,Admin,Active\n' +
+        'Priya Sharma,priya.sharma@example.com,Manager,Active';
+
     const blob = new Blob([data], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -336,7 +336,7 @@ function initMobileMenu() {
         mobileSidebar.classList.toggle('-translate-x-full');
         mobileSidebarOverlay.classList.toggle('hidden');
         body.classList.toggle('overflow-hidden');
-        
+
         // Toggle aria-expanded for accessibility
         const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
         mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
@@ -365,7 +365,7 @@ function initMobileMenu() {
             }
         });
     });
-    
+
     // Close menu when window is resized to desktop
     function handleResize() {
         if (window.innerWidth >= 768) {
@@ -375,7 +375,7 @@ function initMobileMenu() {
             mobileMenuButton.setAttribute('aria-expanded', 'false');
         }
     }
-    
+
     // Add resize event listener
     window.addEventListener('resize', handleResize);
 }
@@ -451,7 +451,7 @@ function initCharts() {
                             drawBorder: false
                         },
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 return value % 100 === 0 ? value : '';
                             }
                         }
@@ -489,7 +489,7 @@ function initDataTables() {
                     }
                 },
                 dom: '<"flex justify-between items-center mb-4"f<"flex items-center">>rt<"flex justify-between items-center mt-4"ip>',
-                initComplete: function() {
+                initComplete: function () {
                     $('.dataTables_filter input').addClass('form-input w-64');
                     $('.dataTables_length select').addClass('form-select');
                 }
@@ -551,7 +551,7 @@ function showNotification(message, type = 'info', options = {}) {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = `relative w-full max-w-xs p-4 rounded-md shadow-lg text-white ${typeClasses[type] || 'bg-gray-800'} transform transition-all duration-300 ease-in-out opacity-0 translate-y-2`;
-    
+
     // Add close button if enabled
     if (closeButton) {
         const closeBtn = document.createElement('button');
@@ -562,19 +562,19 @@ function showNotification(message, type = 'info', options = {}) {
         });
         notification.appendChild(closeBtn);
     }
-    
+
     // Add message
     const messageEl = document.createElement('div');
     messageEl.className = 'pr-4';
     messageEl.textContent = message;
     notification.appendChild(messageEl);
-    
+
     // Add to container with proper positioning
     const notificationWrapper = document.createElement('div');
     notificationWrapper.className = `pointer-events-auto ${positionClasses[position] || positionClasses['top-right']}`;
     notificationWrapper.style.transition = 'all 0.3s ease-in-out';
     notificationWrapper.appendChild(notification);
-    
+
     // Add to container
     if (position.includes('center')) {
         container.style.width = '100%';
@@ -584,24 +584,24 @@ function showNotification(message, type = 'info', options = {}) {
         container.className = `fixed z-50 w-full max-w-xs space-y-2 ${positionClasses[position] || positionClasses['top-right']} pointer-events-none`;
         container.appendChild(notificationWrapper);
     }
-    
+
     // Trigger reflow
     void notification.offsetWidth;
-    
+
     // Show notification with animation
     notification.classList.remove('opacity-0', 'translate-y-2');
     notification.classList.add('opacity-100', 'translate-y-0');
-    
+
     // Auto remove if autoClose is set
     if (autoClose) {
         const timeoutId = setTimeout(() => {
             removeNotification(notification);
         }, autoClose);
-        
+
         // Store timeout ID for potential clearing
         notification.dataset.timeoutId = timeoutId;
     }
-    
+
     // Return notification element for manual control
     return notification;
 }
@@ -609,16 +609,16 @@ function showNotification(message, type = 'info', options = {}) {
 // Remove notification with animation
 function removeNotification(notification) {
     if (!notification) return;
-    
+
     // Clear any existing timeout
     if (notification.dataset.timeoutId) {
         clearTimeout(notification.dataset.timeoutId);
     }
-    
+
     // Add exit animation
     notification.classList.remove('opacity-100', 'translate-y-0');
     notification.classList.add('opacity-0', 'translate-y-2');
-    
+
     // Remove from DOM after animation
     setTimeout(() => {
         const wrapper = notification.parentElement;
@@ -632,7 +632,7 @@ function removeNotification(notification) {
 togglePasswordVisibility = (inputId, toggleId) => {
     const passwordInput = document.getElementById(inputId);
     const toggleButton = document.getElementById(toggleId);
-    
+
     if (passwordInput && toggleButton) {
         toggleButton.addEventListener('click', () => {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -659,3 +659,82 @@ window.adminUtils = {
     togglePasswordVisibility,
     logout
 };
+
+
+async function loadAdminReviews() {
+    try {
+        const res = await fetch("/api/reviews");
+        const reviews = await res.json();
+
+        const box = document.getElementById("adminReviews");
+        if (!box) return;
+
+        box.innerHTML = "";
+
+        if (!reviews.length) {
+            box.innerHTML = `<p class="text-gray-500">No reviews yet.</p>`;
+            return;
+        }
+
+        reviews.slice(0, 6).forEach(r => {
+            box.innerHTML += `
+                <div class="flex justify-between items-start bg-white p-4 rounded shadow">
+                    <div>
+                        <p class="font-medium text-gray-800">${r.name}</p>
+                        <p class="text-yellow-500 text-sm mb-1">
+                        ${"⭐".repeat(r.rating)}
+                        </p>
+                        <p class="text-gray-600 text-sm">${r.message}</p>
+                    </div>
+
+                    <button 
+                        onclick="deleteReview('${r._id}')"
+                        class="text-red-600 hover:text-red-800 text-sm font-medium">
+                        Delete
+                    </button>
+                </div>
+            `;
+        });
+
+    } catch (err) {
+        console.error("Failed to load admin reviews", err);
+    }
+}
+
+
+async function deleteReview(id) {
+    if (!confirm("Delete this review?")) return;
+
+    try {
+        const res = await fetch(`/api/reviews/${id}`, {
+            method: "DELETE"
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            loadAdminReviews(); // refresh list
+        } else {
+            alert("Failed to delete review");
+        }
+
+    } catch (err) {
+        alert("Server error");
+    }
+}
+
+
+// ===============================
+// LOAD ADMIN REVIEWS
+// ===============================
+function forceLoadAdminReviews() {
+    if (document.getElementById("adminReviews")) {
+        loadAdminReviews();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", forceLoadAdminReviews);
+
+
+
+
+

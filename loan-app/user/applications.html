@@ -57,6 +57,22 @@
             background-color: #DBEAFE;
             color: #1E40AF;
         }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .animate-scaleIn {
+            animation: scaleIn .2s ease-out;
+        }
     </style>
 </head>
 
@@ -270,6 +286,60 @@
                         </div>
                     </div>
 
+                    <!-- Review Modal button-->
+                    <div style="margin-top: 20px; text-align: right;">
+                        <button id="openReviewModal"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md">
+                            ⭐ Add Review
+                        </button>
+
+                    </div>
+
+                    <!-- Review Modal -->
+                    <div id="reviewModal"
+                        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+
+                        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-scaleIn">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4">Share your experience</h3>
+
+                            <form id="reviewForm" class="space-y-4">
+
+                                <input id="reviewName" type="text" placeholder="Your Name" required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none" />
+
+                                <!-- Star Rating -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Rating</label>
+                                    <select id="reviewRating" required
+                                        class="w-full px-4 py-2 border rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 outline-none">
+                                        <option value="">Select rating</option>
+                                        <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
+                                        <option value="4">⭐⭐⭐⭐ (Good)</option>
+                                        <option value="3">⭐⭐⭐ (Average)</option>
+                                        <option value="2">⭐⭐ (Poor)</option>
+                                        <option value="1">⭐ (Very Bad)</option>
+                                    </select>
+                                </div>
+
+
+                                <textarea id="reviewMessage" rows="4" placeholder="Write your review..." required
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+
+                                <div class="flex justify-end gap-3 pt-2">
+                                    <button type="button" id="closeReviewModal"
+                                        class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
+                                        Cancel
+                                    </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">
+                                        Submit
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
                     <!-- Applications List -->
                     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                         <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
@@ -290,6 +360,8 @@
 
                         </div>
                     </div>
+
+
                 </div>
             </main>
         </div>
@@ -586,6 +658,103 @@
             })
             .catch(err => console.error("Chatbot load error:", err));
     </script>
+
+    <script>
+        // -------------------------------
+        // Review Modal Open / Close
+        // -------------------------------
+        const openBtn = document.getElementById("openReviewModal");
+        const closeBtn = document.getElementById("closeReviewModal");
+        const modal = document.getElementById("reviewModal");
+        const form = document.getElementById("reviewForm");
+
+        // openBtn.addEventListener("click", () => {
+        //     modal.style.display = "block";
+        // });
+
+        // closeBtn.addEventListener("click", () => {
+        //     modal.style.display = "none";
+        //     form.reset();
+        // });
+
+        // window.addEventListener("click", (e) => {
+        //     if (e.target === modal) {
+        //         modal.style.display = "none";
+        //         form.reset();
+        //     }
+        // });
+
+        // 🔥 REAL BACKEND SUBMIT
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const reviewData = {
+                name: document.getElementById("reviewName").value.trim(),
+                rating: document.getElementById("reviewRating").value,
+                message: document.getElementById("reviewMessage").value.trim()
+            };
+
+            if (!reviewData.name || !reviewData.rating || !reviewData.message) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/reviews", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alert("Failed to submit review");
+                    return;
+                }
+
+                alert("Thank you! Your review has been submitted.");
+
+                modal.style.display = "none";
+                form.reset();
+
+            } catch (err) {
+                console.error(err);
+                alert("Server error. Please try again.");
+            }
+        });
+    </script>
+
+    <script>
+        const stars = document.getElementById("starRating");
+        const ratingInput = document.getElementById("reviewRating");
+
+        if (stars) {
+            [...stars.textContent].forEach((_, i) => {
+                const span = document.createElement("span");
+                span.innerText = "★";
+                span.addEventListener("click", () => {
+                    ratingInput.value = i + 1;
+                    [...stars.children].forEach((s, idx) => {
+                        s.classList.toggle("text-yellow-400", idx <= i);
+                    });
+                });
+                stars.appendChild(span);
+            });
+        }
+
+        // Open / Close modal
+        document.getElementById("openReviewModal").onclick = () =>
+            document.getElementById("reviewModal").classList.remove("hidden");
+
+        document.getElementById("closeReviewModal").onclick = () =>
+            document.getElementById("reviewModal").classList.add("hidden");
+    </script>
+
+
+
 
 
 </body>

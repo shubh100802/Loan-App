@@ -10,6 +10,7 @@ import loanRoutes from "./routes/loanRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
+app.use("/api/reviews", reviewRoutes);
 
 // Default route
 app.get("/", (req, res) => {

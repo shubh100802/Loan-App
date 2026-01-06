@@ -255,6 +255,16 @@
                         </div>
 
                     </div>
+
+                    <!-- Recent Reviews -->
+                    <section class="mt-8">
+                        <h3 class="text-lg font-semibold mb-4">Recent Reviews</h3>
+
+                        <div id="adminReviews" class="space-y-3">
+                            <!-- Reviews will load here -->
+                        </div>
+                    </section>
+
                 </div>
             </main>
         </div>
@@ -399,7 +409,7 @@
                     if (!response.ok) throw new Error("Failed to load applications");
 
                     const responseData = await response.json();
-                    const applications = responseData.data || responseData; 
+                    const applications = responseData.data || responseData;
 
                     if (!Array.isArray(applications)) throw new Error("Invalid format from API");
 
@@ -480,10 +490,6 @@
             return map[s] || "";
         }
 
-
-
-
-
         // ============================================
         // 4) LOGOUT (outside DOMContentLoaded)
         // ============================================
@@ -493,8 +499,6 @@
             window.location.href = "../admin-login.html";
         }
     </script>
-
-
 
 </body>
 

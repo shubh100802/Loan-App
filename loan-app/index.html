@@ -293,7 +293,8 @@
                             </div> -->
 
                             <!-- floating small cards -->
-                            <div class="floating-card relative md:absolute md:-top-6 md:-right-6 bg-white p-4 rounded-xl shadow-lg w-44 sm:w-48 lg:w-56">
+                            <div
+                                class="floating-card relative md:absolute md:-top-6 md:-right-6 bg-white p-4 rounded-xl shadow-lg w-44 sm:w-48 lg:w-56">
 
                                 <div class="flex items-center gap-3">
                                     <div class="rounded-full bg-green-50 p-2"><i
@@ -305,7 +306,8 @@
                                 </div>
                             </div>
 
-                            <div class="floating-card relative md:absolute md:-top-6 md:-right-6 bg-white p-4 rounded-xl shadow-lg w-44 sm:w-48 lg:w-56">
+                            <div
+                                class="floating-card relative md:absolute md:-top-6 md:-right-6 bg-white p-4 rounded-xl shadow-lg w-44 sm:w-48 lg:w-56">
                                 <div class="flex items-center gap-3">
                                     <div class="rounded-full bg-blue-50 p-2"><i
                                             class="fas fa-hand-holding-usd text-blue-600"></i></div>
@@ -331,6 +333,28 @@
                 </div>
             </div>
         </section>
+
+
+        <!-- Customer Reviews -->
+        <section class="bg-gray-50 py-12">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center text-gray-900 mb-8">
+                    What Our Customers Say
+                </h2>
+                <div class="mx-auto my-4 w-28 h-1 bg-gradient-to-r from-indigo-500 to-purple-400 rounded"></div>
+
+                <div class="relative overflow-hidden">
+                    <div id="reviewsWrapper" class="overflow-hidden">
+                        <div id="reviewsSlider" class="flex gap-6 will-change-transform">
+                            <!-- Reviews injected here -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
 
         <!-- OFFERS SECTION (Auto-Scrolling Slider) -->
         <section id="offers" class="py-20 bg-white relative overflow-hidden">
@@ -573,7 +597,8 @@
                         <h4 class="font-semibold mb-3">Legal</h4>
                         <ul class="space-y-2 text-gray-400">
                             <li><a href="t&c/privacy-policy.html" class="hover:text-white">Privacy Policy</a></li>
-                            <li><a href="t&c/terms-and-conditions.html" class="hover:text-white">Terms of Service</a></li>
+                            <li><a href="t&c/terms-and-conditions.html" class="hover:text-white">Terms of Service</a>
+                            </li>
                             <!-- <li><a href="#" class="hover:text-white">Cookie Policy</a></li> -->
                         </ul>
                     </div>
@@ -601,7 +626,7 @@
                         </a>
                     </div>
                 </div>
-                <span class="text-gray-400 text-sm"><i>Last Updated:18:56:40 pm 07/12/2025 </i></span>
+                <span class="text-gray-400 text-sm"><i>Last Updated:05:12:40 am 01/01/2026 </i></span>
             </div>
         </footer>
 
@@ -854,6 +879,76 @@
 
 
     </script>
+
+    <script>
+        async function loadReviews() {
+            try {
+                const res = await fetch("/api/reviews");
+                const reviews = await res.json();
+
+                const slider = document.getElementById("reviewsSlider");
+                slider.innerHTML = "";
+
+                if (!reviews.length) return;
+
+                reviews.forEach(r => {
+                    slider.innerHTML += `
+                        <div class="review-card min-w-[320px] bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-md 
+                            hover:shadow-xl transition transform hover:-translate-y-2">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-semibold text-gray-800">${r.name}</h4>
+                                <div class="text-yellow-500 text-sm">
+                                    ${"⭐".repeat(r.rating)}
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm leading-relaxed">${r.message}</p>
+                        </div>
+                    `;
+                });
+
+                // 🔁 duplicate for infinite loop
+                slider.innerHTML += slider.innerHTML;
+
+            } catch (err) {
+                console.error("Failed to load reviews", err);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadReviews);
+    </script>
+
+
+    <script>
+        let reviewScrollX = 0;
+        let reviewAuto = null;
+
+        function startReviewAuto() {
+            if (reviewAuto) return;
+
+            const slider = document.getElementById("reviewsSlider");
+            reviewAuto = setInterval(() => {
+                reviewScrollX += 0.6; // smooth speed
+                const half = slider.scrollWidth / 2;
+                if (reviewScrollX >= half) reviewScrollX = 0;
+                slider.style.transform = `translateX(-${reviewScrollX}px)`;
+            }, 20);
+        }
+
+        function stopReviewAuto() {
+            clearInterval(reviewAuto);
+            reviewAuto = null;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(startReviewAuto, 800);
+
+            const wrapper = document.getElementById("reviewsWrapper");
+            wrapper.addEventListener("mouseenter", stopReviewAuto);
+            wrapper.addEventListener("mouseleave", startReviewAuto);
+        });
+    </script>
+
+
 
 
 
