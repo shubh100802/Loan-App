@@ -1,8 +1,15 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
+// import crypto from "crypto";
 import { sendEmail } from "../utils/sendEmail.js";
+import {
+    welcomeApplauseEmail,
+    passwordChangedEmail,
+    passwordResetEmail,
+    signupOtpEmail
+} from "../utils/emailTemplates.js";
+
 
 export const register = async (req, res) => {
     try {
@@ -32,18 +39,16 @@ export const register = async (req, res) => {
             email,
             password: hashed,
             otp,
-            otpExpires: Date.now() + 5 * 60 * 1000, 
+            otpExpires: Date.now() + 5 * 60 * 1000,
         });
 
         // Email Body
-        const html = `
-            <h2>Your MLC Verification Code</h2>
-            <p>Your OTP is:</p>
-            <h1 style="font-size:32px; color:#4f46e5;">${otp}</h1>
-            <p>This OTP will expire in 5 minutes.</p>
-        `;
+        const emailSent = await sendEmail(
+            email,
+            "🔐 Verify Your Email – MyLoanCredit",
+            signupOtpEmail({ name, otp })
+        );
 
-        const emailSent = await sendEmail(email, "MLC Email Verification", html);
 
         if (!emailSent) {
             return res.status(500).json({ msg: "Failed to send OTP. Please try again or use a verified email." });
@@ -80,6 +85,19 @@ export const verifyOtp = async (req, res) => {
         user.otpExpires = null;
         await user.save();
 
+
+        try {
+            await sendEmail(
+                user.email,
+                "🎉 Welcome to MyLoanCredit!",
+                welcomeApplauseEmail({ name: user.name })
+            );
+        } catch (err) {
+            console.error("Welcome email failed:", err);
+        }
+
+
+
         // Create token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
             expiresIn: "7d",
@@ -111,11 +129,12 @@ export const resendOtp = async (req, res) => {
         user.otpExpires = Date.now() + 5 * 60 * 1000;
         await user.save();
 
-        const html = `
-            <h2>Your new MLC (myloancredit) OTP</h2>
-            <h1 style="font-size:32px; color:#4f46e5;">${otp}</h1>
-            <p>Expires in 5 minutes.</p>
-        `;
+        await sendEmail(
+            user.email,
+            "🔁 New OTP for Email Verification – MyLoanCredit",
+            signupOtpEmail({ name: user.name, otp })
+        );
+
 
         await sendEmail(user.email, "MLC - New OTP", html);
 
@@ -155,3 +174,102 @@ export const login = async (req, res) => {
 };
 
 
+
+// ================= FORGOT PASSWORD =================
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            // Prevent email enumeration
+            return res.json({ success: true, msg: "If email exists, OTP sent" });
+        }
+
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+        user.otp = otp;
+        user.otpExpires = Date.now() + 5 * 60 * 1000; // 5 min
+        await user.save();
+
+        await sendEmail(
+            user.email,
+            "🔐 Password Reset Request – MyLoanCredit",
+            passwordResetEmail({ name: user.name, otp })
+        );
+
+
+        res.json({ success: true, msg: "OTP sent to email" });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+};
+
+
+// ================= RESET PASSWORD =================
+export const resetPassword = async (req, res) => {
+    try {
+        const { email, otp, newPassword } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user)
+            return res.status(400).json({ success: false, msg: "User not found" });
+
+        if (user.otp !== otp)
+            return res.status(400).json({ success: false, msg: "Invalid OTP" });
+
+        if (user.otpExpires < Date.now())
+            return res.status(400).json({ success: false, msg: "OTP expired" });
+
+        // 🔐 Hash & update password in DB
+        user.password = await bcrypt.hash(newPassword, 10);
+
+        // Clear OTP
+        user.otp = null;
+        user.otpExpires = null;
+
+        await user.save();
+
+        //  Send password changed alert email
+        await sendEmail(
+            user.email,
+            "🔐 Your MyLoanCredit password was changed",
+            passwordChangedEmail({ name: user.name })
+        );
+
+
+        res.json({ success: true, msg: "Password reset successful" });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ msg: "Server error" });
+    }
+};
+
+
+// ================= VERIFY RESET OTP =================
+export const verifyResetOtp = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
+            return res.status(400).json({
+                success: false,
+                msg: "Invalid or expired OTP"
+            });
+        }
+
+        return res.json({
+            success: true,
+            msg: "OTP verified"
+        });
+
+    } catch (err) {
+        res.status(500).json({ msg: "Server error" });
+    }
+};

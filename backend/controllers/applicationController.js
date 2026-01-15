@@ -1,6 +1,8 @@
 // backend/controllers/applicationController.js
 import asyncHandler from "express-async-handler";
 import Application from "../models/Application.js";
+import { sendEmail } from "../utils/sendEmail.js"
+import { loanApplicationSubmittedEmail } from "../utils/emailTemplates.js";
 import mongoose from "mongoose";
 
 
@@ -255,6 +257,27 @@ export const createApplication = asyncHandler(async (req, res) => {
 
   try {
     const app = await Application.create(applicationPayload);
+    // Send loan application submitted email
+    try {
+      await sendEmail(
+        app.personal.email,
+        "Loan Application Submitted – MyLoanCredit",
+        loanApplicationSubmittedEmail({
+          name: app.personal.fullName,
+          bankName: app.bankName,
+          loanName: app.loanName,
+          loanAmount: app.loanAmount,
+          loanPurpose: app.loanPurpose,
+          applicationId: app._id,
+          status: app.status,
+          appliedAt: app.createdAt
+        })
+      );
+
+    } catch (emailErr) {
+      console.error("Loan application email failed:", emailErr.message);
+    }
+
     return res.status(201).json({ success: true, data: app });
   } catch (err) {
     console.error("createApplication error:", err);
