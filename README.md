@@ -269,10 +269,6 @@ pm2 save
 - Session management
 - Password hashing with bcrypt
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 📧 Contact
 
 For support, email [shubhamraj100802@gmail.com](mailto:shubhamraj100802@gmail.com)
@@ -280,5 +276,5 @@ For support, email [shubhamraj100802@gmail.com](mailto:shubhamraj100802@gmail.co
 ---
 
 <div align="center">
-  Made with ❤️ and GPT By Shubh
+  Made with ❤️ By Shubh
 </div>
